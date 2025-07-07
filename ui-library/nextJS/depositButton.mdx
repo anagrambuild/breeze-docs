@@ -1,0 +1,77 @@
+---
+title: 'Deposit Button'
+description: 'Simple deposit button'
+---
+### Preview
+
+<div className="flex justify-center">
+  <img src="/ui-library/nextJS/components/depositButton.png" alt="Simple Deposit" className="w-100 h-auto rounded-lg" />
+</div>
+
+<Card title="Better Preview & Documentation" href="https://breeze-ui-toolkit.vercel.app/component/deposit-button" icon="book-open">
+  View comprehensive component documentation, live examples, and implementation guides in our UI Library section.
+</Card>
+
+
+### CLI Installation
+
+```bash
+npx breeze-ui-library add DepositButton
+```
+
+### Usage
+
+<CodeGroup>
+
+```tsx Basic Usage
+import { DepositButton } from "breeze-ui-library/client"
+
+<DepositButton />
+```
+
+```tsx Component Example
+import { DepositButton } from "breeze-ui-library/client"
+
+export function DepositButtonUI() {
+  return <DepositButton />
+}
+```
+
+</CodeGroup>
+
+{/* ### Advanced Example with Wallet Integration
+
+```tsx
+"use client";
+import React from 'react';
+import { ApiClient, getTransactionForDeposit } from "sdk-breeeze";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { utilSignFetchedTx } from './utils';
+import { DepositButton } from 'breeze-ui-library/client';
+
+export default function DepositExample() {
+  const { publicKey, signTransaction, signAllTransactions, connected } = useWallet();
+
+  const handleDeposit = async () => {
+    const client = new ApiClient();
+    let deposit_tx = await getTransactionForDeposit(
+      client,
+      "userkey_0000",
+      "fund_12855430823",
+      20, 
+      false,
+      "HeZe5JDSvLdfkVxTSuhRZsryhGk1u3nsAb9eA554uXVT"
+    );
+    
+    utilSignFetchedTx(deposit_tx.result, signTransaction);
+  }
+
+  return (
+    <div className='flex justify-center items-center bg-white min-h-screen'>
+      <div onClick={handleDeposit}>
+        <DepositButton />
+      </div>
+    </div>
+  )
+}
+``` */}

@@ -1,0 +1,30 @@
+## 1. Real-Time Risk Assessment
+
+- Every 5 epochs, BRE recalculates all risk metrics.
+
+- Pools exceeding 80% utilization or high liquidation risk trigger rebalance signals.
+
+## 2. Automated Liquidity Redistribution
+
+<div style={{ textAlign: 'center', fontSize: '1.2rem' }}>
+  $ \text{Reallocation Amount} = \frac{(\text{Target Utilization} - \text{Current Utilization}) \times \text{Total Deposits}}{\text{Collateral Factor}} $
+</div>
+
+<Info>Assets are reallocated from high-risk pools to low-risk pools to stabilize liquidity.</Info>
+
+## 3. Adaptive Yield Optimization
+
+**BRE dynamically adjusts incentive structures**
+
+<CardGroup cols={2}>
+  <Card title="Higher APY for low-utilization pools to attract deposits" icon={<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gem-icon lucide-gem"><path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></svg>}>
+  </Card>
+  <Card title="Increased fees for high-risk pools to deter excessive borrowing" icon={<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles-icon lucide-sparkles"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/></svg>}>
+  </Card>
+</CardGroup>
+
+## 4. Risk-Based Capital Constraints
+
+<Card title="If VaR exceeds predefined safety limits" icon={<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-binary-icon lucide-binary"><rect x="14" y="14" width="4" height="6" rx="2"/><rect x="6" y="4" width="4" height="6" rx="2"/><path d="M6 20h4"/><path d="M14 10h4"/><path d="M6 14h2v6"/><path d="M14 4h2v6"/></svg>}>
+    S-Five triggers a cool-down mechanism, restricting new deposits into high-risk pools.
+  </Card>

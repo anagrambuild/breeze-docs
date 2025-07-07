@@ -1,0 +1,251 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Breeze",
+  "colors": {
+    "primary": "#c12c96",
+    "light": "#bc07c9",
+    "dark": "#3b023d"
+  },
+  "favicon": "/favicon.svg",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Welcome to Breeze",
+        "groups": [
+          {
+            "group": "Breeze",
+            "pages": [
+              "introduction/welcome"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Introduction",
+        "groups": [
+          {
+            "group": "Breeze",
+            "pages": [
+              "introduction/introduction"
+            ]
+          },
+          {
+            "group": "Breeze Risk Engine (BRE)",
+            "pages": [
+              "introduction/Breeze-Risk-Engine",
+              "introduction/Key Risk Metrics & Formulas",
+              "introduction/Dynamic Pool Rebalancing Mechanism",
+              "introduction/Why S-Five is the Best Way to Offer Customizable Yield with Risk Protection"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Integration Guide",
+        "groups": [
+          {
+            "group": "Integration Guide",
+            "pages": [
+              "Integration-Guide/Integration-Guide"
+            ]
+          },
+          {
+            "group": "Integration Examples",
+            "pages": [
+              "Integration-Guide/integrationExampleTgBot",
+              "Integration-Guide/inzegrationExampleTgBotBreezeSDK",
+              "Integration-Guide/UILibraryIntegrationExample"
+            ]
+          },
+          {
+            "group": "Integration Tutorials",
+            "pages": [
+              "Integration-Guide/breezePoweredWebsite",
+              "Integration-Guide/tgBotTutorial",
+              "Integration-Guide/twitterTutorial"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Breeze API",
+        "groups": [
+          {
+            "group": "Breeze API",
+            "pages": [
+              "breeze-api/breeze-api",
+              "breeze-api/integration-flow"
+            ]
+          },
+          {
+            "group": "Endpoint Examples",
+            "pages": [
+              "breeze-api/endpoints/getFund",
+              "breeze-api/endpoints/getUser",
+              "breeze-api/endpoints/getUserFund",
+              "breeze-api/endpoints/getFundForBaseAsset",
+              "breeze-api/endpoints/getUserCurrentValue",
+              "breeze-api/endpoints/getUserStats",
+              "breeze-api/endpoints/get_deposit_ixs",
+              "breeze-api/endpoints/GetDepositTransaction",
+              "breeze-api/endpoints/getWithdrawInstruction",
+              "breeze-api/endpoints/getWithdrawTransaction"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Breeze Admin API",
+        "groups": [
+          {
+            "group": "Breeze Admin API",
+            "pages": [
+              "breeze-admin-api/breeze-admin-api"
+            ]
+          },
+          {
+            "group": "Endpoint Examples",
+            "pages": [
+              "breeze-admin-api/endpoints/createUserFundTx",
+              "breeze-admin-api/endpoints/createUserFundIx",
+              "breeze-admin-api/endpoints/createFund",
+              "breeze-admin-api/endpoints/createNewApiUser",
+              "breeze-admin-api/endpoints/createNewApiAdmin",
+              "breeze-admin-api/endpoints/increaseCreditsLimit",
+              "breeze-admin-api/endpoints/recordAllFundStats"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Breeze UI Library",
+        "groups": [
+          {
+            "group": "Breeze UI Library Compact Documentation",
+            "pages": [
+              "ui-library/introduction",
+              "ui-library/get-started"
+            ]
+          },
+          {
+            "group": "NextJS UI Components",
+            "pages": [
+              "ui-library/nextJS/instalation",
+              "ui-library/nextJS/depositSimple",
+              "ui-library/nextJS/toogleDeposit",
+              "ui-library/nextJS/depositButton",
+              "ui-library/nextJS/withdrawButton",
+              "ui-library/nextJS/depositWithAmount",
+              "ui-library/nextJS/deposit",
+              "ui-library/nextJS/withdraw"
+            ]
+          },
+          {
+            "group": "ReactJS UI Components",
+            "pages": [
+              "ui-library/ReactJS/instalation"
+            ]
+          },
+          {
+            "group": "React Native UI Components",
+            "pages": [
+              "ui-library/ReactNative/instalation"
+            ]
+          },
+          {
+            "group": "ViteJS UI Components",
+            "pages": [
+              "ui-library/ViteJS/instalation"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Breeze SDK",
+        "groups": [
+          {
+            "group": "Introduction",
+            "pages": [
+              "breeze-sdk/breeze-sdk",
+              "breeze-sdk/quickstart"
+            ]
+          },
+          {
+            "group": "Examples and usage",
+            "pages": [
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Get Your API Key",
+        "groups": [
+          {
+            "group": "Get API Key",
+            "pages": [
+              "get-your-api-key/instruction"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Contact Us",
+        "groups": [
+          {
+            "group": "Get in touch",
+            "pages": [
+              "contact-us/contact-us"
+            ]
+          }
+        ]
+      }
+    ],
+    "global": {
+      "anchors": [
+        {
+          "anchor": "Documentation",
+          "href": "https://breeze-5f3c750a.mintlify.app/",
+          "icon": "book-open-cover"
+        },
+        {
+          "anchor": "Support",
+          "href": "https://mintlify.com/community",
+          "icon": "telegram"
+        }
+      ]
+    }
+  },
+  "logo": {
+    "light": "/logo/logo-light.png",
+    "dark": "/logo/logo-dark.png"
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Support",
+        "href": "https://t.me.breeze.finance"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Dashboard",
+      "href": "https://breeze-5f3c750a.mintlify.app/"
+    }
+  },
+  "footer": {
+    "socials": {
+      "x": "https://x.com/mintlify",
+      "github": "https://github.com/mintlify",
+      "linkedin": "https://linkedin.com/company/mintlify"
+    }
+  },
+  "api": {
+    "playground": {
+      "display": "interactive"
+    },
+    "examples": {
+      "defaults": "all"
+    }
+  }
+}

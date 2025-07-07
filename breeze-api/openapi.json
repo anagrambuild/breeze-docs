@@ -1,0 +1,2693 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "OpenAPI Breeze",
+        "description": "OpenAPI Configuration for Breeze",
+        "license": {
+            "name": "MIT"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "https://breeze-api.com"
+        }
+    ],
+    "security": [
+        {
+            "apiKeyAuth": []
+        }
+    ],
+    "paths": {
+        "/getFund/{fund_id}": {
+            "get": {
+                "description": "This method returns all relevant information of a fund for a given fund_id",
+                "parameters": [
+                    {
+                        "name": "fund_id",
+                        "in": "path",
+                        "description": "Fund ID of the Fund to get",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FundResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Unexpected error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "missingApiKey": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Invalid Request"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Missing API Key",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "missingApiKey": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Missing Credentials - Missing Api key"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Fund not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "fundNotFound": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Record not found : FundId doesnt Exists"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "methodNotAllowed": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "text"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Rate limit exceeded",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "rateLimit": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Not enoughf Api credits for making the request"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "serverError": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Internal Server Error"
+                                            }
+                                        }
+                                    },
+                                    "dbError": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Error From the DB, couldnt process the query"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/getUser/{user_id}": {
+            "get": {
+                "description": "This method returns all relevant information about a user for given user_id",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "description": "User ID of the User to get",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserFundResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Unexpected error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "missingApiKey": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Invalid Request"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Missing API Key",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "missingApiKey": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Missing Credentials - Missing Api key"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Fund not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "fundNotFound": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Record not found : FundId doesnt Exists"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "methodNotAllowed": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "text"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Rate limit exceeded",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "rateLimit": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Not enoughf Api credits for making the request"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "serverError": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Internal Server Error"
+                                            }
+                                        }
+                                    },
+                                    "dbError": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Error From the DB, couldnt process the query"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/getUserFund/{user_id}": {
+            "get": {
+                "description": "Retrieves all funds informations of a user for a given user_id",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "description": "User ID of the User",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FundsArrayResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Unexpected error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "missingApiKey": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Invalid Request"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Missing API Key",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "missingApiKey": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Missing Credentials - Missing Api key"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Fund not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "fundNotFound": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Record not found : FundId doesnt Exists"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "methodNotAllowed": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "text"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Rate limit exceeded",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "rateLimit": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Not enoughf Api credits for making the request"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "serverError": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Internal Server Error"
+                                            }
+                                        }
+                                    },
+                                    "dbError": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Error From the DB, couldnt process the query"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/fund/{base_asset}": {
+            "get": {
+                "description": "Retrieves all funds informations associated with a given base_asset",
+                "parameters": [
+                    {
+                        "name": "base_asset",
+                        "in": "path",
+                        "description": "Base Asset, e. g. USDC, USDT, PYUSD, etc.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FundsArrayResponseForBaseAsset"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Unexpected error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "missingApiKey": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Invalid Request"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Missing API Key",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "missingApiKey": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Missing Credentials - Missing Api key"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Fund not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "fundNotFound": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Record not found : FundId doesnt Exists"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "methodNotAllowed": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "text"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Rate limit exceeded",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "rateLimit": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Not enoughf Api credits for making the request"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "serverError": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Internal Server Error"
+                                            }
+                                        }
+                                    },
+                                    "dbError": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Error From the DB, couldnt process the query"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/{user_id}/current_value": {
+            "get": {
+                "description": "Retrieves all funds informations of a user for a given user_id",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "description": "User ID of the User",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fiat_value",
+                        "in": "query",
+                        "description": "To convert the value-data to user provided currency",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "EUR"
+                    },
+                    {
+                        "name": "fund_id",
+                        "in": "query",
+                        "description": "Filter the value-result for a specific fund_id",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "base_asset",
+                        "in": "query",
+                        "description": "Filter the value-result for a specific base_asset",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserCurrentValueResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Unexpected error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "missingApiKey": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Invalid Request"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Missing API Key",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "missingApiKey": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Missing Credentials - Missing Api key"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Fund not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "fundNotFound": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Record not found : FundId doesnt Exists"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "methodNotAllowed": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "text"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Rate limit exceeded",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "rateLimit": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Not enoughf Api credits for making the request"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "serverError": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Internal Server Error"
+                                            }
+                                        }
+                                    },
+                                    "dbError": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Error From the DB, couldnt process the query"
+                                            }
+                                        }
+                                    },
+                                    "ValidationError": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Incorrect  query or set of queries required not provided"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/{user_id}/stats": {
+            "get": {
+                "description": "Retrieves funds-stats for the funds for a user_id for a given time-range",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "description": "User ID of the User",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "start",
+                        "in": "query",
+                        "description": "Starting time-range for the stats-calculation, e. g. 2025-04-21T02:20:42.225Z",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "end",
+                        "in": "query",
+                        "description": "Ending time-range for the stats-calculation, e. g. 2025-04-21T02:20:42.225Z",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fiat_value",
+                        "in": "query",
+                        "description": "To convert the value-data to user provided currency",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "EUR"
+                    },
+                    {
+                        "name": "fund_id",
+                        "in": "query",
+                        "description": "Filter the stats-result for a specific fund_id",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "111111111111111111111111111111111"
+                    },
+                    {
+                        "name": "base_asset",
+                        "in": "query",
+                        "description": "Filter the value-result for a specific base_asset",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "USDC"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StatsResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Unexpected error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "missingApiKey": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Invalid Request"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Missing API Key",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "missingApiKey": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Missing Credentials - Missing Api key"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Fund not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "fundNotFound": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Record not found : FundId doesnt Exists"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "methodNotAllowed": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "text"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Rate limit exceeded",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "rateLimit": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Not enoughf Api credits for making the request"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "serverError": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Internal Server Error"
+                                            }
+                                        }
+                                    },
+                                    "dbError": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Error From the DB, couldnt process the query"
+                                            }
+                                        }
+                                    },
+                                    "ValidationError": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Incorrect  query or set of queries required not provided"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/deposit/ix": {
+            "post": {
+                "description": "This method will returns all the instruction required to preform the deposit instruction. It takes amount as input to do the deposit, If all is provided as true , then all the amount in token-account will be considered for deposit. User wallet-address and fund_id is also required.",
+                "requestBody": {
+                    "description": "Deposit instruction parameters",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "fund_id": {
+                                        "type": "string",
+                                        "description": "ID of the Fund"
+                                    },
+                                    "amount": {
+                                        "type": "integer",
+                                        "description": "Amount in Base Asset to deposit"
+                                    },
+                                    "all": {
+                                        "type": "boolean",
+                                        "description": "If true, ignore amount and operate on the entire balance"
+                                    },
+                                    "user_key": {
+                                        "type": "string",
+                                        "description": "User Address"
+                                    },
+                                    "payer_key": {
+                                        "type": "string",
+                                        "description": "User Address"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DepositInstructions"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Unexpected error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "missingApiKey": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Invalid Request"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Missing API Key",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "missingApiKey": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Missing Credentials - Missing Api key"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Fund not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "fundNotFound": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Record not found : FundId doesnt Exists"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "methodNotAllowed": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "text"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Rate limit exceeded",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "rateLimit": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Not enoughf Api credits for making the request"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "serverError": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Internal Server Error"
+                                            }
+                                        }
+                                    },
+                                    "ValidationError": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Incorrect  query or set of queries required not provided"
+                                            }
+                                        }
+                                    },
+                                    "BreezeProgramError": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Error from Breeze Smart Contract"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/deposit/tx": {
+            "post": {
+                "description": "This method will returns all the transaction required to preform the deposit instruction. It takes amount as input to do the deposit, If all is provided as true , then all the amount in token-account will be considered for deposit. User wallet-address and fund_id is also required.",
+                "requestBody": {
+                    "description": "Deposit transaction parameters",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "fund_id": {
+                                        "type": "string",
+                                        "description": "ID of the Fund"
+                                    },
+                                    "amount": {
+                                        "type": "integer",
+                                        "description": "Amount in Base Asset to deposit"
+                                    },
+                                    "all": {
+                                        "type": "boolean",
+                                        "description": "If true, ignore amount and operate on the entire balance"
+                                    },
+                                    "user_key": {
+                                        "type": "string",
+                                        "description": "User Address"
+                                    },
+                                    "payer_key": {
+                                        "type": "string",
+                                        "description": "User Address"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SerializedTransactionResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Unexpected error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "missingApiKey": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Invalid Request"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Missing API Key",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "missingApiKey": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Missing Credentials - Missing Api key"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Fund not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "fundNotFound": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Record not found : FundId doesnt Exists"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "methodNotAllowed": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "text"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Rate limit exceeded",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "rateLimit": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Not enoughf Api credits for making the request"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "serverError": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Internal Server Error"
+                                            }
+                                        }
+                                    },
+                                    "ValidationError": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Incorrect  query or set of queries required not provided"
+                                            }
+                                        }
+                                    },
+                                    "BreezeProgramError": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Error from Breeze Smart Contract"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/withdraw/ix": {
+            "post": {
+                "description": "This method will returns all the instruction required to preform the withdraw instruction. It takes shares as input to do the withdraw, If all is provided as true , then all the shares will be considered for withdraw. User wallet-address and fund_id is also required.",
+                "requestBody": {
+                    "description": "Withdraw instruction parameters",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "fund_id": {
+                                        "type": "string",
+                                        "description": "ID of the Fund"
+                                    },
+                                    "shares": {
+                                        "type": "integer",
+                                        "description": "Amount in of shares to withdraw"
+                                    },
+                                    "all": {
+                                        "type": "boolean",
+                                        "description": "If true, ignore amount and operate on the entire balance"
+                                    },
+                                    "user_key": {
+                                        "type": "string",
+                                        "description": "User Address"
+                                    },
+                                    "payer_key": {
+                                        "type": "string",
+                                        "description": "User Address"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DepositInstructions"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Unexpected error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "missingApiKey": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Invalid Request"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Missing API Key",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "missingApiKey": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Missing Credentials - Missing Api key"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Fund not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "fundNotFound": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Record not found : FundId doesnt Exists"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "methodNotAllowed": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "text"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Rate limit exceeded",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "rateLimit": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Not enoughf Api credits for making the request"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "serverError": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Internal Server Error"
+                                            }
+                                        }
+                                    },
+                                    "ValidationError": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Incorrect  query or set of queries required not provided"
+                                            }
+                                        }
+                                    },
+                                    "BreezeProgramError": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Error from Breeze Smart Contract"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/withdraw/tx": {
+            "post": {
+                "description": "This method will returns all the transaction required to preform the withdraw instruction. It takes shares as input to do the withdraw, If all is provided as true , then all the shares will be considered for withdraw. User wallet-address and fund_id is also required.",
+                "requestBody": {
+                    "description": "Withdraw transaction parameters",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "fund_id": {
+                                        "type": "string",
+                                        "description": "ID of the Fund"
+                                    },
+                                    "shares": {
+                                        "type": "integer",
+                                        "description": "Amount in of shares to withdraw"
+                                    },
+                                    "all": {
+                                        "type": "boolean",
+                                        "description": "If true, ignore amount and operate on the entire balance"
+                                    },
+                                    "user_key": {
+                                        "type": "string",
+                                        "description": "User Address"
+                                    },
+                                    "payer_key": {
+                                        "type": "string",
+                                        "description": "User Address"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SerializedTransactionResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Unexpected error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "missingApiKey": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Invalid Request"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Missing API Key",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "missingApiKey": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Missing Credentials - Missing Api key"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Fund not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "fundNotFound": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Record not found : FundId doesnt Exists"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "methodNotAllowed": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "text"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Rate limit exceeded",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "rateLimit": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Not enoughf Api credits for making the request"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "serverError": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Internal Server Error"
+                                            }
+                                        }
+                                    },
+                                    "ValidationError": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Incorrect  query or set of queries required not provided"
+                                            }
+                                        }
+                                    },
+                                    "BreezeProgramError": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Error from Breeze Smart Contract"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/create_user_fund/tx": {
+            "post": {
+                "description": "This method will returns all the transaction required to create User Fund account.",
+                "requestBody": {
+                    "description": "Create User Fund transaction parameters",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "fund_id": {
+                                        "type": "string",
+                                        "description": "ID of the Fund"
+                                    },
+                                    "user_key": {
+                                        "type": "string",
+                                        "description": "User Address"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SerializedTransactionResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Unexpected error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "missingApiKey": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Invalid Request"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Missing API Key",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "missingApiKey": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Missing Credentials - Missing Api key"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Fund not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "fundNotFound": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Record not found : FundId doesnt Exists"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "methodNotAllowed": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "text"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Rate limit exceeded",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "rateLimit": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Not enoughf Api credits for making the request"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "serverError": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Internal Server Error"
+                                            }
+                                        }
+                                    },
+                                    "ValidationError": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Incorrect  query or set of queries required not provided"
+                                            }
+                                        }
+                                    },
+                                    "BreezeProgramError": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Error from Breeze Smart Contract"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "FundResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "result": {
+                        "$ref": "#/components/schemas/Fund"
+                    }
+                },
+                "required": [
+                    "success",
+                    "result"
+                ]
+            },
+            "Fund": {
+                "type": "object",
+                "properties": {
+                    "fund_id": {
+                        "type": "string"
+                    },
+                    "base_asset": {
+                        "type": "string"
+                    },
+                    "base_asset_decimals": {
+                        "type": "integer"
+                    },
+                    "user_id": {
+                        "type": "string"
+                    },
+                    "total_shares": {
+                        "type": "integer"
+                    },
+                    "share_price": {
+                        "type": "number"
+                    },
+                    "current_value": {
+                        "type": "number"
+                    },
+                    "updated_at_timestamp": {
+                        "type": "integer"
+                    },
+                    "updated_at_slot": {
+                        "type": "integer"
+                    },
+                    "risk_max": {
+                        "type": "number"
+                    },
+                    "current_risk": {
+                        "type": "number"
+                    },
+                    "unallocated_amount": {
+                        "type": "number"
+                    },
+                    "last_recalculate_value_timestamp": {
+                        "type": "integer"
+                    },
+                    "last_rebalance_timestamp": {
+                        "type": "integer"
+                    },
+                    "last_rebalance_slot": {
+                        "type": "integer"
+                    },
+                    "constraints": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    },
+                    "allocations": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    }
+                },
+                "required": [
+                    "fund_id",
+                    "base_asset",
+                    "user_id"
+                ],
+                "example": {
+                    "fund_id": "GiADBNc22AVbkQ5CYV5RBoG4YrXKx8oUQYL2n5YYtgZp",
+                    "base_asset": "USDC",
+                    "base_asset_decimals": 18,
+                    "user_id": "9hz2NhiKBE6bKieJkpUhboLe3LEwMnqvnD5pyd796Raf",
+                    "total_shares": 1224,
+                    "share_price": 100,
+                    "current_value": 100000,
+                    "updated_at_timestamp": 1743901094,
+                    "updated_at_slot": 0,
+                    "risk_max": 30,
+                    "current_risk": 0,
+                    "unallocated_amount": 22582,
+                    "last_recalculate_value_timestamp": 1743901094,
+                    "last_rebalance_timestamp": 1743901094,
+                    "last_rebalance_slot": 0,
+                    "constraints": [],
+                    "allocations": []
+                }
+            },
+            "UserFundResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "result": {
+                        "type": "object",
+                        "properties": {
+                            "user": {
+                                "type": "string",
+                                "example": "9hz2NhiKBE6bKieJkpUhboLe3LEwMnqvnD5pyd796Raf"
+                            },
+                            "fund_id": {
+                                "type": "string",
+                                "example": "GiADBNc22AVbkQ5CYV5RBoG4YrXKx8oUQYL2n5YYtgZp"
+                            },
+                            "shares": {
+                                "type": "integer",
+                                "example": 33
+                            },
+                            "updated_at_timestamp": {
+                                "type": "integer",
+                                "example": 100000000
+                            },
+                            "updated_at_slot": {
+                                "type": "integer",
+                                "example": 0
+                            }
+                        },
+                        "required": [
+                            "user",
+                            "fund_id",
+                            "shares",
+                            "updated_at_timestamp",
+                            "updated_at_slot"
+                        ]
+                    }
+                },
+                "required": [
+                    "success",
+                    "result"
+                ]
+            },
+            "FundsArrayResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "result": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Fund"
+                        }
+                    }
+                },
+                "required": [
+                    "success",
+                    "result"
+                ],
+                "example": {
+                    "success": true,
+                    "result": [
+                        {
+                            "fund_id": "GiADBNc22AVbkQ5CYV5RBoG4YrXKx8oUQYL2n5YYtgZp",
+                            "base_asset": "USDC",
+                            "base_asset_decimals": 18,
+                            "user_id": "9hz2NhiKBE6bKieJkpUhboLe3LEwMnqvnD5pyd796Raf",
+                            "total_shares": 1224,
+                            "share_price": 100,
+                            "current_value": 100000,
+                            "updated_at_timestamp": 1743901094,
+                            "updated_at_slot": 0,
+                            "risk_max": 30,
+                            "current_risk": 0,
+                            "unallocated_amount": 22582,
+                            "last_recalculate_value_timestamp": 1743901094,
+                            "last_rebalance_timestamp": 1743901094,
+                            "last_rebalance_slot": 0,
+                            "constraints": [],
+                            "allocations": []
+                        },
+                        {
+                            "fund_id": "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3",
+                            "base_asset": "PYUSDC",
+                            "base_asset_decimals": 18,
+                            "user_id": "9hz2NhiKBE6bKieJkpUhboLe3LEwMnqvnD5pyd796Raf",
+                            "total_shares": 1224,
+                            "share_price": 100,
+                            "current_value": 100000,
+                            "updated_at_timestamp": 1743901094,
+                            "updated_at_slot": 0,
+                            "risk_max": 30,
+                            "current_risk": 0,
+                            "unallocated_amount": 22582,
+                            "last_recalculate_value_timestamp": 1743901094,
+                            "last_rebalance_timestamp": 1743901094,
+                            "last_rebalance_slot": 0,
+                            "constraints": [],
+                            "allocations": []
+                        }
+                    ]
+                }
+            },
+            "FundsArrayResponseForBaseAsset": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "result": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Fund"
+                        }
+                    }
+                },
+                "required": [
+                    "success",
+                    "result"
+                ],
+                "example": {
+                    "success": true,
+                    "result": [
+                        {
+                            "fund_id": "GiADBNc22AVbkQ5CYV5RBoG4YrXKx8oUQYL2n5YYtgZp",
+                            "base_asset": "USDC",
+                            "base_asset_decimals": 18,
+                            "user_id": "9hz2NhiKBE6bKieJkpUhboLe3LEwMnqvnD5pyd796Raf",
+                            "total_shares": 1224,
+                            "share_price": 100,
+                            "current_value": 100000,
+                            "updated_at_timestamp": 1743901094,
+                            "updated_at_slot": 0,
+                            "risk_max": 30,
+                            "current_risk": 0,
+                            "unallocated_amount": 22582,
+                            "last_recalculate_value_timestamp": 1743901094,
+                            "last_rebalance_timestamp": 1743901094,
+                            "last_rebalance_slot": 0,
+                            "constraints": [],
+                            "allocations": []
+                        },
+                        {
+                            "fund_id": "U74hJmRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3",
+                            "base_asset": "USDC",
+                            "base_asset_decimals": 18,
+                            "user_id": "9hz2NhiKBE6bKieJkpUhboLe3LEwMnqvnD5pyd796Raf",
+                            "total_shares": 1224,
+                            "share_price": 100,
+                            "current_value": 100000,
+                            "updated_at_timestamp": 1743901094,
+                            "updated_at_slot": 0,
+                            "risk_max": 30,
+                            "current_risk": 0,
+                            "unallocated_amount": 22582,
+                            "last_recalculate_value_timestamp": 1743901094,
+                            "last_rebalance_timestamp": 1743901094,
+                            "last_rebalance_slot": 0,
+                            "constraints": [],
+                            "allocations": []
+                        }
+                    ]
+                }
+            },
+            "UserCurrentValueResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "result": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "base_asset": {
+                                    "type": "string",
+                                    "example": "USDC"
+                                },
+                                "position": {
+                                    "type": "object",
+                                    "properties": {
+                                        "fund_id": {
+                                            "type": "string",
+                                            "example": "U74hJmRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3"
+                                        },
+                                        "base_asset_value": {
+                                            "type": "number",
+                                            "example": 1
+                                        },
+                                        "fiat_value": {
+                                            "type": "number",
+                                            "example": 8000
+                                        },
+                                        "percent_of_fund": {
+                                            "type": "number",
+                                            "example": 50
+                                        },
+                                        "total_fund_value": {
+                                            "type": "number",
+                                            "example": 20
+                                        }
+                                    },
+                                    "required": [
+                                        "fund_id",
+                                        "base_asset_value",
+                                        "fiat_value",
+                                        "percent_of_fund",
+                                        "total_fund_value"
+                                    ]
+                                }
+                            },
+                            "required": [
+                                "base_asset",
+                                "position"
+                            ]
+                        },
+                        "example": [
+                            {
+                                "base_asset": "USDC",
+                                "position": {
+                                    "fund_id": "U74hJmRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3",
+                                    "base_asset_value": 1,
+                                    "fiat_value": 8000,
+                                    "percent_of_fund": 50,
+                                    "total_fund_value": 20
+                                }
+                            },
+                            {
+                                "base_asset": "USDC",
+                                "position": {
+                                    "fund_id": "9hz2NhiKBE6bKieJkpUhboLe3LEwMnqvnD5pyd796Raf",
+                                    "base_asset_value": 1,
+                                    "fiat_value": 8000,
+                                    "percent_of_fund": 50,
+                                    "total_fund_value": 20
+                                }
+                            }
+                        ]
+                    }
+                },
+                "required": [
+                    "success",
+                    "result"
+                ]
+            },
+            "StatsResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "result": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "time_stamps": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    "example": [
+                                        "2025-04-21T02:37:51.502632Z",
+                                        "2025-04-21T02:22:42.182773Z"
+                                    ]
+                                },
+                                "base_asset_value": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "number"
+                                    },
+                                    "example": [
+                                        10.0,
+                                        10.0
+                                    ]
+                                },
+                                "fiat_value": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "number"
+                                    },
+                                    "example": [
+                                        860.0,
+                                        860.0
+                                    ]
+                                },
+                                "yeild_percentage": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "number"
+                                    },
+                                    "example": [
+                                        8.4,
+                                        8.4
+                                    ]
+                                },
+                                "meta": {
+                                    "type": "object",
+                                    "properties": {
+                                        "base_asset": {
+                                            "type": "string",
+                                            "example": "USDC"
+                                        },
+                                        "fund_id": {
+                                            "type": "string",
+                                            "example": "fund_1285543088"
+                                        },
+                                        "fiat_currency": {
+                                            "type": "string",
+                                            "example": "USD"
+                                        },
+                                        "start": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2025-04-21T02:20:42.225Z"
+                                        },
+                                        "end": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2025-04-21T02:39:51.519Z"
+                                        },
+                                        "granularity": {
+                                            "type": "string",
+                                            "example": "daily"
+                                        }
+                                    },
+                                    "required": [
+                                        "base_asset",
+                                        "fund_id",
+                                        "fiat_currency",
+                                        "start",
+                                        "end",
+                                        "granularity"
+                                    ]
+                                }
+                            },
+                            "required": [
+                                "time_stamps",
+                                "base_asset_value",
+                                "fiat_value",
+                                "yeild_percentage",
+                                "meta"
+                            ]
+                        },
+                        "example": [
+                            {
+                                "time_stamps": [
+                                    "2025-04-21T02:37:51.502632Z",
+                                    "2025-04-21T02:22:42.182773Z"
+                                ],
+                                "base_asset_value": [
+                                    10.0,
+                                    10.0
+                                ],
+                                "fiat_value": [
+                                    860.0,
+                                    860.0
+                                ],
+                                "yeild_percentage": [
+                                    8.4,
+                                    8.4
+                                ],
+                                "meta": {
+                                    "base_asset": "USDC",
+                                    "fund_id": "fund_1285543088",
+                                    "fiat_currency": "USD",
+                                    "start": "2025-04-21T02:20:42.225Z",
+                                    "end": "2025-04-21T02:39:51.519Z",
+                                    "granularity": "daily"
+                                }
+                            },
+                            {
+                                "time_stamps": [
+                                    "2025-04-21T02:22:42.177277Z",
+                                    "2025-04-21T02:37:51.498116Z"
+                                ],
+                                "base_asset_value": [
+                                    10.0,
+                                    10.0
+                                ],
+                                "fiat_value": [
+                                    860.0,
+                                    860.0
+                                ],
+                                "yeild_percentage": [
+                                    8.4,
+                                    8.4
+                                ],
+                                "meta": {
+                                    "base_asset": "USDC",
+                                    "fund_id": "fund_1285543085",
+                                    "fiat_currency": "USD",
+                                    "start": "2025-04-21T02:20:42.225Z",
+                                    "end": "2025-04-21T02:39:51.519Z",
+                                    "granularity": "daily"
+                                }
+                            }
+                        ]
+                    }
+                },
+                "required": [
+                    "success",
+                    "result"
+                ]
+            },
+            "DepositInstructions": {
+                "type": "object",
+                "properties": {
+                    "program_id": {
+                        "type": "string",
+                        "description": "The public key of the program to invoke",
+                        "example": "pubkey"
+                    },
+                    "accounts": {
+                        "type": "array",
+                        "description": "List of accounts involved in the instruction",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "pubkey": {
+                                    "type": "string",
+                                    "description": "The public key of the account",
+                                    "example": "pubkey"
+                                },
+                                "is_signer": {
+                                    "type": "boolean",
+                                    "description": "Indicates if this account is a signer"
+                                },
+                                "is_writable": {
+                                    "type": "boolean",
+                                    "description": "Indicates if this account is writable"
+                                }
+                            },
+                            "required": [
+                                "pubkey",
+                                "is_signer",
+                                "is_writable"
+                            ]
+                        },
+                        "example": [
+                            {
+                                "pubkey": "pubkey",
+                                "is_signer": false,
+                                "is_writable": false
+                            },
+                            {
+                                "pubkey": "pubkey",
+                                "is_signer": false,
+                                "is_writable": true
+                            },
+                            {
+                                "pubkey": "pubkey",
+                                "is_signer": false,
+                                "is_writable": true
+                            },
+                            {
+                                "pubkey": "pubkey",
+                                "is_signer": false,
+                                "is_writable": true
+                            },
+                            {
+                                "pubkey": "pubkey",
+                                "is_signer": true,
+                                "is_writable": true
+                            },
+                            {
+                                "pubkey": "pubkey",
+                                "is_signer": false,
+                                "is_writable": true
+                            },
+                            {
+                                "pubkey": "pubkey",
+                                "is_signer": false,
+                                "is_writable": false
+                            },
+                            {
+                                "pubkey": "pubkey",
+                                "is_signer": false,
+                                "is_writable": false
+                            },
+                            {
+                                "pubkey": "pubkey",
+                                "is_signer": false,
+                                "is_writable": true
+                            },
+                            {
+                                "pubkey": "pubkey",
+                                "is_signer": false,
+                                "is_writable": false
+                            },
+                            {
+                                "pubkey": "pubkey",
+                                "is_signer": false,
+                                "is_writable": false
+                            },
+                            {
+                                "pubkey": "pubkey",
+                                "is_signer": false,
+                                "is_writable": true
+                            },
+                            {
+                                "pubkey": "pubkey",
+                                "is_signer": false,
+                                "is_writable": false
+                            },
+                            {
+                                "pubkey": "pubkey",
+                                "is_signer": false,
+                                "is_writable": false
+                            },
+                            {
+                                "pubkey": "pubkey",
+                                "is_signer": false,
+                                "is_writable": false
+                            },
+                            {
+                                "pubkey": "pubkey",
+                                "is_signer": false,
+                                "is_writable": true
+                            },
+                            {
+                                "pubkey": "pubkey",
+                                "is_signer": false,
+                                "is_writable": false
+                            },
+                            {
+                                "pubkey": "pubkey",
+                                "is_signer": false,
+                                "is_writable": false
+                            },
+                            {
+                                "pubkey": "pubkey",
+                                "is_signer": false,
+                                "is_writable": false
+                            },
+                            {
+                                "pubkey": "pubkey",
+                                "is_signer": false,
+                                "is_writable": false
+                            }
+                        ]
+                    },
+                    "data": {
+                        "type": "array",
+                        "description": "Instruction data as a list of bytes",
+                        "items": {
+                            "type": "integer",
+                            "format": "uint8",
+                            "minimum": 0,
+                            "maximum": 255
+                        },
+                        "example": [
+                            13,
+                            0,
+                            225,
+                            245,
+                            5,
+                            0,
+                            0,
+                            0,
+                            0
+                        ]
+                    }
+                },
+                "required": [
+                    "program_id",
+                    "accounts",
+                    "data"
+                ]
+            },
+            "SerializedTransactionResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "description": "Indicates if the transaction was successfully created",
+                        "example": true
+                    },
+                    "result": {
+                        "type": "string",
+                        "description": "The base64-encoded serialized transaction",
+                        "example": "serialized_transaction"
+                    }
+                },
+                "required": [
+                    "success",
+                    "result"
+                ]
+            },
+            "ErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "description": "Indicates if the transaction was successfully created",
+                        "example": true
+                    },
+                    "result": {
+                        "type": "string",
+                        "description": "The base64-encoded serialized transaction",
+                        "example": "serialized_transaction"
+                    }
+                },
+                "required": [
+                    "success",
+                    "result"
+                ]
+            }
+        },
+        "securitySchemes": {
+            "apiKeyAuth": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "api-key"
+            }
+        }
+    }
+}

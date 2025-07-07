@@ -1,0 +1,94 @@
+
+## 1. Utilization Ratio (Measures Pool Liquidity Stress)
+
+<div style={{ textAlign: 'center', fontSize: '1.5rem' }}>
+  $ \text{Utilization Ratio} = \frac{\text{Total Borrows}}{\text{Total Deposits}} $
+</div>
+
+<CardGroup cols={3}>
+  <Card title="Low utilization (<50%)" icon={<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-columns2-icon lucide-columns-2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M12 3v18"/></svg>}>
+    Low yield, excessive idle liquidity
+  </Card>
+  <Card title="Optimal utilization (50-80%)" icon={<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-columns3-icon lucide-columns-3"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="M15 3v18"/></svg>}>
+    Balanced lending efficiency
+  </Card>
+  <Card title="High utilization (>80%)" icon={<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-columns4-icon lucide-columns-4"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7.5 3v18"/><path d="M12 3v18"/><path d="M16.5 3v18"/></svg>}>
+    Increased withdrawal risks, higher liquidation chances
+  </Card>
+</CardGroup>
+
+---
+
+## 2. Liquidations at Risk (Measures Potential Liquidation Exposure)
+
+<br />
+
+<div style={{ textAlign: 'center', fontSize: '0.9rem' }}>
+  $$ \text{Liquidations at Risk} = \sum (\text{Borrowers Below Liquidation Threshold} \times \text{Borrow Amount}) $$
+</div>
+
+<br />
+
+<Note> OR (if borrower data unavailable)</Note>
+
+<br />
+
+<div style={{ textAlign: 'center', fontSize: '1.2rem' }}>
+  $ \text{Liquidation Risk} = \frac{\text{Total Borrows} \times (\text{Utilization Ratio} - \text{Safe Utilization Threshold})}{\text{Collateral Factor}} $
+</div>
+
+<br />
+
+<Card title="Identifies borrowers at risk of liquidation due to market volatility." icon={<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-alert-icon lucide-circle-alert"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>} horizontal>
+  </Card>
+  <Card title="Safe Utilization Threshold is typically set at 70-80%." icon={<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-check-icon lucide-shield-check"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>} horizontal>
+</Card>
+
+---
+
+## 3. Value at Risk (VaR) (Estimates Potential Capital Loss in Extreme Events)
+
+<br />
+
+<div style={{ textAlign: 'center', fontSize: '1.0rem' }}>
+  $ \text{VaR} = \text{Total Assets} \times \text{Price Volatility Factor} \times \text{Confidence Level (Z-score)} $
+</div>
+
+<br />
+
+<Info>Example (95% confidence, stable asset volatility ~5%):</Info>
+
+<div style={{ textAlign: 'center', fontSize: '1.5rem' }}>
+  $ \text{VaR} = \sum (\text{Asset Supply} \times \text{Volatility Factor} \times 1.65) $
+</div>
+
+<Card title="Ensures liquidity reserves align with potential market movements." icon={<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-lock2-icon lucide-file-lock-2"><path d="M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v1"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><rect width="8" height="5" x="2" y="13" rx="1"/><path d="M8 13v-2a2 2 0 1 0-4 0v2"/></svg>} horizontal>
+  </Card>
+
+## 4. Borrow Usage (Measures Borrower Leverage)
+
+<br />
+
+<div style={{ textAlign: 'center', fontSize: '1.5rem' }}>
+  $ \text{Borrow Usage} = \frac{\text{Total Borrows}}{\text{Max Borrowing Power}} $
+</div>
+
+<CardGroup cols={2}>
+  <Card title="Higher borrow usage = greater liquidation sensitivity" icon={<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gem-icon lucide-gem"><path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></svg>}>
+  </Card>
+  <Card title="Used to determine capital efficiency and adjust pool weights dynamically." icon={<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles-icon lucide-sparkles"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/></svg>}>
+  </Card>
+</CardGroup>
+
+## 5. Supply vs Borrow APR Spread (Measures Pool Efficiency)
+
+<br />
+
+<div style={{ textAlign: 'center', fontSize: '1.5rem' }}>
+  $ \text{Spread} = \text{Borrow APR} - \text{Supply APR} $
+</div>
+
+
+- $$Narrow Spread:$$ Efficient capital allocation.
+
+- $$Wide Spread:$$ Possible liquidity inefficiencies.

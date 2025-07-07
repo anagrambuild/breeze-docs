@@ -1,0 +1,41 @@
+---
+title: 'Breeze API Documentation'
+description: 'Integrate Breeze into Your Product with the help of simple Breeze API'
+---
+---
+# What is Breeze API?
+
+Breeze API provides a simple and fast way to integrate Breeze's risk-managed yield functionality into your application, offering the same familiar 
+experience as traditional web2 APIs. With straightforward https endpoints and JSON responses, you can completely integrate Breeze into your existing 
+app without requiring significant code rewrites or blockchain expertise from your development team. The API abstracts away the complexity of Solana 
+blockchain interactions, allowing you to focus on building your user experience while leveraging Breeze's sophisticated risk management and yield 
+optimization features.
+
+---
+
+# API Methods Overview
+
+## Fund Information
+- **`GET /getFund/{fund_id}`** - Retrieve detailed information about a specific fund, including current value, risk metrics, allocations, and constraints.
+- **`GET /getUser/{user_id}`** - Get user information and their associated fund data.
+- **`GET /getUserFund/{user_id}`** - Retrieve all funds associated with a specific user.
+- **`GET /fund/{base_asset}`** - Get all funds that use a specific base asset (e.g., USDC, USDT).
+
+## Portfolio Analytics
+- **`GET /user/{user_id}/current_value`** - Get real-time portfolio value with optional currency conversion and filtering by fund or base asset.
+- **`GET /user/{user_id}/stats`** - Retrieve historical performance data including yield percentages, value changes, and time-series data for a specified date range.
+
+## Transaction Generation
+- **`POST /deposit/ix`** - Generate Solana instructions for depositing funds into a Breeze fund.
+- **`POST /deposit/tx`** - Generate a complete, versioned serialized unsigned for depositing funds.
+- **`POST /withdraw/ix`** - Generate Solana instructions for withdrawing shares from a fund.
+- **`POST /withdraw/tx`** - Generate a complete, versioned serialized unsigned for withdrawing funds.
+- **`POST /create_user_fund/tx`** - Generate versioned serialized unsigned transaction for the initial user fund account creation which is required before first deposit.
+
+
+<Info>
+**Getting Started**: Begin by creating a user fund account with `POST /create_user_fund/tx`, then use the deposit endpoints to fund your account. Monitor your portfolio with the analytics endpoints.
+</Info>
+<Tip>
+**Best Practice**: Always check current portfolio value before making transactions to ensure accurate calculations and optimal timing.
+</Tip>
