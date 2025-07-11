@@ -27,7 +27,8 @@
           {
             "group": "Breeze",
             "pages": [
-              "introduction/introduction"
+              "introduction/introduction",
+              "introduction/integration-benefits"
             ]
           },
           {
@@ -96,24 +97,14 @@
         ]
       },
       {
-        "tab": "Breeze Admin API",
+        "tab": "Breeze Admin Portal",
         "groups": [
           {
-            "group": "Breeze Admin API",
+            "group": "Breeze Admin Portal",
             "pages": [
-              "breeze-admin-api/breeze-admin-api"
-            ]
-          },
-          {
-            "group": "Endpoint Examples",
-            "pages": [
-              "breeze-admin-api/endpoints/createUserFundTx",
-              "breeze-admin-api/endpoints/createUserFundIx",
-              "breeze-admin-api/endpoints/createFund",
-              "breeze-admin-api/endpoints/createNewApiUser",
-              "breeze-admin-api/endpoints/createNewApiAdmin",
-              "breeze-admin-api/endpoints/increaseCreditsLimit",
-              "breeze-admin-api/endpoints/recordAllFundStats"
+              "admin-portal/introduction",
+              "admin-portal/quickstart",
+              "admin-portal/functionality"
             ]
           }
         ]
@@ -205,12 +196,12 @@
       "anchors": [
         {
           "anchor": "Documentation",
-          "href": "https://breeze-5f3c750a.mintlify.app/",
+          "href": "https://docs.breeze.baby/introduction/welcome",
           "icon": "book-open-cover"
         },
         {
           "anchor": "Support",
-          "href": "https://mintlify.com/community",
+          "href": "https://t.me/breezedevs",
           "icon": "telegram"
         }
       ]
@@ -224,20 +215,20 @@
     "links": [
       {
         "label": "Support",
-        "href": "https://t.me.breeze.finance"
+        "href": "https://t.me/breezedevs"
       }
     ],
     "primary": {
       "type": "button",
       "label": "Dashboard",
-      "href": "https://breeze-5f3c750a.mintlify.app/"
+      "href": "https://docs.breeze.baby/introduction/welcome"
     }
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "x": "https://x.com/usebreezebaby",
+      "github": "https://github.com/anagrambuild/breeze-sdk",
+      "telegram": "https://t.me/breezedevs"
     }
   },
   "api": {

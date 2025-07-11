@@ -1049,7 +1049,7 @@
         },
         "/deposit/ix": {
             "post": {
-                "description": "This method will returns all the instruction required to preform the deposit instruction. It takes amount as input to do the deposit, If all is provided as true , then all the amount in token-account will be considered for deposit. User wallet-address and fund_id is also required.",
+                "description": "This method returns an array of instructions required to perform the deposit instruction. It takes amount as input to do the deposit, If all is provided as true, then all the amount in token-account will be considered for deposit. User wallet-address and fund_id is also required.",
                 "requestBody": {
                     "description": "Deposit instruction parameters",
                     "content": {
@@ -1088,7 +1088,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/DepositInstructions"
+                                    "$ref": "#/components/schemas/DepositInstructionsArray"
                                 }
                             }
                         }
@@ -2476,6 +2476,79 @@
                 "required": [
                     "success",
                     "result"
+                ]
+            },
+            "DepositInstructionsArray": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "description": "Indicates if the instructions were successfully generated",
+                        "example": true
+                    },
+                    "result": {
+                        "type": "array",
+                        "description": "Array of instructions required for the deposit operation",
+                        "items": {
+                            "$ref": "#/components/schemas/InstructionObject"
+                        }
+                    }
+                },
+                "required": [
+                    "success",
+                    "result"
+                ]
+            },
+            "InstructionObject": {
+                "type": "object",
+                "properties": {
+                    "program_id": {
+                        "type": "string",
+                        "description": "The public key of the program to invoke",
+                        "example": "pubkey"
+                    },
+                    "accounts": {
+                        "type": "array",
+                        "description": "List of accounts involved in the instruction",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "pubkey": {
+                                    "type": "string",
+                                    "description": "The public key of the account",
+                                    "example": "pubkey"
+                                },
+                                "is_signer": {
+                                    "type": "boolean",
+                                    "description": "Indicates if this account is a signer"
+                                },
+                                "is_writable": {
+                                    "type": "boolean",
+                                    "description": "Indicates if this account is writable"
+                                }
+                            },
+                            "required": [
+                                "pubkey",
+                                "is_signer",
+                                "is_writable"
+                            ]
+                        }
+                    },
+                    "data": {
+                        "type": "array",
+                        "description": "Instruction data as a list of bytes",
+                        "items": {
+                            "type": "integer",
+                            "format": "uint8",
+                            "minimum": 0,
+                            "maximum": 255
+                        }
+                    }
+                },
+                "required": [
+                    "program_id",
+                    "accounts",
+                    "data"
                 ]
             },
             "DepositInstructions": {
