@@ -1,9 +1,130 @@
 ---
-mode: "center"
+mode: "custom"
 title: Welcome to Breeze
 ---
 
-<img 
+<div className="max-w-5xl mx-auto px-6 py-8">
+  
+  <div className="text-center mb-8">
+    {/* <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+      Welcome to <span style={{color: '#bc07c9'}}>Breeze Docs</span>
+    </h1> */}
+    
+    <div className="max-w-5xl mx-auto mb-8">
+      <img 
+        className="block dark:hidden rounded-xl shadow-lg w-full h-auto max-h-64 object-cover" 
+        src="/breeze-images/breeze-banner-light-mode.png" 
+        alt="Breeze light mode interface"
+      />
+      <img 
+        className="hidden dark:block rounded-xl shadow-lg w-full h-auto max-h-64 object-cover" 
+        src="/breeze-images/breeze-banner-dark-mode.png" 
+        alt="Breeze dark mode interface"
+      />
+    </div>
+  </div>
+
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-2">
+    <Card
+      title="Introduction"
+      icon={<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wind-icon lucide-wind"><path d="M12.8 19.6A2 2 0 1 0 14 16H2"/><path d="M17.5 8a2.5 2.5 0 1 1 2 4H2"/><path d="M9.8 4.4A2 2 0 1 1 11 8H2"/></svg>}
+      href="/introduction/introduction"
+    >
+      <div className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+        Welcome to Breeze
+      </div>
+    </Card>
+    
+    <Card
+      title="Integration Guide"
+      icon={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="8" height="8" x="3" y="3" rx="2"/><path d="M7 11v4a2 2 0 0 0 2 2h4"/><rect width="8" height="8" x="13" y="13" rx="2"/></svg>}
+      href="/Integration-Guide/Integration-Guide"
+    >
+      <div className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+        Find the best way to integrate Breeze in your product
+      </div>
+    </Card>
+
+    <Card
+      title="Breeze MCP Server"
+      icon={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 6V2H8"/><path d="m8 18-4 4V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2Z"/><path d="M2 12h2"/><path d="M9 11v2"/><path d="M15 11v2"/><path d="M20 12h2"/></svg>}
+      href="/mcp-server/quickstart"
+    >
+      <div className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+        Get started with the Breeze MCP Server
+      </div>
+    </Card>
+  </div>
+
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-2">
+    <Card
+      title="Breeze API"
+      icon={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 4.1 12 6"/><path d="m5.1 8-2.9-.8"/><path d="m6 12-1.9 2"/><path d="M7.2 2.2 8 5.1"/><path d="M9.037 9.69a.498.498 0 0 1 .653-.653l11 4.5a.5.5 0 0 1-.074.949l-4.349 1.041a1 1 0 0 0-.74.739l-1.04 4.35a.5.5 0 0 1-.95.074z"/></svg>}
+      href="/breeze-api/breeze-api"
+    >
+      <div className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+        Breeze API Documentation
+      </div>
+    </Card>
+
+    <Card
+      title="Breeze SDK"
+      icon={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><polyline points="3.29 7 12 12 20.71 7"/><path d="m7.5 4.27 9 5.15"/></svg>}
+      href="/breeze-sdk/breeze-sdk"
+    >
+      <div className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+        Breeze Typescript SDK Documentation
+      </div>
+    </Card>
+
+    <Card
+      title="Breeze Admin Portal"
+      icon={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="M6.376 18.91a6 6 0 0 1 11.249.003"/><circle cx="12" cy="11" r="4"/></svg>}
+      href="/admin-portal/introduction"
+    >
+      <div className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+        Start integrating Breeze by signing in the Breeze Admin Portal
+      </div>
+    </Card>
+  </div>
+
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-2">
+    <Card
+      title="Breeze UI Library"
+      icon={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 13a3 3 0 1 0-6 0"/><path d="M4 19.5v-15A2.5 2.0 0 0 1 6.5 2H19a1 1 0 0 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/><circle cx="12" cy="8" r="2"/></svg>}
+      href="/ui-library/introduction"
+    >
+      <div className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+        Explore our comprehensive UI component library
+      </div>
+    </Card>
+
+    <Card
+      title="Get Your API Key"
+      icon={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"/><circle cx="16.5" cy="7.5" r=".5" fill="currentColor"/></svg>}
+      href="/get-your-api-key/instruction"
+    >
+      <div className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+        Get Your API Key to start using Breeze API and SDK
+      </div>
+    </Card>
+
+    <Card
+      title="Contact Us"
+      icon={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10,8 16,12 10,16 10,8"/></svg>}
+      href="/contact-us/contact-us"
+    >
+      <div className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+        Get in touch with the Breeze Team
+      </div>
+    </Card>
+  </div>
+
+</div>
+
+
+{/* Previous version:  */}
+{/* <img 
   className="block dark:hidden rounded-lg" 
   src="/breeze-images/breeze-banner-light-mode.png" 
   alt="Light mode interface"
@@ -15,7 +136,7 @@ title: Welcome to Breeze
   alt="Dark mode interface"
 />
 
-<CardGroup cols={2}>
+<CardGroup cols={3}>
   <Card
     title="Introduction"
     icon={<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wind-icon lucide-wind"><path d="M12.8 19.6A2 2 0 1 0 14 16H2"/><path d="M17.5 8a2.5 2.5 0 1 1 2 4H2"/><path d="M9.8 4.4A2 2 0 1 1 11 8H2"/></svg>} 
@@ -30,6 +151,18 @@ title: Welcome to Breeze
   >
     Find the best way to integrate Breeze in your product
   </Card>
+
+
+
+
+  <Card
+    title="Breeze MCP Server"
+    icon={<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bot-message-square-icon lucide-bot-message-square"><path d="M12 6V2H8"/><path d="m8 18-4 4V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2Z"/><path d="M2 12h2"/><path d="M9 11v2"/><path d="M15 11v2"/><path d="M20 12h2"/></svg>} 
+    href="/introduction/introduction"
+  >
+    AI is changing our world!
+  </Card>
+
   <Card
     title="Breeze API"
     icon={<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mouse-pointer-click-icon lucide-mouse-pointer-click"><path d="M14 4.1 12 6"/><path d="m5.1 8-2.9-.8"/><path d="m6 12-1.9 2"/><path d="M7.2 2.2 8 5.1"/><path d="M9.037 9.69a.498.498 0 0 1 .653-.653l11 4.5a.5.5 0 0 1-.074.949l-4.349 1.041a1 1 0 0 0-.74.739l-1.04 4.35a.5.5 0 0 1-.95.074z"/></svg>}
@@ -72,4 +205,4 @@ title: Welcome to Breeze
   >
     Schedule a Call with us
   </Card>
-</CardGroup>
+</CardGroup> */}

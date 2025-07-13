@@ -70,6 +70,17 @@
         ]
       },
       {
+        "tab": "Breeze MCP Server",
+        "groups": [
+          {
+            "group": "Set up Breeze MCP Server",
+            "pages": [
+              "mcp-server/quickstart"
+            ]
+          }
+        ]
+      },
+      {
         "tab": "Breeze API",
         "groups": [
           {
