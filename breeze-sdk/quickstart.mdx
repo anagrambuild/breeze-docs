@@ -187,14 +187,8 @@ async function example() {
     const fund = await sdk.getFund('DYUgGU88Fsyr2xmYAv2p8jXVPa3jrcUZmb36C8EgfpaW');
     console.log('Fund:', fund.result.fund_id, fund.result.base_asset);
 
-    // 2. Create user fund association
-    const userFund = await sdk.createUserFundTransaction(
-      'DYUgGU88Fsyr2xmYAv2p8jXVPa3jrcUZmb36C8EgfpaW',
-      '4Z9byLWE4DhH3KM84mjrkggkCxPuU8eBFgM44Enj41bh'
-    );
-    console.log('User fund created:', userFund.success);
 
-    // 3. Create deposit transaction
+    // 2. Create deposit transaction
     const deposit = await sdk.createDepositTransaction({
       fundId: 'DYUgGU88Fsyr2xmYAv2p8jXVPa3jrcUZmb36C8EgfpaW',
       amount: 100,
@@ -202,7 +196,7 @@ async function example() {
     });
     console.log('Deposit transaction:', deposit.result);
 
-    // 4. Get deposit instructions (for manual transaction building)
+    // 3. Get deposit instructions (for manual transaction building)
     const instructions = await sdk.getDepositInstructions({
       fundId: 'DYUgGU88Fsyr2xmYAv2p8jXVPa3jrcUZmb36C8EgfpaW',
       amount: 100,
@@ -318,7 +312,6 @@ The SDK interacts with these API endpoints:
 - `GET /userstats/{user_id}?start=...&end=...` - Get user statistics
 
 ### POST Endpoints  
-- `POST /create_user_fund/tx` - Create user fund association
 - `POST /deposit/tx` - Create deposit transaction
 - `POST /withdraw/tx` - Create withdraw transaction
 - `POST /deposit/ix` - Get deposit instructions

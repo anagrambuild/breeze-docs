@@ -10,7 +10,7 @@
     },
     "servers": [
         {
-            "url": "https://breeze-api.com"
+            "url": "https://api.breeze.baby"
         }
     ],
     "security": [
@@ -19,7 +19,7 @@
         }
     ],
     "paths": {
-        "/getFund/{fund_id}": {
+        "/getfund/{fund_id}": {
             "get": {
                 "description": "This method returns all relevant information of a fund for a given fund_id",
                 "parameters": [
@@ -175,7 +175,7 @@
                 }
             }
         },
-        "/getUser/{user_id}": {
+        "/user/{user_id}": {
             "get": {
                 "description": "This method returns all relevant information about a user for given user_id",
                 "parameters": [
@@ -861,7 +861,7 @@
                         "name": "end",
                         "in": "query",
                         "description": "Ending time-range for the stats-calculation, e. g. 2025-04-21T02:20:42.225Z",
-                        "required": false,
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -1057,27 +1057,40 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "fund_id": {
-                                        "type": "string",
-                                        "description": "ID of the Fund"
-                                    },
-                                    "amount": {
-                                        "type": "integer",
-                                        "description": "Amount in Base Asset to deposit"
-                                    },
-                                    "all": {
-                                        "type": "boolean",
-                                        "description": "If true, ignore amount and operate on the entire balance"
-                                    },
-                                    "user_key": {
-                                        "type": "string",
-                                        "description": "User Address"
-                                    },
-                                    "payer_key": {
-                                        "type": "string",
-                                        "description": "User Address"
+                                    "params": {
+                                        "type": "object",
+                                        "properties": {
+                                            "fund_id": {
+                                                "type": "string",
+                                                "description": "ID of the Fund"
+                                            },
+                                            "amount": {
+                                                "type": "integer",
+                                                "description": "Amount in Base Asset to deposit"
+                                            },
+                                            "all": {
+                                                "type": "boolean",
+                                                "description": "If true, ignore amount and operate on the entire balance"
+                                            },
+                                            "user_key": {
+                                                "type": "string",
+                                                "description": "User Address"
+                                            },
+                                            "payer_key": {
+                                                "type": "string",
+                                                "description": "Payer Address"
+                                            }
+                                        },
+                                        "required": [
+                                            "user_key",
+                                            "fund_id",
+                                            "amount"
+                                        ]
                                     }
-                                }
+                                },
+                                "required": [
+                                    "params"
+                                ]
                             }
                         }
                     }
@@ -1242,27 +1255,40 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "fund_id": {
-                                        "type": "string",
-                                        "description": "ID of the Fund"
-                                    },
-                                    "amount": {
-                                        "type": "integer",
-                                        "description": "Amount in Base Asset to deposit"
-                                    },
-                                    "all": {
-                                        "type": "boolean",
-                                        "description": "If true, ignore amount and operate on the entire balance"
-                                    },
-                                    "user_key": {
-                                        "type": "string",
-                                        "description": "User Address"
-                                    },
-                                    "payer_key": {
-                                        "type": "string",
-                                        "description": "User Address"
+                                    "params": {
+                                        "type": "object",
+                                        "properties": {
+                                            "fund_id": {
+                                                "type": "string",
+                                                "description": "ID of the Fund"
+                                            },
+                                            "amount": {
+                                                "type": "integer",
+                                                "description": "Amount in Base Asset to deposit"
+                                            },
+                                            "all": {
+                                                "type": "boolean",
+                                                "description": "If true, ignore amount and operate on the entire balance"
+                                            },
+                                            "user_key": {
+                                                "type": "string",
+                                                "description": "User Address"
+                                            },
+                                            "payer_key": {
+                                                "type": "string",
+                                                "description": "Payer Address"
+                                            }
+                                        },
+                                        "required": [
+                                            "user_key",
+                                            "fund_id",
+                                            "amount"
+                                        ]
                                     }
-                                }
+                                },
+                                "required": [
+                                    "params"
+                                ]
                             }
                         }
                     }
@@ -1427,27 +1453,40 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "fund_id": {
-                                        "type": "string",
-                                        "description": "ID of the Fund"
-                                    },
-                                    "shares": {
-                                        "type": "integer",
-                                        "description": "Amount in of shares to withdraw"
-                                    },
-                                    "all": {
-                                        "type": "boolean",
-                                        "description": "If true, ignore amount and operate on the entire balance"
-                                    },
-                                    "user_key": {
-                                        "type": "string",
-                                        "description": "User Address"
-                                    },
-                                    "payer_key": {
-                                        "type": "string",
-                                        "description": "User Address"
+                                    "params": {
+                                        "type": "object",
+                                        "properties": {
+                                            "fund_id": {
+                                                "type": "string",
+                                                "description": "ID of the Fund"
+                                            },
+                                            "shares": {
+                                                "type": "integer",
+                                                "description": "Amount in Base Asset to deposit"
+                                            },
+                                            "all": {
+                                                "type": "boolean",
+                                                "description": "If true, ignore amount and operate on the entire balance"
+                                            },
+                                            "user_key": {
+                                                "type": "string",
+                                                "description": "User Address"
+                                            },
+                                            "payer_key": {
+                                                "type": "string",
+                                                "description": "Payer Address"
+                                            }
+                                        },
+                                        "required": [
+                                            "user_key",
+                                            "fund_id",
+                                            "shares"
+                                        ]
                                     }
-                                }
+                                },
+                                "required": [
+                                    "params"
+                                ]
                             }
                         }
                     }
@@ -1458,7 +1497,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/DepositInstructions"
+                                    "$ref": "#/components/schemas/WithdrawInstructionResponse"
                                 }
                             }
                         }
@@ -1612,27 +1651,40 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "fund_id": {
-                                        "type": "string",
-                                        "description": "ID of the Fund"
-                                    },
-                                    "shares": {
-                                        "type": "integer",
-                                        "description": "Amount in of shares to withdraw"
-                                    },
-                                    "all": {
-                                        "type": "boolean",
-                                        "description": "If true, ignore amount and operate on the entire balance"
-                                    },
-                                    "user_key": {
-                                        "type": "string",
-                                        "description": "User Address"
-                                    },
-                                    "payer_key": {
-                                        "type": "string",
-                                        "description": "User Address"
+                                    "params": {
+                                        "type": "object",
+                                        "properties": {
+                                            "fund_id": {
+                                                "type": "string",
+                                                "description": "ID of the Fund"
+                                            },
+                                            "shares": {
+                                                "type": "integer",
+                                                "description": "Amount in Base Asset to deposit"
+                                            },
+                                            "all": {
+                                                "type": "boolean",
+                                                "description": "If true, ignore amount and operate on the entire balance"
+                                            },
+                                            "user_key": {
+                                                "type": "string",
+                                                "description": "User Address"
+                                            },
+                                            "payer_key": {
+                                                "type": "string",
+                                                "description": "Payer Address"
+                                            }
+                                        },
+                                        "required": [
+                                            "user_key",
+                                            "fund_id",
+                                            "shares"
+                                        ]
                                     }
-                                }
+                                },
+                                "required": [
+                                    "params"
+                                ]
                             }
                         }
                     }
@@ -1787,36 +1839,75 @@
                 }
             }
         },
-        "/create_user_fund/tx": {
-            "post": {
-                "description": "This method will returns all the transaction required to create User Fund account.",
-                "requestBody": {
-                    "description": "Create User Fund transaction parameters",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "fund_id": {
-                                        "type": "string",
-                                        "description": "ID of the Fund"
-                                    },
-                                    "user_key": {
-                                        "type": "string",
-                                        "description": "User Address"
-                                    }
-                                }
-                            }
+        "/partner/{organization_id}/stats": {
+            "get": {
+                "description": "Retrieves funds-stats for the funds for an organization_id for a given time-range, including yield of the fund",
+                "parameters": [
+                    {
+                        "name": "organization_id",
+                        "in": "path",
+                        "description": "Organization ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
                         }
+                    },
+                    {
+                        "name": "start",
+                        "in": "query",
+                        "description": "Starting time-range for the stats-calculation, e. g. 2025-04-21T02:20:42.225Z",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "end",
+                        "in": "query",
+                        "description": "Ending time-range for the stats-calculation, e. g. 2025-04-21T02:20:42.225Z",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fiat_value",
+                        "in": "query",
+                        "description": "To convert the value-data to user provided currency",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "EUR"
+                    },
+                    {
+                        "name": "fund_id",
+                        "in": "query",
+                        "description": "Filter the stats-result for a specific fund_id",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "111111111111111111111111111111111"
+                    },
+                    {
+                        "name": "base_asset",
+                        "in": "query",
+                        "description": "Filter the value-result for a specific base_asset",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "USDC"
                     }
-                },
+                ],
                 "responses": {
                     "200": {
                         "description": "Successful response",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/SerializedTransactionResponse"
+                                    "$ref": "#/components/schemas/PartnerStatsResponse"
                                 }
                             }
                         }
@@ -1937,19 +2028,19 @@
                                             }
                                         }
                                     },
+                                    "dbError": {
+                                        "value": {
+                                            "error": {
+                                                "success": false,
+                                                "message": "Error From the DB, couldnt process the query"
+                                            }
+                                        }
+                                    },
                                     "ValidationError": {
                                         "value": {
                                             "error": {
                                                 "success": false,
                                                 "message": "Incorrect  query or set of queries required not provided"
-                                            }
-                                        }
-                                    },
-                                    "BreezeProgramError": {
-                                        "value": {
-                                            "error": {
-                                                "success": false,
-                                                "message": "Error from Breeze Smart Contract"
                                             }
                                         }
                                     }
@@ -1989,9 +2080,6 @@
                     },
                     "base_asset_decimals": {
                         "type": "integer"
-                    },
-                    "user_id": {
-                        "type": "string"
                     },
                     "total_shares": {
                         "type": "integer"
@@ -2048,7 +2136,6 @@
                     "fund_id": "GiADBNc22AVbkQ5CYV5RBoG4YrXKx8oUQYL2n5YYtgZp",
                     "base_asset": "USDC",
                     "base_asset_decimals": 18,
-                    "user_id": "9hz2NhiKBE6bKieJkpUhboLe3LEwMnqvnD5pyd796Raf",
                     "total_shares": 1224,
                     "share_price": 100,
                     "current_value": 100000,
@@ -2134,7 +2221,6 @@
                             "fund_id": "GiADBNc22AVbkQ5CYV5RBoG4YrXKx8oUQYL2n5YYtgZp",
                             "base_asset": "USDC",
                             "base_asset_decimals": 18,
-                            "user_id": "9hz2NhiKBE6bKieJkpUhboLe3LEwMnqvnD5pyd796Raf",
                             "total_shares": 1224,
                             "share_price": 100,
                             "current_value": 100000,
@@ -2153,7 +2239,6 @@
                             "fund_id": "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3",
                             "base_asset": "PYUSDC",
                             "base_asset_decimals": 18,
-                            "user_id": "9hz2NhiKBE6bKieJkpUhboLe3LEwMnqvnD5pyd796Raf",
                             "total_shares": 1224,
                             "share_price": 100,
                             "current_value": 100000,
@@ -2196,7 +2281,6 @@
                             "fund_id": "GiADBNc22AVbkQ5CYV5RBoG4YrXKx8oUQYL2n5YYtgZp",
                             "base_asset": "USDC",
                             "base_asset_decimals": 18,
-                            "user_id": "9hz2NhiKBE6bKieJkpUhboLe3LEwMnqvnD5pyd796Raf",
                             "total_shares": 1224,
                             "share_price": 100,
                             "current_value": 100000,
@@ -2215,7 +2299,6 @@
                             "fund_id": "U74hJmRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3",
                             "base_asset": "USDC",
                             "base_asset_decimals": 18,
-                            "user_id": "9hz2NhiKBE6bKieJkpUhboLe3LEwMnqvnD5pyd796Raf",
                             "total_shares": 1224,
                             "share_price": 100,
                             "current_value": 100000,
@@ -2349,16 +2432,6 @@
                                         10.0
                                     ]
                                 },
-                                "fiat_value": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "number"
-                                    },
-                                    "example": [
-                                        860.0,
-                                        860.0
-                                    ]
-                                },
                                 "yeild_percentage": {
                                     "type": "array",
                                     "items": {
@@ -2412,7 +2485,6 @@
                             "required": [
                                 "time_stamps",
                                 "base_asset_value",
-                                "fiat_value",
                                 "yeild_percentage",
                                 "meta"
                             ]
@@ -2426,10 +2498,6 @@
                                 "base_asset_value": [
                                     10.0,
                                     10.0
-                                ],
-                                "fiat_value": [
-                                    860.0,
-                                    860.0
                                 ],
                                 "yeild_percentage": [
                                     8.4,
@@ -2453,10 +2521,6 @@
                                     10.0,
                                     10.0
                                 ],
-                                "fiat_value": [
-                                    860.0,
-                                    860.0
-                                ],
                                 "yeild_percentage": [
                                     8.4,
                                     8.4
@@ -2478,6 +2542,89 @@
                     "result"
                 ]
             },
+            "PartnerStatsResponse": {
+  "type": "object",
+  "properties": {
+    "success": {
+      "type": "boolean",
+      "example": true
+    },
+    "result": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "time_stamps": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "2025-07-12T15:34:39.406Z",
+              "2025-07-12T16:34:39.406Z"
+            ]
+          },
+          "base_asset_value": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "example": [100.0, 200.0]
+          },
+          "yeild_percentage": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "example": [0.0, 500.0]
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "base_asset": {
+                "type": "string",
+                "example": "PYUSD"
+              },
+              "fund_id": {
+                "type": "string",
+                "example": "fund_12855430823"
+              },
+              "start": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2025-07-11T15:34:39.406Z"
+              },
+              "end": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2025-07-13T19:34:39.406Z"
+              },
+              "granularity": {
+                "type": "string",
+                "example": "daily"
+              }
+            },
+            "required": [
+              "base_asset",
+              "fund_id",
+              "start",
+              "end",
+              "granularity"
+            ]
+          }
+        },
+        "required": [
+          "time_stamps",
+          "base_asset_value",
+          "yeild_percentage",
+          "meta"
+        ]
+      }
+    }
+  },
+  "required": ["success", "result"]
+}
+,
             "DepositInstructionsArray": {
                 "type": "object",
                 "properties": {
@@ -2728,6 +2875,62 @@
                         "type": "string",
                         "description": "The base64-encoded serialized transaction",
                         "example": "serialized_transaction"
+                    }
+                },
+                "required": [
+                    "success",
+                    "result"
+                ]
+            },
+            "WithdrawInstructionResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "result": {
+                        "type": "object",
+                        "properties": {
+                            "lut_address": {
+                                "type": "string",
+                                "description": "Lookup Table address"
+                            },
+                            "withdraw_instruction": {
+                                "type": "object",
+                                "properties": {
+                                    "program_id": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "description": "Byte array representing the program ID"
+                                    },
+                                    "accounts": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object"
+                                        },
+                                        "description": "Accounts involved in the instruction"
+                                    },
+                                    "data": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "description": "Instruction data as a byte array"
+                                    }
+                                },
+                                "required": [
+                                    "program_id",
+                                    "accounts",
+                                    "data"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "lut_address",
+                            "withdraw_instruction"
+                        ]
                     }
                 },
                 "required": [

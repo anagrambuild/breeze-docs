@@ -16,9 +16,9 @@ optimization features.
 # API Methods Overview
 
 ## Fund Information
-- **`GET /getFund/{fund_id}`** - Retrieve detailed information about a specific fund, including current value, risk metrics, allocations, and constraints.
-- **`GET /getUser/{user_id}`** - Get user information and their associated fund data.
-- **`GET /getUserFund/{user_id}`** - Retrieve all funds associated with a specific user.
+- **`GET /getfund/{fund_id}`** - Retrieve detailed information about a specific fund, including current value, risk metrics, allocations, and constraints.
+- **`GET /user/{user_id}`** - Get user information and their associated fund data.
+- **`GET /partner/{organization_id}/stats`** - Retrieve all funds associated with a specific organization and their stats.
 - **`GET /fund/{base_asset}`** - Get all funds that use a specific base asset (e.g., USDC, USDT).
 
 ## Portfolio Analytics
@@ -30,12 +30,7 @@ optimization features.
 - **`POST /deposit/tx`** - Generate a complete, versioned serialized unsigned for depositing funds.
 - **`POST /withdraw/ix`** - Generate Solana instructions for withdrawing shares from a fund.
 - **`POST /withdraw/tx`** - Generate a complete, versioned serialized unsigned for withdrawing funds.
-- **`POST /create_user_fund/tx`** - Generate versioned serialized unsigned transaction for the initial user fund account creation which is required before first deposit.
 
-
-<Info>
-**Getting Started**: Begin by creating a user fund account with `POST /create_user_fund/tx`, then use the deposit endpoints to fund your account. Monitor your portfolio with the analytics endpoints.
-</Info>
 <Tip>
 **Best Practice**: Always check current portfolio value before making transactions to ensure accurate calculations and optimal timing.
 </Tip>

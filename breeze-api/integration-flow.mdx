@@ -12,11 +12,6 @@ description: 'Explination of possible Breeze Integration using Breeze Admin API 
 </Card>
 
 <Steps>
-  {/* <Step title="Account Setup">
-    <Card title="Create User Fund Account" icon="user-plus">
-      Call `POST /create_user_fund/tx` (Breeze Admin API) with the user's wallet address and fund ID. This creates the necessary on-chain account for the user to participate in the fund. The user signs and submits this transaction to initialize their account.
-    </Card>
-  </Step> */}
   
   <Step title="Deposit Funds">
     <Card title="Process User Deposits" icon="arrow-down">
@@ -33,7 +28,7 @@ description: 'Explination of possible Breeze Integration using Breeze Admin API 
       Regularly update user portfolio data:
       - `GET /user/{user_id}/current_value` for real-time portfolio values
       - `GET /user/{user_id}/stats` for historical performance analytics
-      - `GET /getFund/{fund_id}` for fund-level risk metrics and allocations
+      - `GET /getfund/{fund_id}` for fund-level risk metrics and allocations
       - Display yield earned, current risk exposure, and portfolio growth
     </Card>
   </Step>
