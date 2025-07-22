@@ -57,37 +57,6 @@ sequenceDiagram
     B->>U: Withdrawal Successful
 ```
 
-{/* ## Core Components Architecture
-
-```mermaid
-graph TB
-    subgraph "Breeze Integration Module"
-        A[API Client] --> B[Transaction Manager]
-        B --> C[Balance Tracker]
-        C --> D[Portfolio Monitor]
-        
-        E[Wallet Interface] --> F[Key Management]
-        F --> G[Transaction Signer]
-        
-        H[Bot Interface] --> I[Command Handlers]
-        I --> J[Message Formatters]
-        J --> K[Keyboard Builders]
-    end
-    
-    subgraph "External Dependencies"
-        L[Breeze API]
-        M[Solana RPC]
-        N[Telegram Bot API]
-    end
-    
-    A --> L
-    B --> M
-    H --> N
-    
-    style A fill:#fff3e0
-    style E fill:#f1f8e9
-    style H fill:#e3f2fd
-``` */}
 
 ## Integration Patterns
 
@@ -97,35 +66,38 @@ Perfect for bots with traditional command interfaces:
 
 ```typescript
 class CommandBasedBreezeBot {
-    private breezeClient: BreezeAPIClient;
-    
-    constructor() {
-        this.breezeClient = new BreezeAPIClient({
-            baseURL: process.env.BREEZE_API_URL,
-            apiKey: process.env.BREEZE_API_KEY
-        });
-        
-        this.setupCommands();
-    }
-    
-    private setupCommands() {
-        this.bot.onText(/\/deposit (.+)/, this.handleDeposit.bind(this));
-        this.bot.onText(/\/withdraw (.+)/, this.handleWithdraw.bind(this));
-        this.bot.onText(/\/balance/, this.handleBalance.bind(this));
-        this.bot.onText(/\/yield/, this.handleYieldInfo.bind(this));
-    }
-    
     private async handleDeposit(msg: Message, match: RegExpExecArray) {
         const amount = parseFloat(match[1]);
         const chatId = msg.chat.id;
+        const userData = this.users.get(chatId)!;
         
         try {
-            const transaction = await this.breezeClient.createDeposit({
-                userKey: this.getUserWallet(chatId).publicKey,
-                amount: this.convertToTokenAmount(amount, 'USDC')
-            });
+            const tokenAmount = this.convertToTokenAmount(amount, 'USDC');
             
-            await this.processTransaction(chatId, transaction, 'deposit');
+            const requestBody = {
+                "params": {
+                    "fund_id": BREEZE_FUND_ID,
+                    "amount": Number(tokenAmount),
+                    "all": false,
+                    "user_key": userData.publicKey,
+                    "payer_key": null
+                }
+            };
+
+            const response = await fetch('http://localhost:8080/deposit/tx', {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-api-key": BREEZE_API_KEY
+                },
+                body: JSON.stringify(requestBody)
+            });
+
+            const data = await response.json() as BreezeApiResponse;
+            
+            if (data.success && data.result) {
+                await this.processTransaction(chatId, data.result, 'deposit');
+            }
         } catch (error) {
             await this.bot.sendMessage(chatId, `❌ Deposit failed: ${error.message}`);
         }
@@ -135,33 +107,35 @@ class CommandBasedBreezeBot {
 
 ### 2. Inline Keyboard Integration
 
-For bots with rich interactive interfaces:
+For bots with rich interactive interfaces (current implementation):
 
 ```typescript
 class InlineKeyboardBreezeBot {
     private async showYieldDashboard(chatId: number) {
-        const userWallet = this.getUserWallet(chatId);
-        const balance = await this.breezeClient.getUserValue(userWallet.publicKey);
-        const yield = await this.breezeClient.getCurrentYield();
+        const userData = this.users.get(chatId)!;
+        const publicKey = userData.publicKey!;
+        
+        const balance = await this.getUserCurrentValue(publicKey);
+        const yieldData = await this.getBreezeYieldFromAPI(publicKey);
         
         const message = `
 🌊 **Breeze Yield Dashboard**
 💰 Current Balance: $${balance.toFixed(2)}
-📈 APY: ${yield.toFixed(2)}%
+📈 APY: ${yieldData.toFixed(2)}%
         `;
         
         const keyboard = {
             inline_keyboard: [
                 [
-                    { text: '📥 Deposit', callback_data: 'deposit_menu' },
-                    { text: '📤 Withdraw', callback_data: 'withdraw_menu' }
+                    { text: '📥 Deposit', callback_data: 'deposit' },
+                    { text: '📤 Withdraw', callback_data: 'withdraw' }
                 ],
                 [
-                    { text: '📊 Portfolio', callback_data: 'portfolio_view' },
-                    { text: '📈 Yield History', callback_data: 'yield_history' }
+                    { text: '💳 Detailed Balances', callback_data: 'view_balances' },
+                    { text: '📈 Yield History', callback_data: 'view_yield_history' }
                 ],
                 [
-                    { text: '⚙️ Settings', callback_data: 'settings_menu' },
+                    { text: '⚙️ Settings', callback_data: 'settings_mock' },
                     { text: '❓ Help', callback_data: 'help_menu' }
                 ]
             ]
@@ -195,15 +169,16 @@ class ConversationalBreezeBot {
     }
     
     private async initiateDepositFlow(chatId: number) {
-        const balance = await this.getUserTokenBalance(chatId, 'USDC');
+        const userData = this.users.get(chatId)!;
+        const balances = await this.getBalances(userData.publicKey!);
         
         await this.bot.sendMessage(chatId, 
             `I can help you deposit USDC to earn yield! 💰\n\n` +
-            `Available: ${balance.toFixed(2)} USDC\n` +
+            `Available: ${balances.usdc.human.toFixed(2)} USDC\n` +
             `Please tell me how much you'd like to deposit:`
         );
         
-        this.setUserState(chatId, 'awaiting_deposit_amount');
+        userData.currentMenu = 'awaiting_deposit_amount';
     }
 }
 ```
@@ -216,58 +191,87 @@ class ConversationalBreezeBot {
 export class BreezeAPIClient {
     private baseURL: string;
     private apiKey: string;
-    private httpClient: AxiosInstance;
     
-    constructor(config: BreezeConfig) {
-        this.baseURL = config.baseURL;
-        this.apiKey = config.apiKey;
-        this.httpClient = axios.create({
-            baseURL: this.baseURL,
+    constructor(baseURL: string, apiKey: string) {
+        this.baseURL = baseURL;
+        this.apiKey = apiKey;
+    }
+    
+    async createDeposit(params: {
+        fundId: string;
+        amount: number;
+        all: boolean;
+        userKey: string;
+        payerKey?: string;
+    }): Promise<BreezeApiResponse> {
+        const response = await fetch(`${this.baseURL}/deposit/tx`, {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'api-key': this.apiKey
-            }
+                'x-api-key': this.apiKey
+            },
+            body: JSON.stringify({ params })
         });
+        
+        return await response.json();
     }
     
-    async createDeposit(params: DepositParams): Promise<TransactionResponse> {
-        const response = await this.httpClient.post('/deposit/tx', {
-            params: {
-                fund_id: params.fundId,
-                amount: params.amount,
-                all: params.all || false,
-                user_key: params.userKey,
-                payer_key: params.payerKey || null
+    async createWithdraw(params: {
+        fundId: string;
+        amount: number;
+        all: boolean;
+        userKey: string;
+        payerKey?: string;
+    }): Promise<BreezeApiResponse> {
+        const response = await fetch(`${this.baseURL}/withdraw/tx`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': this.apiKey
+            },
+            body: JSON.stringify({ params })
+        });
+        
+        return await response.json();
+    }
+    
+    async getUserBalances(userPubkey: string): Promise<BreezeUserBalancesResponse> {
+        const response = await fetch(`${this.baseURL}/user-balances/${userPubkey}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': this.apiKey
             }
         });
         
-        return this.validateResponse(response.data);
+        return await response.json();
     }
     
-    async createWithdraw(params: WithdrawParams): Promise<TransactionResponse> {
-        const response = await this.httpClient.post('/withdraw/tx', {
-            params: {
-                fund_id: params.fundId,
-                shares: params.shares,
-                all: params.all || false,
-                user_key: params.userKey,
-                payer_key: params.payerKey || null
-            }
-        });
+    async getUserYield(userPubkey: string, options?: {
+        fundId?: string;
+        page?: number;
+        limit?: number;
+    }): Promise<BreezeUserYieldResponse> {
+        let url = `${this.baseURL}/user-yield/${userPubkey}`;
+        const params = new URLSearchParams();
         
-        return this.validateResponse(response.data);
-    }
-    
-    async getUserValue(userPubkey: string): Promise<UserValueResponse> {
-        const response = await this.httpClient.get(`/user/${userPubkey}/current_value`);
-        return this.validateResponse(response.data);
-    }
-    
-    private validateResponse(data: any): any {
-        if (!data.success) {
-            throw new Error(data.error || 'API request failed');
+        if (options?.page) params.append('page', options.page.toString());
+        if (options?.limit) params.append('limit', options.limit.toString());
+        if (options?.fundId) params.append('fund_id', options.fundId);
+        
+        if (params.toString()) {
+            url += `?${params.toString()}`;
         }
-        return data.result;
+        
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': this.apiKey
+            }
+        });
+        
+        return await response.json();
     }
 }
 ```
@@ -277,189 +281,42 @@ export class BreezeAPIClient {
 ```typescript
 export class TransactionManager {
     private connection: Connection;
-    private retryConfig: RetryConfig;
     
-    constructor(rpcUrl: string, retryConfig?: RetryConfig) {
+    constructor(rpcUrl: string) {
         this.connection = new Connection(rpcUrl);
-        this.retryConfig = retryConfig || {
-            maxRetries: 3,
-            retryDelay: 1000,
-            backoffMultiplier: 2
-        };
     }
     
     async processTransaction(
         serializedTx: string,
-        userKeypair: Keypair,
-        options?: TransactionOptions
-    ): Promise<TransactionResult> {
-        const transaction = VersionedTransaction.deserialize(
-            Buffer.from(serializedTx, 'base64')
-        );
-        
-        // Sign transaction
-        transaction.sign([userKeypair]);
-        
-        // Submit with retry logic
-        return await this.submitWithRetry(transaction, options);
-    }
-    
-    private async submitWithRetry(
-        transaction: VersionedTransaction,
-        options?: TransactionOptions
-    ): Promise<TransactionResult> {
-        let lastError: Error;
-        
-        for (let attempt = 0; attempt < this.retryConfig.maxRetries; attempt++) {
-            try {
-                const signature = await this.connection.sendTransaction(
-                    transaction,
-                    options?.sendOptions
-                );
-                
-                const confirmation = await this.connection.confirmTransaction(
-                    signature,
-                    options?.confirmationStrategy || 'confirmed'
-                );
-                
-                if (confirmation.value.err) {
-                    throw new Error(`Transaction failed: ${confirmation.value.err}`);
-                }
-                
-                return {
-                    signature,
-                    confirmation,
-                    success: true
-                };
-                
-            } catch (error) {
-                lastError = error as Error;
-                
-                if (attempt < this.retryConfig.maxRetries - 1) {
-                    await this.sleep(this.retryConfig.retryDelay * 
-                        Math.pow(this.retryConfig.backoffMultiplier, attempt));
-                }
-            }
-        }
-        
-        throw lastError!;
-    }
-    
-    private sleep(ms: number): Promise<void> {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-}
-```
-
-### Portfolio Monitoring
-
-```typescript
-export class PortfolioMonitor {
-    private breezeClient: BreezeAPIClient;
-    private updateInterval: number;
-    private subscribers: Map<number, PortfolioSubscriber>;
-    
-    constructor(breezeClient: BreezeAPIClient, updateInterval = 30000) {
-        this.breezeClient = breezeClient;
-        this.updateInterval = updateInterval;
-        this.subscribers = new Map();
-    }
-    
-    subscribeToUpdates(chatId: number, subscriber: PortfolioSubscriber) {
-        this.subscribers.set(chatId, subscriber);
-        
-        // Start monitoring if first subscriber
-        if (this.subscribers.size === 1) {
-            this.startMonitoring();
-        }
-    }
-    
-    private async startMonitoring() {
-        while (this.subscribers.size > 0) {
-            for (const [chatId, subscriber] of this.subscribers) {
-                try {
-                    const userWallet = subscriber.getUserWallet();
-                    const currentValue = await this.breezeClient.getUserValue(userWallet.publicKey);
-                    const previousValue = subscriber.getPreviousValue();
-                    
-                    if (this.hasSignificantChange(currentValue, previousValue)) {
-                        await subscriber.onPortfolioUpdate({
-                            chatId,
-                            currentValue,
-                            previousValue,
-                            changePercent: this.calculateChangePercent(currentValue, previousValue)
-                        });
-                    }
-                    
-                    subscriber.setPreviousValue(currentValue);
-                } catch (error) {
-                    console.error(`Portfolio monitoring error for ${chatId}:`, error);
-                }
+        userKeypair: Keypair
+    ): Promise<{ signature: string; success: boolean }> {
+        try {
+            const transaction = VersionedTransaction.deserialize(
+                Buffer.from(serializedTx, 'base64')
+            );
+            
+            // Sign transaction
+            transaction.sign([userKeypair]);
+            
+            // Submit transaction
+            const signature = await this.connection.sendTransaction(transaction);
+            
+            // Wait for confirmation
+            const confirmation = await this.connection.confirmTransaction(
+                signature,
+                'confirmed'
+            );
+            
+            if (confirmation.value.err) {
+                throw new Error(`Transaction failed: ${confirmation.value.err}`);
             }
             
-            await this.sleep(this.updateInterval);
+            return { signature, success: true };
+            
+        } catch (error) {
+            console.error('Transaction processing error:', error);
+            throw error;
         }
-    }
-    
-    private hasSignificantChange(current: number, previous: number): boolean {
-        if (!previous) return false;
-        const changePercent = Math.abs((current - previous) / previous * 100);
-        return changePercent >= 1.0; // 1% threshold
-    }
-    
-    private calculateChangePercent(current: number, previous: number): number {
-        if (!previous) return 0;
-        return ((current - previous) / previous) * 100;
-    }
-}
-```
-
-## Bot Integration Patterns
-
-### State Management
-
-```typescript
-interface UserState {
-    chatId: number;
-    currentMenu: string;
-    wallet: {
-        publicKey: string;
-        privateKey: string; // Encrypted
-    };
-    portfolio: {
-        totalValue: number;
-        lastUpdate: Date;
-        positions: Position[];
-    };
-    preferences: {
-        notifications: boolean;
-        language: string;
-        currency: string;
-    };
-}
-
-export class StateManager {
-    private states: Map<number, UserState> = new Map();
-    private storage: StorageAdapter;
-    
-    constructor(storage: StorageAdapter) {
-        this.storage = storage;
-    }
-    
-    async getUserState(chatId: number): Promise<UserState> {
-        if (!this.states.has(chatId)) {
-            const state = await this.storage.load(chatId);
-            this.states.set(chatId, state || this.createDefaultState(chatId));
-        }
-        return this.states.get(chatId)!;
-    }
-    
-    async updateUserState(chatId: number, updates: Partial<UserState>): Promise<void> {
-        const currentState = await this.getUserState(chatId);
-        const newState = { ...currentState, ...updates };
-        
-        this.states.set(chatId, newState);
-        await this.storage.save(chatId, newState);
     }
 }
 ```
@@ -479,340 +336,25 @@ export class MessageFormatter {
         return `📈 **Current APY**: ${apy.toFixed(2)}%`;
     }
     
-    static formatPortfolio(portfolio: Portfolio): string {
-        const totalValue = portfolio.positions.reduce(
-            (sum, pos) => sum + pos.value, 0
-        );
-        
+    static formatPortfolio(balances: BreezeUserBalancesResponse): string {
         let message = `🌊 **Portfolio Overview**\n\n`;
-        message += `💰 **Total Value**: $${totalValue.toFixed(2)}\n`;
-        message += `📊 **Positions**: ${portfolio.positions.length}\n\n`;
+        message += `💰 **Total Value**: $${parseFloat(balances.total_portfolio_value).toFixed(2)}\n`;
+        message += `🎯 **Total Yield**: $${parseFloat(balances.total_yield_earned).toFixed(2)}\n\n`;
         
-        portfolio.positions.forEach(position => {
-            message += `• ${position.asset}: $${position.value.toFixed(2)}\n`;
+        balances.balances.forEach(balance => {
+            message += `• ${balance.symbol}: $${parseFloat(balance.total_balance).toFixed(2)}\n`;
         });
         
         return message;
     }
     
-    static formatTransaction(tx: Transaction): string {
-        const icon = tx.type === 'deposit' ? '📥' : '📤';
-        const action = tx.type === 'deposit' ? 'Deposited' : 'Withdrawn';
+    static formatTransaction(type: string, amount: number, asset: string, signature: string): string {
+        const icon = type === 'deposit' ? '📥' : '📤';
+        const action = type === 'deposit' ? 'Deposited' : 'Withdrawn';
         
-        return `${icon} **${action}**: $${tx.amount.toFixed(2)} ${tx.asset}\n` +
-               `🔗 **Transaction**: \`${tx.signature}\`\n` +
-               `⏰ **Time**: ${tx.timestamp.toLocaleString()}`;
-    }
-}
-```
-
-{/* ## Advanced Features
-
-### Automated Yield Optimization
-
-```typescript
-export class YieldOptimizer {
-    private breezeClient: BreezeAPIClient;
-    private rebalanceThreshold: number;
-    
-    constructor(breezeClient: BreezeAPIClient, threshold = 0.5) {
-        this.breezeClient = breezeClient;
-        this.rebalanceThreshold = threshold;
-    }
-    
-    async optimizePortfolio(userPubkey: string): Promise<OptimizationResult> {
-        const currentPositions = await this.breezeClient.getUserValue(userPubkey);
-        const availableStrategies = await this.getAvailableStrategies();
-        
-        const recommendations = this.calculateOptimalAllocation(
-            currentPositions,
-            availableStrategies
-        );
-        
-        return {
-            currentAllocation: currentPositions,
-            recommendedAllocation: recommendations,
-            potentialYieldIncrease: this.calculateYieldIncrease(
-                currentPositions,
-                recommendations
-            )
-        };
-    }
-    
-    private async getAvailableStrategies(): Promise<YieldStrategy[]> {
-        // Fetch available yield strategies from Breeze API
-        return [];
-    }
-}
-```
-
-### Risk Management
-
-```typescript
-export class RiskManager {
-    private maxPositionSize: number;
-    private maxDailyVolume: number;
-    private riskLimits: Map<string, number>;
-    
-    constructor(config: RiskConfig) {
-        this.maxPositionSize = config.maxPositionSize;
-        this.maxDailyVolume = config.maxDailyVolume;
-        this.riskLimits = new Map(Object.entries(config.assetLimits));
-    }
-    
-    async validateTransaction(
-        userPubkey: string,
-        transaction: TransactionRequest
-    ): Promise<ValidationResult> {
-        const currentPortfolio = await this.getCurrentPortfolio(userPubkey);
-        const dailyVolume = await this.getDailyVolume(userPubkey);
-        
-        // Check position size limits
-        if (transaction.amount > this.maxPositionSize) {
-            return {
-                valid: false,
-                reason: `Transaction exceeds maximum position size of $${this.maxPositionSize}`
-            };
-        }
-        
-        // Check daily volume limits
-        if (dailyVolume + transaction.amount > this.maxDailyVolume) {
-            return {
-                valid: false,
-                reason: `Transaction would exceed daily volume limit of $${this.maxDailyVolume}`
-            };
-        }
-        
-        // Check asset-specific limits
-        const assetLimit = this.riskLimits.get(transaction.asset);
-        if (assetLimit && transaction.amount > assetLimit) {
-            return {
-                valid: false,
-                reason: `Transaction exceeds ${transaction.asset} limit of $${assetLimit}`
-            };
-        }
-        
-        return { valid: true };
-    }
-}
-``` */}
-{/* 
-## Deployment Architecture
-
-```mermaid
-graph TB
-    subgraph "Production Environment"
-        A[Load Balancer] --> B[Bot Instance 1]
-        A --> C[Bot Instance 2]
-        A --> D[Bot Instance N]
-        
-        B --> E[Redis Cache]
-        C --> E
-        D --> E
-        
-        B --> F[PostgreSQL]
-        C --> F
-        D --> F
-        
-        B --> G[Monitoring Stack]
-        C --> G
-        D --> G
-    end
-    
-    subgraph "External Services"
-        H[Breeze API]
-        I[Solana RPC]
-        J[Telegram API]
-    end
-    
-    B --> H
-    B --> I
-    B --> J
-    
-    style A fill:#ffeb3b
-    style E fill:#ff9800
-    style F fill:#4caf50
-    style G fill:#2196f3
-```
-
-## Security Considerations
-
-### Private Key Management
-
-```typescript
-export class SecureWalletManager {
-    private encryptionKey: string;
-    private keyStorage: KeyStorageAdapter;
-    
-    constructor(encryptionKey: string, storage: KeyStorageAdapter) {
-        this.encryptionKey = encryptionKey;
-        this.keyStorage = storage;
-    }
-    
-    async storeUserWallet(chatId: number, keypair: Keypair): Promise<void> {
-        const encryptedKey = await this.encrypt(keypair.secretKey);
-        await this.keyStorage.store(chatId, {
-            publicKey: keypair.publicKey.toString(),
-            encryptedPrivateKey: encryptedKey,
-            createdAt: new Date()
-        });
-    }
-    
-    async getUserWallet(chatId: number): Promise<Keypair> {
-        const walletData = await this.keyStorage.retrieve(chatId);
-        if (!walletData) {
-            throw new Error('Wallet not found');
-        }
-        
-        const decryptedKey = await this.decrypt(walletData.encryptedPrivateKey);
-        return Keypair.fromSecretKey(decryptedKey);
-    }
-    
-    private async encrypt(data: Uint8Array): Promise<string> {
-        // Implement secure encryption
-        return '';
-    }
-    
-    private async decrypt(encryptedData: string): Promise<Uint8Array> {
-        // Implement secure decryption
-        return new Uint8Array();
-    }
-}
-```
-
-## Testing Strategy
-
-### Unit Tests
-
-```typescript
-describe('BreezeAPIClient', () => {
-    let client: BreezeAPIClient;
-    let mockAxios: jest.Mocked<AxiosInstance>;
-    
-    beforeEach(() => {
-        mockAxios = {
-            post: jest.fn(),
-            get: jest.fn()
-        } as any;
-        
-        client = new BreezeAPIClient({
-            baseURL: 'http://test-api',
-            apiKey: 'test-key'
-        });
-        
-        (client as any).httpClient = mockAxios;
-    });
-    
-    it('should create deposit transaction', async () => {
-        const mockResponse = {
-            data: {
-                success: true,
-                result: 'mock-serialized-tx'
-            }
-        };
-        
-        mockAxios.post.mockResolvedValue(mockResponse);
-        
-        const result = await client.createDeposit({
-            fundId: 'test-fund',
-            amount: 1000000,
-            userKey: 'test-user-key'
-        });
-        
-        expect(result).toBe('mock-serialized-tx');
-        expect(mockAxios.post).toHaveBeenCalledWith('/deposit/tx', {
-            params: {
-                fund_id: 'test-fund',
-                amount: 1000000,
-                all: false,
-                user_key: 'test-user-key',
-                payer_key: null
-            }
-        });
-    });
-});
-```
-
-### Integration Tests
-
-```typescript
-describe('Bot Integration', () => {
-    let bot: BreezeBot;
-    let mockBreezeAPI: jest.Mocked<BreezeAPIClient>;
-    
-    beforeEach(() => {
-        mockBreezeAPI = {
-            createDeposit: jest.fn(),
-            getUserValue: jest.fn()
-        } as any;
-        
-        bot = new BreezeBot(mockBreezeAPI);
-    });
-    
-    it('should handle deposit command', async () => {
-        mockBreezeAPI.createDeposit.mockResolvedValue('mock-tx');
-        
-        const mockMessage = {
-            chat: { id: 123 },
-            text: '/deposit 100'
-        };
-        
-        await bot.handleMessage(mockMessage as any);
-        
-        expect(mockBreezeAPI.createDeposit).toHaveBeenCalledWith({
-            fundId: expect.any(String),
-            amount: 100000000, // 100 USDC in token units
-            userKey: expect.any(String)
-        });
-    });
-});
-``` */}
-
-## Monitoring and Analytics
-
-### Metrics Collection
-
-```typescript
-export class MetricsCollector {
-    private prometheus: PrometheusRegistry;
-    
-    constructor() {
-        this.prometheus = new PrometheusRegistry();
-        this.initializeMetrics();
-    }
-    
-    private initializeMetrics() {
-        // API call metrics
-        this.apiCallCounter = new Counter({
-            name: 'breeze_api_calls_total',
-            help: 'Total number of Breeze API calls',
-            labelNames: ['endpoint', 'status']
-        });
-        
-        // Transaction metrics
-        this.transactionCounter = new Counter({
-            name: 'breeze_transactions_total',
-            help: 'Total number of transactions',
-            labelNames: ['type', 'status']
-        });
-        
-        // User metrics
-        this.activeUsersGauge = new Gauge({
-            name: 'breeze_active_users',
-            help: 'Number of active users'
-        });
-    }
-    
-    recordAPICall(endpoint: string, status: string) {
-        this.apiCallCounter.inc({ endpoint, status });
-    }
-    
-    recordTransaction(type: string, status: string) {
-        this.transactionCounter.inc({ type, status });
-    }
-    
-    updateActiveUsers(count: number) {
-        this.activeUsersGauge.set(count);
+        return `${icon} **${action}**: ${amount.toFixed(2)} ${asset}\n` +
+               `🔗 **Transaction**: \`${signature}\`\n` +
+               `⏰ **Time**: ${new Date().toLocaleString()}`;
     }
 }
 ```
@@ -821,46 +363,51 @@ export class MetricsCollector {
 
 <AccordionGroup>
 <Accordion title="Error Handling">
-- Implement comprehensive error handling for API failures
+- Always check API response success status
 - Provide user-friendly error messages
 - Log errors with sufficient context for debugging
-- Implement retry mechanisms for transient failures
+- Handle network timeouts and connection issues
 </Accordion>
 
 <Accordion title="User Experience">
-- Provide clear feedback for all operations
-- Show loading states during API calls
-- Implement confirmation dialogs for destructive actions
-- Support multiple languages if targeting global users
+- Show loading states during API calls with "⏳ Processing..." messages
+- Implement transaction confirmation UI before signing
+- Display clear success/failure messages with transaction links
+- Use inline keyboards for intuitive navigation
 </Accordion>
 
 <Accordion title="Security">
+- Store API keys securely in environment variables
 - Never log private keys or sensitive information
-- Implement rate limiting to prevent abuse
-- Use secure storage for user credentials
-- Validate all user inputs
+- Validate all user inputs before processing
+- Use HTTPS for all API communications
 </Accordion>
 
 <Accordion title="Performance">
-- Implement caching for frequently accessed data
-- Use connection pooling for database connections
-- Optimize API calls by batching requests where possible
-- Monitor response times and optimize bottlenecks
+- Cache user balance data appropriately
+- Use efficient decimal handling with BigInt for token amounts
+- Implement proper pagination for yield history
+- Monitor API response times and implement timeouts
 </Accordion>
 </AccordionGroup>
 
 ## Conclusion
 
-This comprehensive guide provides the foundation for integrating Breeze Protocol into various types of Telegram bots. The modular architecture allows for easy customization and extension based on specific bot requirements.
+This integration guide demonstrates how to build production-ready Telegram bots using the Breeze API. The current implementation provides:
+
+- **Real-time Data**: Live balance and yield information
+- **User-friendly Interface**: Inline keyboards and conversational flows
+- **Robust Transaction Handling**: Secure signing and submission
+- **Comprehensive Analytics**: Portfolio tracking and yield history
 
 Key takeaways:
-- **Simplified Integration**: Breeze handles user fund management automatically
-- **Flexible Architecture**: Supports multiple bot interaction patterns
-- **Production Ready**: Includes security, monitoring, and performance considerations
-- **Extensible Design**: Easy to add new features and capabilities
+- **Direct API Integration**: Simple REST API calls for all operations
+- **Flexible Architecture**: Supports multiple interaction patterns
+- **Production Ready**: Includes security and error handling
+- **Extensible Design**: Easy to add new features
 
 <Note>
-Remember to thoroughly test your integration in a development environment before deploying to production. Consider implementing gradual rollouts and monitoring user feedback during the initial launch phase.
+Remember to test thoroughly in development before deploying to production. Monitor API usage and implement appropriate rate limiting for production deployments.
 </Note>
 
 For technical support and advanced integration scenarios, consult the official Breeze Protocol documentation or reach out to the development team.

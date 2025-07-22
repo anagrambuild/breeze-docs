@@ -63,8 +63,7 @@
             "group": "Integration Tutorials",
             "pages": [
               "Integration-Guide/breezePoweredWebsite",
-              "Integration-Guide/tgBotTutorial",
-              "Integration-Guide/twitterTutorial"
+              "Integration-Guide/tgBotTutorial"
             ]
           }
         ]
@@ -93,12 +92,8 @@
           {
             "group": "Endpoint Examples",
             "pages": [
-              "breeze-api/endpoints/get-fund",
-              "breeze-api/endpoints/get-user",
-              "breeze-api/endpoints/get-fund-for-base-asset",
-              "breeze-api/endpoints/get-user-current-value",
-              "breeze-api/endpoints/get-user-stats",
-              "breeze-api/endpoints/get-partner-fund-stats",
+              "breeze-api/endpoints/get-user-balances",
+              "breeze-api/endpoints/get-user-yield",
               "breeze-api/endpoints/get-deposit-instructions",
               "breeze-api/endpoints/get-deposit-transaction",
               "breeze-api/endpoints/get-withdraw-instruction",

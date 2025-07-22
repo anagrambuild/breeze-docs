@@ -26,9 +26,8 @@ description: 'Explination of possible Breeze Integration using Breeze Admin API 
   <Step title="Monitor Portfolio">
     <Card title="Track Performance & Analytics" icon="chart-line">
       Regularly update user portfolio data:
-      - `GET /user/{user_id}/current_value` for real-time portfolio values
-      - `GET /user/{user_id}/stats` for historical performance analytics
-      - `GET /getfund/{fund_id}` for fund-level risk metrics and allocations
+      - `GET /user-balances/{user_id}` for real-time portfolio values
+      - `GET /user-yield/{user_id}` for earned yield values
       - Display yield earned, current risk exposure, and portfolio growth
     </Card>
   </Step>
@@ -38,7 +37,7 @@ description: 'Explination of possible Breeze Integration using Breeze Admin API 
       When a user wants to withdraw:
       - Use `POST /withdraw/tx` to generate a complete withdrawal transaction, or  
       - Use `POST /withdraw/ix` for custom transaction handling
-      - Specify number of shares to withdraw or use `"all": true` for full withdrawal
+      - Specify amount of assets to withdraw or use `"all": true` for full withdrawal
       - User signs the transaction to complete the withdrawal process
     </Card>
   </Step>

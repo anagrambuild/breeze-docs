@@ -15,20 +15,20 @@ optimization features.
 
 # API Methods Overview
 
-## Fund Information
+{/* ## Fund Information
 - **`GET /getfund/{fund_id}`** - Retrieve detailed information about a specific fund, including current value, risk metrics, allocations, and constraints.
 - **`GET /user/{user_id}`** - Get user information and their associated fund data.
 - **`GET /partner/{organization_id}/stats`** - Retrieve all funds associated with a specific organization and their stats.
-- **`GET /fund/{base_asset}`** - Get all funds that use a specific base asset (e.g., USDC, USDT).
+- **`GET /fund/{base_asset}`** - Get all funds that use a specific base asset (e.g., USDC, USDT). */}
 
 ## Portfolio Analytics
-- **`GET /user/{user_id}/current_value`** - Get real-time portfolio value with optional currency conversion and filtering by fund or base asset.
-- **`GET /user/{user_id}/stats`** - Retrieve historical performance data including yield percentages, value changes, and time-series data for a specified date range.
+- **`GET /user-yield/{user_id}`** - Get real-time portfolio value with optional currency conversion and filtering by fund or base asset.
+- **`GET /user-balances/{user_id}`** - Retrieve data about the earned yield by the user.
 
 ## Transaction Generation
 - **`POST /deposit/ix`** - Generate Solana instructions for depositing funds into a Breeze fund.
 - **`POST /deposit/tx`** - Generate a complete, versioned serialized unsigned for depositing funds.
-- **`POST /withdraw/ix`** - Generate Solana instructions for withdrawing shares from a fund.
+- **`POST /withdraw/ix`** - Generate Solana instructions for withdrawing from a organization fund.
 - **`POST /withdraw/tx`** - Generate a complete, versioned serialized unsigned for withdrawing funds.
 
 <Tip>
