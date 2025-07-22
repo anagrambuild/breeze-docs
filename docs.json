@@ -103,14 +103,14 @@
         ]
       },
       {
-        "tab": "Breeze Admin Portal",
+        "tab": "Breeze Customer Portal",
         "groups": [
           {
-            "group": "Breeze Admin Portal",
+            "group": "Breeze Customer Portal",
             "pages": [
-              "admin-portal/introduction",
-              "admin-portal/quickstart",
-              "admin-portal/functionality"
+              "customer-portal/introduction",
+              "customer-portal/quickstart",
+              "customer-portal/functionality"
             ]
           }
         ]

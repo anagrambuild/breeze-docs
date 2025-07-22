@@ -45,7 +45,7 @@ The Breeze SDK Telegram Bot enables users to:
 - **Flexible Withdrawals**: Withdraw funds with percentage-based or custom amounts
 - **Transaction Management**: Sign and submit transactions directly through Telegram
 
-> **Info**: The Breeze SDK (`breeze-sdk`) abstracts away complex API interactions, providing a clean interface for deposit/withdraw operations and real-time portfolio management.
+> **Info**: The Breeze SDK (`@breezebaby/breeze-sdk`) abstracts away complex API interactions, providing a clean interface for deposit/withdraw operations and real-time portfolio management.
 
 ## Project Setup
 
@@ -57,7 +57,7 @@ The Breeze SDK Telegram Bot enables users to:
     "@solana/web3.js": "^1.98.2",
     "@solana/spl-token": "^0.4.13",
     "node-telegram-bot-api": "^0.66.0",
-    "breeze-sdk": "^0.0.1",
+    "@breezebaby/breeze-sdk": "1.0.0",
     "bs58": "^6.0.0",
     "dotenv": "^16.5.0"
   },
@@ -92,7 +92,7 @@ The Breeze SDK Telegram Bot enables users to:
 ### SDK Initialization
 
 ```typescript
-import { BreezeSDK } from 'breeze-sdk';
+import { BreezeSDK } from '@breezebaby/breeze-sdk';
 
 class BreezeBot {
     private bot: TelegramBot;
@@ -106,7 +106,7 @@ class BreezeBot {
         
         // Initialize Breeze SDK
         this.breezeSDK = new BreezeSDK({
-            baseUrl: 'http://localhost:8080',
+            baseUrl: 'https://api.breeze.baby/',
             apiKey: BREEZE_API_KEY
         });
         

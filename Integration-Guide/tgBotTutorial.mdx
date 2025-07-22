@@ -84,7 +84,7 @@ class CommandBasedBreezeBot {
                 }
             };
 
-            const response = await fetch('http://localhost:8080/deposit/tx', {
+            const response = await fetch('https://api.breeze.baby/deposit/tx', {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",

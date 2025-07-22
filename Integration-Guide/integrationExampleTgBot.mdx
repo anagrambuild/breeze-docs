@@ -102,7 +102,7 @@ const SOLANA_RPC_URL = process.env.SOLANA_RPC_URL || 'https://api.mainnet-beta.s
 
 ### Base URL
 ```
-http://localhost:8080 || https://api.breeze.baby
+https://api.breeze.baby/
 ```
 
 <Warning>
@@ -271,7 +271,7 @@ class BreezeBot {
 
     private async getUserBalances(userPublicKey: string): Promise<BreezeUserBalancesResponse | null> {
         try {
-            const response = await fetch(`http://localhost:8080/user-balances/${userPublicKey}`, {
+            const response = await fetch(`https://api.breeze.baby/user-balances/${userPublicKey}`, {
                 method: 'GET',
                 headers: {
                     "Content-Type": "application/json",
@@ -365,7 +365,7 @@ private async processDeposit(chatId: number, percentage?: number, customAmount?:
         };
 
         // Call Breeze API for deposit
-        const response = await fetch('http://localhost:8080/deposit/tx', {
+        const response = await fetch('https://api.breeze.baby/deposit/tx', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
@@ -424,7 +424,7 @@ private async processWithdraw(chatId: number, percentage?: number, customAmount?
             }
         };
 
-        const response = await fetch('http://localhost:8080/withdraw/tx', {
+        const response = await fetch('https://api.breeze.baby/withdraw/tx', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
@@ -949,8 +949,3 @@ The bot integrates with these Breeze API endpoints:
 </Accordion>
 </AccordionGroup>
 
----
-
-<Note>
-This integration assumes the Breeze API is running locally on port 8080. Adjust the base URL for production deployments.
-</Note>
