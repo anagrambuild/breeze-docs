@@ -45,32 +45,35 @@ The Breeze SDK Telegram Bot enables users to:
 - **Flexible Withdrawals**: Withdraw funds with percentage-based or custom amounts
 - **Transaction Management**: Sign and submit transactions directly through Telegram
 
-> **Info**: The Breeze SDK (`@breezebaby/breeze-sdk`) abstracts away complex API interactions, providing a clean interface for deposit/withdraw operations and real-time portfolio management.
+<Info>
+The Breeze SDK (`@breezebaby/breeze-sdk`) abstracts away complex API interactions, providing a clean interface for deposit/withdraw operations and real-time portfolio management.
+</Info>
 
 ## Project Setup
 
 ### Dependencies
 
-```json
+```json package.json
 {
   "dependencies": {
     "@solana/web3.js": "^1.98.2",
     "@solana/spl-token": "^0.4.13",
     "node-telegram-bot-api": "^0.66.0",
-    "@breezebaby/breeze-sdk": "1.0.0",
+    "@breezebaby/breeze-sdk": "^1.5.0",
     "bs58": "^6.0.0",
     "dotenv": "^16.5.0"
   },
   "devDependencies": {
     "typescript": "^5.0.0",
-    "@types/node": "^20.0.0"
+    "@types/node": "^20.0.0",
+    "@types/node-telegram-bot-api": "^0.64.9"
   }
 }
 ```
 
 ### TypeScript Configuration
 
-```json
+```json tsconfig.json
 {
   "compilerOptions": {
     "target": "ES2020",
@@ -85,14 +88,21 @@ The Breeze SDK Telegram Bot enables users to:
 }
 ```
 
-> **Warning**: Make sure to set `"type": "module"` in your package.json to use ES modules with the Breeze SDK.
+<Warning>
+Make sure to set `"type": "module"` in your package.json to use ES modules with the Breeze SDK.
+</Warning>
 
 ## Core Implementation
 
 ### SDK Initialization
 
-```typescript
+```typescript src/bot.ts
+import TelegramBot from 'node-telegram-bot-api';
+import { Connection, PublicKey, Keypair, VersionedTransaction } from '@solana/web3.js';
 import { BreezeSDK } from '@breezebaby/breeze-sdk';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 class BreezeBot {
     private bot: TelegramBot;
@@ -101,13 +111,13 @@ class BreezeBot {
     private users: Map<number, UserData> = new Map();
 
     constructor() {
-        this.bot = new TelegramBot(BOT_TOKEN, { polling: true });
-        this.connection = new Connection(SOLANA_RPC_URL);
+        this.bot = new TelegramBot(process.env.BOT_TOKEN!, { polling: true });
+        this.connection = new Connection(process.env.SOLANA_RPC_URL || 'https://api.mainnet-beta.solana.com');
         
         // Initialize Breeze SDK
         this.breezeSDK = new BreezeSDK({
             baseUrl: 'https://api.breeze.baby/',
-            apiKey: BREEZE_API_KEY
+            apiKey: process.env.BREEZE_API_KEY!
         });
         
         this.setupHandlers();
@@ -161,7 +171,14 @@ private async getUserCurrentValue(userPublicKey: string): Promise<number> {
             userId: userPublicKey
         });
 
-        return parseFloat(data.total_portfolio_value) || 0;
+        // Calculate total from data array
+        let total = 0;
+        for (const balance of data.data) {
+            if (balance.yield_balance) {
+                total += parseFloat(balance.yield_balance.funds) / Math.pow(10, balance.decimals);
+            }
+        }
+        return total;
     } catch (error) {
         console.error('Error fetching user current value:', error);
         return 0;
@@ -178,7 +195,7 @@ private async getBreezeYieldFromAPI(userPublicKey: string): Promise<number> {
             userId: userPublicKey
         });
 
-        if (!yieldData || !yieldData.yields || yieldData.yields.length === 0) {
+        if (!yieldData || !yieldData.data || yieldData.data.length === 0) {
             return 0;
         }
 
@@ -186,7 +203,7 @@ private async getBreezeYieldFromAPI(userPublicKey: string): Promise<number> {
         let totalAPY = 0;
         let count = 0;
         
-        for (const position of yieldData.yields) {
+        for (const position of yieldData.data) {
             const apy = parseFloat(position.apy);
             if (!isNaN(apy)) {
                 totalAPY += apy;
@@ -234,21 +251,22 @@ private async processDeposit(chatId: number, percentage?: number, customAmount?:
     try {
         // Call Breeze SDK for deposit
         const data = await this.breezeSDK.createDepositTransaction({
-            fundId: BREEZE_FUND_ID,
+            fundId: process.env.BREEZE_FUND_ID!,
             amount: Number(tokenAmount),
             all: isAll,
             userKey: userData.publicKey!,
             payerKey: undefined
         });
 
-        if (!data.success || !data.result) {
-            await this.bot.sendMessage(chatId, `❌ Error: Failed to create deposit transaction`);
+        // Check if response is string (success) or error object
+        if (typeof data === 'object' && 'message' in data) {
+            await this.bot.sendMessage(chatId, `❌ Error: ${data.message}`);
             return;
         }
 
         // Store pending transaction for user confirmation
         userData.pendingTransaction = {
-            serializedTx: data.result,
+            serializedTx: data as string,
             type: 'deposit',
             amount: humanAmount,
             asset: 'USDC'
@@ -294,20 +312,21 @@ private async processWithdraw(chatId: number, percentage?: number, customAmount?
     try {
         // Call Breeze SDK for withdraw
         const data = await this.breezeSDK.createWithdrawTransaction({
-            fundId: BREEZE_FUND_ID,
+            fundId: process.env.BREEZE_FUND_ID!,
             amount: tokenAmount,
             all: isAll,
             userKey: userData.publicKey!,
             payerKey: undefined
         });
 
-        if (!data.success || !data.result) {
-            await this.bot.sendMessage(chatId, `❌ Error: Failed to create withdraw transaction`);
+        // Check if response is string (success) or error object
+        if (typeof data === 'object' && 'message' in data) {
+            await this.bot.sendMessage(chatId, `❌ Error: ${data.message}`);
             return;
         }
 
         userData.pendingTransaction = {
-            serializedTx: data.result,
+            serializedTx: data as string,
             type: 'withdraw',
             amount: humanAmount,
             asset: 'USDC'
@@ -336,23 +355,42 @@ private async showDetailedBalances(chatId: number) {
         });
 
         let message = '💳 **Detailed Breeze Balances** 💳\n\n';
-        message += `💰 **Total Portfolio Value:** $${parseFloat(breezeBalances.total_portfolio_value).toFixed(2)}\n`;
-        message += `🎯 **Total Yield Earned:** $${parseFloat(breezeBalances.total_yield_earned).toFixed(2)}\n\n`;
+        
+        // Calculate totals from data array
+        let totalPortfolioValue = 0;
+        let totalYieldEarned = 0;
+        
+        for (const balance of breezeBalances.data) {
+            if (balance.yield_balance) {
+                const funds = parseFloat(balance.yield_balance.funds) / Math.pow(10, balance.decimals);
+                const yieldAmount = parseFloat(balance.yield_balance.amount_of_yield) / Math.pow(10, balance.decimals);
+                totalPortfolioValue += funds;
+                totalYieldEarned += yieldAmount;
+            }
+        }
 
-        if (breezeBalances.balances.length === 0) {
+        message += `💰 **Total Portfolio Value:** $${totalPortfolioValue.toFixed(2)}\n`;
+        message += `🎯 **Total Yield Earned:** $${totalYieldEarned.toFixed(2)}\n\n`;
+
+        if (breezeBalances.data.length === 0) {
             message += 'No positions found in Breeze.';
         } else {
-            for (const balance of breezeBalances.balances) {
-                message += `**${balance.symbol}**\n`;
-                message += `• Wallet Balance: ${parseFloat(balance.wallet_balance).toFixed(6)}\n`;
-                message += `• Total Balance: ${parseFloat(balance.total_balance).toFixed(6)}\n`;
-                message += `• Total Yield: $${parseFloat(balance.total_yield).toFixed(2)}\n`;
+            for (const balance of breezeBalances.data) {
+                const totalBalance = balance.total_balance / Math.pow(10, balance.decimals);
+                
+                message += `**${balance.token_symbol}**\n`;
+                message += `• Total Balance: ${totalBalance.toFixed(6)}\n`;
 
-                if (balance.fund_positions.length > 0) {
-                    message += `• Fund Positions:\n`;
-                    for (const position of balance.fund_positions) {
-                        message += `  - ${position.fund_name}: $${parseFloat(position.position_value).toFixed(2)} (APY: ${parseFloat(position.apy).toFixed(2)}%)\n`;
-                    }
+                if (balance.yield_balance) {
+                    const funds = parseFloat(balance.yield_balance.funds) / Math.pow(10, balance.decimals);
+                    const yieldAmount = parseFloat(balance.yield_balance.amount_of_yield) / Math.pow(10, balance.decimals);
+                    const apy = balance.yield_balance.fund_apy;
+                    
+                    message += `• Breeze Position: ${funds.toFixed(6)}\n`;
+                    message += `• Yield Earned: $${yieldAmount.toFixed(6)}\n`;
+                    message += `• APY: ${apy.toFixed(2)}%\n`;
+                } else {
+                    message += `• No Breeze position\n`;
                 }
                 message += '\n';
             }
@@ -388,12 +426,19 @@ private async showYieldHistory(chatId: number) {
         });
 
         let message = '📈 **Yield History** 📈\n\n';
-        message += `💰 **Total Yield Earned:** $${parseFloat(yieldData.total_yield_earned).toFixed(2)}\n\n`;
+        
+        // Calculate total yield earned from data array
+        let totalYieldEarned = 0;
+        for (const yieldEntry of yieldData.data) {
+            totalYieldEarned += parseFloat(yieldEntry.yield_earned);
+        }
+        
+        message += `💰 **Total Yield Earned:** $${totalYieldEarned.toFixed(2)}\n\n`;
 
-        if (yieldData.yields.length === 0) {
+        if (yieldData.data.length === 0) {
             message += 'No yield history found.';
         } else {
-            for (const yieldEntry of yieldData.yields) {
+            for (const yieldEntry of yieldData.data) {
                 const entryDate = new Date(yieldEntry.entry_date).toLocaleDateString();
                 const lastUpdated = new Date(yieldEntry.last_updated).toLocaleDateString();
                 
@@ -405,8 +450,8 @@ private async showYieldHistory(chatId: number) {
                 message += `• Last Updated: ${lastUpdated}\n\n`;
             }
 
-            if (yieldData.pagination.total_pages > 1) {
-                message += `📄 Page ${yieldData.pagination.page} of ${yieldData.pagination.total_pages} (${yieldData.pagination.total_items} total items)`;
+            if (yieldData.meta.total_pages > 1) {
+                message += `📄 Page ${yieldData.meta.page} of ${yieldData.meta.total_pages} (${yieldData.meta.total} total items)`;
             }
         }
 
@@ -439,23 +484,18 @@ private async showMainInterface(chatId: number) {
     const breezeBalance = await this.getUserCurrentValue(publicKey);
     const currentYield = await this.getBreezeYieldFromAPI(publicKey);
 
-    const message = `
-🌊 **BREEZE INTEGRATION BOT** 🌊
-
-💳 Wallet: \`${publicKey.slice(0, 8)}...${publicKey.slice(-8)}\`
-
-💰 **Balances:**
-• SOL: ${balances.sol.toFixed(4)} ◎
-• USDC: ${balances.usdc.human.toFixed(2)} 💵
-• USDT: ${balances.usdt.human.toFixed(2)} 💵
-• PYUSD: ${balances.pyusd.human.toFixed(2)} 💵
-• USDS: ${balances.usds.human.toFixed(2)} 💵
-
-🌊 **Breeze Balance:** $${breezeBalance.toFixed(2)}
-📈 **Current APY:** ${currentYield.toFixed(2)}%
-
-🚀 Ready to earn yield with Breeze!
-    `;
+    const message =
+        '🌊 **BREEZE INTEGRATION BOT** 🌊\n\n' +
+        `💳 Wallet: \`${publicKey.slice(0, 8)}...${publicKey.slice(-8)}\`\n\n` +
+        '💰 **Balances:**\n' +
+        `• SOL: ${balances.sol.toFixed(4)} ◎\n` +
+        `• USDC: ${balances.usdc.human.toFixed(2)} 💵\n` +
+        `• USDT: ${balances.usdt.human.toFixed(2)} 💵\n` +
+        `• PYUSD: ${balances.pyusd.human.toFixed(2)} 💵\n` +
+        `• USDS: ${balances.usds.human.toFixed(2)} 💵\n\n` +
+        `🌊 **Breeze Balance:** $${breezeBalance.toFixed(2)}\n` +
+        `📈 **Current APY:** ${currentYield.toFixed(2)}%\n\n` +
+        '🚀 Ready to earn yield with Breeze!';
 
     const keyboard = {
         inline_keyboard: [
@@ -492,20 +532,16 @@ private async showEarnYieldInterface(chatId: number) {
     const currentYield = await this.getBreezeYieldFromAPI(publicKey);
     const breezeBalance = await this.getUserCurrentValue(publicKey);
 
-    const message = `
-🌊 **Earn Yield with Breeze** 🌊
-
-💰 **Current Balances:**
-• USDC: ${balances.usdc.human.toFixed(2)} 💵
-• USDT: ${balances.usdt.human.toFixed(2)} 💵
-• PYUSD: ${balances.pyusd.human.toFixed(2)} 💵
-• USDS: ${balances.usds.human.toFixed(2)} 💵
-
-📈 **Current Breeze Yield:** ${currentYield.toFixed(1)}% APY
-🌊 **Deposited in Breeze:** $${breezeBalance.toFixed(2)}
-
-💡 Earn passive yield on your stablecoins!
-    `;
+    const message =
+        '🌊 **Earn Yield with Breeze** 🌊\n\n' +
+        '💰 **Current Balances:**\n' +
+        `• USDC: ${balances.usdc.human.toFixed(2)} 💵\n` +
+        `• USDT: ${balances.usdt.human.toFixed(2)} 💵\n` +
+        `• PYUSD: ${balances.pyusd.human.toFixed(2)} 💵\n` +
+        `• USDS: ${balances.usds.human.toFixed(2)} 💵\n\n` +
+        `📈 **Current Breeze Yield:** ${currentYield.toFixed(1)}% APY\n` +
+        `🌊 **Deposited in Breeze:** $${breezeBalance.toFixed(2)}\n\n` +
+        '💡 Earn passive yield on your stablecoins!';
 
     const keyboard = {
         inline_keyboard: [
@@ -530,14 +566,11 @@ private async showEarnYieldInterface(chatId: number) {
 
 ```typescript
 private async showTransactionConfirmation(chatId: number, type: string, amount: number, asset: string) {
-    const message = `
-✅ **Confirm ${type.charAt(0).toUpperCase() + type.slice(1)}** ✅
-
-💰 Amount: ${amount.toFixed(6)} ${asset}
-🎯 Action: ${type.charAt(0).toUpperCase() + type.slice(1)} ${type === 'deposit' ? 'to' : 'from'} Breeze
-
-⚠️ Please confirm this transaction:
-    `;
+    const message =
+        `✅ **Confirm ${type.charAt(0).toUpperCase() + type.slice(1)}** ✅\n\n` +
+        `💰 Amount: ${amount.toFixed(6)} ${asset}\n` +
+        `🎯 Action: ${type.charAt(0).toUpperCase() + type.slice(1)} ${type === 'deposit' ? 'to' : 'from'} Breeze\n\n` +
+        '⚠️ Please confirm this transaction:';
 
     const keyboard = {
         inline_keyboard: [
@@ -587,12 +620,12 @@ private async confirmTransaction(chatId: number) {
         }
 
         const action = pendingTx.type === 'deposit' ? 'deposited to' : 'withdrawn from';
-        await this.bot.sendMessage(chatId, `
-🎉 **Successfully ${action} Breeze!**
-
-💰 Amount: ${pendingTx.amount?.toFixed(2)} ${pendingTx.asset}
-🔗 Transaction: \`${signature}\`
-        `, { parse_mode: 'Markdown' });
+        await this.bot.sendMessage(chatId,
+            `🎉 **Successfully ${action} Breeze!**\n\n` +
+            `💰 Amount: ${pendingTx.amount?.toFixed(2)} ${pendingTx.asset}\n` +
+            `🔗 Transaction: \`${signature}\``,
+            { parse_mode: 'Markdown' }
+        );
 
         // Clear pending transaction
         userData.pendingTransaction = undefined;
@@ -680,7 +713,7 @@ private async handleCallbackQuery(query: TelegramBot.CallbackQuery) {
 
 ## Environment Setup
 
-```bash
+```bash .env
 # Required environment variables
 BOT_TOKEN=your_telegram_bot_token
 SOLANA_RPC_URL=https://api.mainnet-beta.solana.com
@@ -705,10 +738,83 @@ npm start
 
 The bot integrates with these Breeze SDK methods:
 
-- `getUserBalances({ userId })` - Get detailed user balance information
-- `getUserYield({ userId, fundId?, page?, limit? })` - Get user yield history and stats
-- `createDepositTransaction({ fundId, amount, userKey, all?, payerKey? })` - Create deposit transactions
-- `createWithdrawTransaction({ fundId, amount, userKey, all?, payerKey? })` - Create withdraw transactions
+<CardGroup cols={2}>
+  <Card title="getUserBalances" icon="wallet">
+    Get detailed user balance information including yield positions
+  </Card>
+  <Card title="getUserYield" icon="chart-line">
+    Get user yield history and stats with pagination support
+  </Card>
+  <Card title="createDepositTransaction" icon="arrow-down">
+    Create deposit transactions for yield-generating funds
+  </Card>
+  <Card title="createWithdrawTransaction" icon="arrow-up">
+    Create withdraw transactions with flexible amount options
+  </Card>
+</CardGroup>
+
+## Response Formats
+
+### UserBalances Response
+
+```typescript
+{
+  data: [
+    {
+      token_address: string;
+      token_symbol: string;
+      token_name: string;
+      decimals: number;
+      total_balance: number;
+      yield_balance: {
+        fund_id: string;
+        funds: string;
+        amount_of_yield: string;
+        fund_apy: number;
+      } | null;
+    }
+  ];
+  meta: {
+    page: number;
+    per_page: number;
+    total: number;
+    total_pages: number;
+    has_more: boolean;
+  };
+}
+```
+
+### UserYield Response
+
+```typescript
+{
+  data: [
+    {
+      fund_id: string;
+      fund_name: string;
+      base_asset: string;
+      position_value: string;
+      yield_earned: string;
+      apy: string;
+      entry_date: string;
+      last_updated: string;
+    }
+  ];
+  meta: {
+    page: number;
+    per_page: number;
+    total: number;
+    total_pages: number;
+    has_more: boolean;
+  };
+}
+```
+
+### Transaction Responses
+
+Transaction methods return either:
+- `string` - Base64 encoded transaction (success)
+- `{ message: string }` - Error object with error message
 
 ## Best Practices
 
@@ -755,6 +861,8 @@ The updated Breeze SDK integration provides powerful real-time portfolio trackin
 
 This implementation demonstrates how the Breeze SDK simplifies DeFi integration while providing comprehensive functionality for yield farming applications.
 
-> **Note**: This implementation provides a solid foundation that can be extended with additional features like multi-asset support, advanced analytics, automated rebalancing, and more sophisticated user management.
+<Note>
+This implementation provides a solid foundation that can be extended with additional features like multi-asset support, advanced analytics, automated rebalancing, and more sophisticated user management.
+</Note>
 
-For additional support and advanced integration patterns, consult the [Breeze SDK documentation](https://docs.breeze.baby/breeze-sdk/breeze-sdk) or reach out to the development team.
+For additional support and advanced integration patterns, consult the [Breeze SDK documentation](/breeze-sdk) or reach out to the development team.
