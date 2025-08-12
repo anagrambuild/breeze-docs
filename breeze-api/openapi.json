@@ -363,7 +363,8 @@
                 "examples": {
                   "example": {
                     "value": {
-                      "deposit_instruction": [
+                      "lookup_table": "7Xpgp15kooeJmJoy6NP8YXJuXFEqs6aZiy6bwt4KdaxX",
+                      "deposit_instructions": [
                         {
                           "program_id": [
                             8,
@@ -2208,8 +2209,9 @@
                 "examples": {
                   "example": {
                     "value": {
-                      "lut_address": "7Xpgp15kooeJmJoy6NP8YXJuXFEqs6aZiy6bwt4KdaxX",
-                      "withdraw_instruction": {
+                      "lookup_table": "7Xpgp15kooeJmJoy6NP8YXJuXFEqs6aZiy6bwt4KdaxX",
+                      "withdraw_instructions": [
+                        {
                         "program_id": [
                           8,
                           238,
@@ -3741,7 +3743,7 @@
                           0,
                           0
                         ]
-                      }
+                      }]
                     }
                   }
                 }
@@ -4869,6 +4871,12 @@
               "string",
               "null"
             ]
+          },
+          "user_token_account": {
+            "type": [
+              "string",
+              "null"
+            ]
           }
         }
       },
@@ -4917,6 +4925,12 @@
             ]
           },
           "user_key": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "user_token_account": {
             "type": [
               "string",
               "null"
@@ -5491,7 +5505,12 @@
       "DepositInstructionResponse": {
         "type": "object",
         "properties": {
-          "deposit_instruction": {
+          "lookup_table": {
+            "type": "string",
+            "description": "Address of address lookup table (if applicable)",
+            "example": "7Xpgp15kooeJmJoy6NP8YXJuXFEqs6aZiy6bwt4KdaxX"
+          },
+          "deposit_instructions": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/CompiledInstruction"
@@ -5499,23 +5518,26 @@
           }
         },
         "required": [
-          "deposit_instruction"
+          "deposit_instructions"
         ]
       },
       "WithdrawInstructionResponse": {
         "type": "object",
         "properties": {
-          "lut_address": {
+          "lookup_table": {
             "type": "string",
             "description": "Address of address lookup table (if applicable)",
             "example": "7Xpgp15kooeJmJoy6NP8YXJuXFEqs6aZiy6bwt4KdaxX"
           },
-          "withdraw_instruction": {
-            "$ref": "#/components/schemas/CompiledInstruction"
+          "withdraw_instructions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CompiledInstruction"
+            }
           }
         },
         "required": [
-          "withdraw_instruction"
+          "withdraw_instructions"
         ]
       },
       "UserBalancesResponse": {
