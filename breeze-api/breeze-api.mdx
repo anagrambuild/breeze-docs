@@ -1,36 +1,174 @@
 ---
-title: 'Breeze API Documentation'
-description: 'Integrate Breeze into Your Product with the help of simple Breeze API'
----
----
-# What is Breeze API?
-
-Breeze API provides a simple and fast way to integrate Breeze's risk-managed yield functionality into your application, offering the same familiar 
-experience as traditional web2 APIs. With straightforward https endpoints and JSON responses, you can completely integrate Breeze into your existing 
-app without requiring significant code rewrites or blockchain expertise from your development team. The API abstracts away the complexity of Solana 
-blockchain interactions, allowing you to focus on building your user experience while leveraging Breeze's sophisticated risk management and yield 
-optimization features.
-
+title: 'Breeze API Quickstart'
+description: 'Integrate Breeze yield functionality into your product with a simple REST API'
 ---
 
-# API Methods Overview
+Breeze API provides a straightforward way to integrate yield functionality into your application. With standard HTTPS endpoints and JSON responses, you can integrate Breeze without blockchain expertise - the API handles all Solana interactions for you.
 
-{/* ## Fund Information
-- **`GET /getfund/{fund_id}`** - Retrieve detailed information about a specific fund, including current value, risk metrics, allocations, and constraints.
-- **`GET /user/{user_id}`** - Get user information and their associated fund data.
-- **`GET /partner/{organization_id}/stats`** - Retrieve all funds associated with a specific organization and their stats.
-- **`GET /fund/{base_asset}`** - Get all funds that use a specific base asset (e.g., USDC, USDT). */}
+## Authentication
 
-## Portfolio Analytics
-- **`GET /user-yield/{user_id}`** - Get real-time portfolio value with optional currency conversion and filtering by fund or base asset.
-- **`GET /user-balances/{user_id}`** - Retrieve data about the earned yield by the user.
+All API requests require an API key passed in the header:
 
-## Transaction Generation
-- **`POST /deposit/ix`** - Generate Solana instructions for depositing funds into a Breeze fund.
-- **`POST /deposit/tx`** - Generate a complete, versioned serialized unsigned for depositing funds.
-- **`POST /withdraw/ix`** - Generate Solana instructions for withdrawing from a organization fund.
-- **`POST /withdraw/tx`** - Generate a complete, versioned serialized unsigned for withdrawing funds.
+```bash
+x-api-key: YOUR_API_KEY
+```
 
-<Tip>
-**Best Practice**: Always check current portfolio value before making transactions to ensure accurate calculations and optimal timing.
-</Tip>
+<Card title="Get Your API Key" icon="key" href="/get-your-api-key/instruction">
+  Generate an API key from the Breeze Customer Portal.
+</Card>
+
+---
+
+## Core Endpoints
+
+<AccordionGroup>
+  <Accordion title="Strategy Information" icon="chart-line">
+    <ResponseField name="GET /strategy-info/{strategy_id}/" type="GET">
+      Get strategy details including name, supported assets, and current APY for each asset.
+    </ResponseField>
+  </Accordion>
+
+  <Accordion title="User Balances & Yield" icon="wallet">
+    <ResponseField name="GET /breeze-balances/{user_id}" type="GET">
+      Get detailed balances with strategy info, position values, deposits, yield earned, and APY.
+    </ResponseField>
+    <ResponseField name="GET /user-balances/{user_id}" type="GET">
+      Get user balance information with optional filtering.
+    </ResponseField>
+    <ResponseField name="GET /user-yield/{user_id}" type="GET">
+      Get total yield earned by a user.
+    </ResponseField>
+  </Accordion>
+
+  <Accordion title="Deposit Transactions" icon="arrow-down-to-bracket">
+    <ResponseField name="POST /deposit/tx" type="POST">
+      Generate a complete serialized transaction for depositing funds into a strategy.
+    </ResponseField>
+    <ResponseField name="POST /deposit/ix" type="POST">
+      Generate raw Solana instructions for depositing (advanced use cases).
+    </ResponseField>
+  </Accordion>
+
+  <Accordion title="Withdraw Transactions" icon="arrow-up-from-bracket">
+    <ResponseField name="POST /withdraw/tx" type="POST">
+      Generate a complete serialized transaction for withdrawing funds from a strategy.
+    </ResponseField>
+    <ResponseField name="POST /withdraw/ix" type="POST">
+      Generate raw Solana instructions for withdrawing (advanced use cases).
+    </ResponseField>
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Quick Start
+
+### 1. Get Strategy Info
+
+First, fetch your strategy details to see supported assets and current APY:
+
+```bash
+curl -X GET "https://api.breeze.baby/strategy-info/{strategy_id}/" \
+  -H "x-api-key: YOUR_API_KEY"
+```
+
+**Response:**
+```json
+{
+  "strategy_id": "43620ba3-354c-456b-aa3c-5bf7fa46a6d4",
+  "strategy_name": "my-strategy",
+  "assets": ["EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", "..."],
+  "apy": 4.29,
+  "apy_per_asset": {
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": 5.66
+  }
+}
+```
+
+### 2. Check User Balances
+
+Get a user's current positions and earned yield:
+
+```bash
+curl -X GET "https://api.breeze.baby/breeze-balances/{user_pubkey}?strategy_id={strategy_id}" \
+  -H "x-api-key: YOUR_API_KEY"
+```
+
+### 3. Generate Deposit Transaction
+
+Create a transaction for the user to sign:
+
+```bash
+curl -X POST "https://api.breeze.baby/deposit/tx" \
+  -H "x-api-key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "params": {
+      "strategy_id": "your-strategy-id",
+      "base_asset": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "amount": 1000000,
+      "user_key": "user-wallet-pubkey",
+      "payer_key": "user-wallet-pubkey"
+    }
+  }'
+```
+
+**Response:**
+```json
+{
+  "base64-encoded-transaction"
+}
+```
+
+### 4. Generate Withdraw Transaction
+
+```bash
+curl -X POST "https://api.breeze.baby/withdraw/tx" \
+  -H "x-api-key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "params": {
+      "strategy_id": "your-strategy-id",
+      "base_asset": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "amount": 1000000,
+      "user_key": "user-wallet-pubkey",
+      "payer_key": "user-wallet-pubkey"
+    }
+  }'
+```
+
+<Warning>
+**Amount Format**: Amounts are in raw token units. For USDC/USDT (6 decimals), 1 token = 1,000,000. For SOL (9 decimals), 1 SOL = 1,000,000,000.
+</Warning>
+
+---
+
+## Transaction Flow
+
+<Steps>
+  <Step title="Generate Transaction">
+    Call `/deposit/tx` or `/withdraw/tx` to get a serialized transaction.
+  </Step>
+  <Step title="Deserialize">
+    Deserialize the base64-encoded transaction in your client.
+  </Step>
+  <Step title="Sign">
+    Have the user sign the transaction with their wallet.
+  </Step>
+  <Step title="Submit">
+    Send the signed transaction to the Solana network.
+  </Step>
+</Steps>
+
+---
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Integration Flow" icon="route" href="/breeze-api/integration-flow">
+    See a complete integration example with code.
+  </Card>
+  <Card title="Breeze SDK" icon="cube" href="/breeze-sdk/breeze-sdk">
+    Use our TypeScript SDK for easier integration.
+  </Card>
+</CardGroup>

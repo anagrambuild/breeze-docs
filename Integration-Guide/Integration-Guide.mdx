@@ -10,35 +10,30 @@ description: 'Find out how to integrate Breeze'
     style={{ width: '500px', height: 'auto', margin: '0 auto' }}
   />
   
-    Breeze is designed with developers in mind, offering plug-and-play <strong>integration that takes minutes, not months.</strong> Whether you are building a trading platform, Telegram bot, mobile app, or any financial product, <strong>Breeze’s SDK</strong> and comprehensive <strong>API</strong> documentation make integration effortless. With just a few lines of code, you can embed sophisticated DeFi yield strategies and risk management directly into your existing infrastructure. No complex setup, no lengthy onboarding – just clean, developer-friendly tools that scale with your platform’s needs. And if you don’t want to change your React Code, the <strong>Breeze UI Library</strong> lets you drop in fully functional components without touching the SDK or API – perfect for rapid prototyping or production-ready apps.
+    Breeze is designed with developers in mind, offering plug-and-play <strong>integration that takes minutes, not months.</strong> Whether you are building a trading platform, Telegram bot, mobile app, or any financial product, <strong>Breeze’s SDK</strong> and comprehensive <strong>API</strong> documentation make integration effortless. With just a few lines of code, you can embed sophisticated DeFi yield strategies and risk management directly into your existing infrastructure. No complex setup, no lengthy onboarding – just clean, developer-friendly tools that scale with your platform’s needs. And if you don’t want to change your React Code, the <strong>Breeze UI Components and UI Playground</strong> let you drop in fully functional components without touching the SDK or API – perfect for rapid prototyping or production-ready apps.
   
 </Card>
 
 # **First Steps**
 
-Ready to integrate Breeze into your product? Just contact us to discuss details and get your API key so you can start building in minutes.
+Ready to integrate Breeze into your product? Just follow these simple steps and start integrating in minutes.
 
-<CardGroup cols={2}>
-  <Card
-    title="Contact us"
-    icon={<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-headset-icon lucide-headset"><path d="M3 11h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5Zm0 0a9 9 0 1 1 18 0m0 0v5a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3Z"/><path d="M21 16v2a4 4 0 0 1-4 4h-5"/></svg>} 
-    href="/contact-us/contact-us"
-  >
-    Get in contact with the Breeze Team
-  </Card>
-  <Card
-    title="Get your API Key"
-    icon='code'
-    href="/get-your-api-key/instruction"
-  >
-    Get you API key to start building
-  </Card>
-</CardGroup>
+<Steps>
+  <Step title="Sign Up">
+    Create an account on the [Breeze Customer Portal](https://portal.breeze.baby/) to get started.
+  </Step>
+  <Step title="Create a Strategy">
+    Set up a [strategy](/customer-portal/create-strategy) for your application in the customer portal to define possible assets to deposit and the application fees.
+  </Step>
+  <Step title="Get Your API Key">
+    Generate your [API key](/get-your-api-key/instruction) from the Customer Portal to authenticate your requests and start integrating.
+  </Step>
+</Steps>
 
 # **Possible Integration Methods**
 ## **1. Breeze API**
 
-Breeze API gives you full programmatic access to your users' data and fund activity, making it easy to integrate Breeze into any platform – backend, frontend, mobile, or bots. With a wide range of endpoints, you can fetch user information, build custom transactions and deposit instructions, track portfolio value, and more. It’s the core of Breeze’s flexibility, giving you everything you need to power DeFi features in your own product.
+Breeze API gives you full programmatic access to your users' data and strategy activity, making it easy to integrate Breeze into any platform – backend, frontend, mobile, or bots. With a wide range of endpoints, you can fetch user information, build custom transactions and deposit instructions, track portfolio value, and more. It’s the core of Breeze’s flexibility, giving you everything you need to power DeFi features in your own product.
 
 <CardGroup cols={2}>
   <Card
@@ -57,26 +52,46 @@ Breeze API gives you full programmatic access to your users' data and fund activ
 ---
 ## **2. Breeze SDK**
 
-Breeze SDK is a TypeScript-first toolkit designed to make integration with the Breeze API seamless and developer-friendly. Ideal for Telegram bots, web apps, and any financial tools built in JavaScript or TypeScript, the SDK abstracts away direct API calls and provides a clean, intuitive interface for accessing user data, creating transactions, and managing funds – all with minimal setup and maximum flexibility.
-<Card
-    title="Breeze SDK"
-    icon={<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wrench-icon lucide-wrench"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>} 
-    href="/breeze-sdk/breeze-sdk"
-  >
-    Explore how to integrate Breeze using Breeze SDK
-  </Card>
+Breeze SDK is a TypeScript-first toolkit designed to make integration with the Breeze API seamless and developer-friendly. Ideal for Telegram bots, web apps, and any financial tools built in JavaScript or TypeScript, the SDK abstracts away direct API calls and provides a clean, intuitive interface for accessing user data, creating transactions, and managing strategies – all with minimal setup and maximum flexibility.
+<CardGroup cols={2}>
+  <Card
+      title="Breeze SDK"
+      icon={<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wrench-icon lucide-wrench"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>} 
+      href="/breeze-sdk/breeze-sdk"
+    >
+      Explore how to integrate Breeze using Breeze SDK
+    </Card>
+    <Card
+      title="Other Developer Tooling"
+      icon={<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-code-icon lucide-code"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>} 
+      href="/breeze-sdk/tooling"
+    >
+      Check out other Developer Tooling that might be useful for your Integration
+    </Card>
+</CardGroup>
 ---
-## **3. Breeze UI Library**
+## **3. Breeze UI Components and UI Playground**
 
-Breeze UI Library is a plug-and-play React component library that lets you add Breeze functionality to your app without writing any custom logic. It includes prebuilt components like deposit/withdraw buttons, user stats, and fund views — all fully connected to the Breeze API and SDK. No need to handle integration or state management yourself — just drop in the components and go.
+Breeze UI Components are plug-and-play React components that lets you add Breeze functionality to your app without writing any custom logic. It includes prebuilt components like deposit/withdraw buttons, user stats, and strategy views — all fully connected to the Breeze API and SDK. No need to handle integration or state management yourself — just drop in the components and go.
 
+<CardGroup cols={2}>
 <Card
-    title="Breeze UI Library"
+    title="Breeze UI Components and UI Playground"
     icon={<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-template-icon lucide-layout-template"><rect width="18" height="7" x="3" y="3" rx="1"/><rect width="9" height="7" x="3" y="14" rx="1"/><rect width="5" height="7" x="16" y="14" rx="1"/></svg>} 
-    href="/ui-library/introduction"
+    href="/ui-components-and-ui-playground/introduction"
   >
-    Get started with Breeze UI Library
+    Get started with Breeze UI Components
   </Card>
+
+  <Card
+    title="Breeze UI Playground"
+    icon={<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-template-icon lucide-layout-template"><rect width="18" height="7" x="3" y="3" rx="1"/><rect width="9" height="7" x="3" y="14" rx="1"/><rect width="5" height="7" x="16" y="14" rx="1"/></svg>} 
+    href="https://ui.breeze.baby/"
+  >
+    Direct link to Breeze UI Playground
+  </Card>
+
+  </CardGroup>
 ---
 # **Need Help with Integration?**
 

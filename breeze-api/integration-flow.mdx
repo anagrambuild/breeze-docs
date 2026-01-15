@@ -1,44 +1,148 @@
 ---
-title: 'Example Integration Flow'
-description: 'Explination of possible Breeze Integration using Breeze Customer API and Breeze API'
+title: 'Integration Flow'
+description: 'Step-by-step guide for integrating Breeze API into your application'
 ---
 
-<Danger>This represents one possible implementation approach. Other valid implementations may vary based on your specific requirements.</Danger>
+<Info>This represents one possible implementation approach. Your implementation may vary based on specific requirements.</Info>
+
+## Prerequisites
+
+<Card title="Create Strategy & Get API Key" href="/customer-portal/create-strategy" icon="rocket">
+  Before starting, create a strategy in the Customer Portal and get your API key.
+</Card>
+
+---
 
 ## Integration Flow
 
-<Card title="Step #0 -> Contact us" href="/contact-us/contact-us" icon={<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-power-icon lucide-power"><path d="M12 2v10"/><path d="M18.4 6.6a9 9 0 1 1-12.77.04"/></svg>}>
-      To begin integration, it is highly recommended and even required to contact the Breeze Team to discuss the details of Your Specific Product Integration. We will provide You with all necessary data, API keys, accounts, and any custom settings related to fees and risk. Also we will assign to Your Product your personal fund.
-</Card>
-
 <Steps>
-  
-  <Step title="Deposit Funds">
-    <Card title="Process User Deposits" icon="arrow-down">
-      When a user wants to deposit:
-      - Use `POST /deposit/tx` to generate a complete transaction, or
-      - Use `POST /deposit/ix` for more control over transaction construction
-      - User signs the transaction with their wallet
-      - Submit to Solana network to complete the deposit
-    </Card>
+  <Step title="Fetch Supported Assets (Once)">
+    Call `/strategy-info/{strategy_id}/` once on app initialization to get all supported assets for your strategy.
+
+    ```bash
+    GET /strategy-info/{strategy_id}/
+    ```
+
+    **Use this to:**
+    - Build your asset selector/dropdown
+    - Store the list of supported token mints
+    - Know which assets users can deposit
+
+    ```json
+    {
+      "strategy_id": "43620ba3-...",
+      "strategy_name": "my-strategy",
+      "assets": [
+        "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+        "So11111111111111111111111111111111111111112"
+      ],
+      "apy": 4.29,
+      "apy_per_asset": { ... }
+    }
+    ```
+
+    <Tip>Cache this response - the supported assets rarely change.</Tip>
   </Step>
-  
-  <Step title="Monitor Portfolio">
-    <Card title="Track Performance & Analytics" icon="chart-line">
-      Regularly update user portfolio data:
-      - `GET /user-balances/{user_id}` for real-time portfolio values
-      - `GET /user-yield/{user_id}` for earned yield values
-      - Display yield earned, current risk exposure, and portfolio growth
-    </Card>
+
+  <Step title="Fetch APY Data (Periodically)">
+    Use the same `/strategy-info/{strategy_id}/` endpoint to display current APY rates.
+
+    ```bash
+    GET /strategy-info/{strategy_id}/
+    ```
+
+    **Use this to:**
+    - Display overall strategy APY
+    - Show per-asset APY rates
+    - Update APY display periodically (e.g., every few minutes)
+
+    ```json
+    {
+      "apy": 4.29,
+      "apy_per_asset": {
+        "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": 5.66,
+        "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB": 2.46,
+        "So11111111111111111111111111111111111111112": 2.78
+      }
+    }
+    ```
+  </Step>
+
+  <Step title="Fetch User Balances">
+    When a user connects their wallet, fetch their Breeze balances using `/breeze-balances/{user_pubkey}`.
+
+    ```bash
+    GET /breeze-balances/{user_pubkey}?strategy_id={strategy_id}
+    ```
+
+    **Use this to:**
+    - Show user's deposited amounts per asset
+    - Display total position value
+    - Show earned yield per asset
+
+    <Note>Call this endpoint whenever you need to refresh balance data (after transactions, on page load, etc.)</Note>
+  </Step>
+
+  <Step title="Deposit Funds">
+    When a user wants to deposit, generate a transaction using `/deposit/tx`.
+
+    ```bash
+    POST /deposit/tx
+    ```
+
+    ```json
+    {
+      "params": {
+        "strategy_id": "your-strategy-id",
+        "base_asset": "token-mint-address",
+        "amount": 1000000,
+        "user_key": "user-wallet-pubkey",
+        "payer_key": "user-wallet-pubkey"
+      }
+    }
+    ```
+
+    **Flow:**
+    1. Generate transaction with `/deposit/tx`
+    2. Deserialize the base64 response
+    3. User signs with their wallet
+    4. Submit to Solana network
+    5. Refresh balances after confirmation
   </Step>
 
   <Step title="Withdraw Funds">
-    <Card title="Process User Withdrawals" icon="arrow-up">
-      When a user wants to withdraw:
-      - Use `POST /withdraw/tx` to generate a complete withdrawal transaction, or  
-      - Use `POST /withdraw/ix` for custom transaction handling
-      - Specify amount of assets to withdraw or use `"all": true` for full withdrawal
-      - User signs the transaction to complete the withdrawal process
-    </Card>
+    When a user wants to withdraw, generate a transaction using `/withdraw/tx`.
+
+    ```bash
+    POST /withdraw/tx
+    ```
+
+    ```json
+    {
+      "params": {
+        "strategy_id": "your-strategy-id",
+        "base_asset": "token-mint-address",
+        "amount": 1000000,
+        "user_key": "user-wallet-pubkey",
+        "payer_key": "user-wallet-pubkey"
+      }
+    }
+    ```
+
+    <Tip>Set `"all": true` in params to withdraw the entire balance for an asset.</Tip>
   </Step>
 </Steps>
+
+---
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="API Quickstart" icon="bolt" href="/breeze-api/breeze-api">
+    See detailed API documentation with examples.
+  </Card>
+  <Card title="UI Components Example" icon="window" href="/Integration-Guide/breeze-ui-components-integration-example">
+    Full code example with React components.
+  </Card>
+</CardGroup>

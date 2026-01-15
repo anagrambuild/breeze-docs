@@ -34,10 +34,10 @@
           {
             "group": "Breeze Risk Engine (BRE)",
             "pages": [
-              "introduction/Breeze-Risk-Engine",
-              "introduction/Key Risk Metrics & Formulas",
-              "introduction/Dynamic Pool Rebalancing Mechanism",
-              "introduction/Why S-Five is the Best Way to Offer Customizable Yield with Risk Protection"
+              "introduction/breeze-risk-engine",
+              "introduction/key-risk-metrics-and-formulas",
+              "introduction/dynamic-pool-rebalancing-mechanism",
+              "introduction/s-five"
             ]
           }
         ]
@@ -56,14 +56,7 @@
             "pages": [
               "Integration-Guide/integrationExampleTgBot",
               "Integration-Guide/inzegrationExampleTgBotBreezeSDK",
-              "Integration-Guide/UILibraryIntegrationExample"
-            ]
-          },
-          {
-            "group": "Integration Tutorials",
-            "pages": [
-              "Integration-Guide/breezePoweredWebsite",
-              "Integration-Guide/tgBotTutorial"
+              "Integration-Guide/breeze-ui-components-integration-example"
             ]
           }
         ]
@@ -90,10 +83,12 @@
             ]
           },
           {
-            "group": "Endpoint Examples",
+            "group": "Endpoints",
             "pages": [
               "breeze-api/endpoints/get-user-balances",
+              "breeze-api/endpoints/get-breeze-balances",
               "breeze-api/endpoints/get-user-yield",
+              "breeze-api/endpoints/get-strategy-info",
               "breeze-api/endpoints/get-deposit-instructions",
               "breeze-api/endpoints/get-deposit-transaction",
               "breeze-api/endpoints/get-withdraw-instruction",
@@ -110,18 +105,20 @@
             "pages": [
               "customer-portal/introduction",
               "customer-portal/quickstart",
+              "customer-portal/create-strategy",
               "customer-portal/functionality"
             ]
           }
         ]
       },
       {
-        "tab": "Breeze UI Library",
+        "tab": "Breeze UI Components",
         "groups": [
           {
-            "group": "Breeze UI Library Compact Documentation",
+            "group": "Breeze UI Components and UI Playground",
             "pages": [
-              "ui-library/introduction"
+              "ui-components-and-ui-playground/introduction",
+              "ui-components-and-ui-playground/get-started"
             ]
           }
         ]
@@ -133,7 +130,8 @@
             "group": "Introduction",
             "pages": [
               "breeze-sdk/breeze-sdk",
-              "breeze-sdk/quickstart"
+              "breeze-sdk/quickstart",
+              "breeze-sdk/tooling"
             ]
           },
           {
@@ -177,6 +175,11 @@
           "anchor": "Support",
           "href": "https://t.me/breezedevs",
           "icon": "telegram"
+        },
+        {
+          "anchor": "Breeze Customer Portal",
+          "href": "https://portal.breeze.baby",
+          "icon": "house"
         }
       ]
     }

@@ -3,190 +3,144 @@ title: 'Customer Portal Functionality'
 description: 'Comprehensive overview of Breeze Customer Portal features and capabilities'
 ---
 
-# Overview
+The Breeze Customer Portal provides a comprehensive web-based interface for managing your strategies, monitoring performance, and configuring your integration settings.
 
-The Breeze Customer Portal provides a comprehensive web-based interface for managing your Breeze integration. With intuitive dashboards and powerful customeristrative tools, the portal simplifies complex operations and gives you complete visibility into your platform's performance.
+## Organization Overview
 
-## Welcome Dashboard
+The Organization Overview is your central dashboard providing a quick snapshot of your entire organization's performance.
 
-<div className="flex justify-center">
-  <img src="/customer-portal/images/mainscreen-new.png" alt="Customer Portal" className="w-100 h-auto rounded-lg" />
-</div>
-
-<Info>
-Your central command center for managing the entire Breeze platform with real-time insights and quick actions.
-</Info>
-
-<CardGroup cols={2}>
-  <Card title="Quick Access Navigation" icon={<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevrons-up-icon lucide-chevrons-up"><path d="m17 11-5-5-5 5"/><path d="m17 18-5-5-5 5"/></svg>}>
-    Direct links to commonly used customeristrative functions and platform sections.
-  </Card>
-  
-  <Card title="Platform Status" icon={<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sticky-note-icon lucide-sticky-note"><path d="M16 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8Z"/><path d="M15 3v4a2 2 0 0 0 2 2h4"/></svg>}>
-    Real-time system health and operational status indicators with alerts.
-  </Card>
-  
-  <Card title="Recent Activity Feed" icon="clock">
-    Latest transactions, user activities, and system events in chronological order.
-  </Card>
-  
-  <Card title="Key Performance Metrics" icon={<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-up-icon lucide-trending-up"><path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/></svg>}>
-    Summary cards showing critical platform statistics and performance indicators.
-  </Card>
-</CardGroup>
-
-## Fund Statistics & Analytics
-
-<div className="flex justify-center">
-  <img src="/customer-portal/images/dashboard.png" alt="Stats" className="w-100 h-auto rounded-lg" />
-</div>
-<div className="flex justify-center">
-  <img src="/customer-portal/images/fund-det.png" alt="Stats" className="w-100 h-auto rounded-lg" />
-</div>
-<div className="flex justify-center">
-  <img src="/customer-portal/images/rebalance.png" alt="Stats" className="w-100 h-auto rounded-lg" />
-</div>
-
-<Tip>
-Comprehensive insights into fund performance with advanced analytics and reporting capabilities.
-</Tip>
+<img src="/customer-portal/new-images/organization-overview-up.png" alt="Organization Overview" />
 
 <CardGroup cols={3}>
-  <Card title="Performance Tracking" icon={<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chart-area-icon lucide-chart-area"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M7 11.207a.5.5 0 0 1 .146-.353l2-2a.5.5 0 0 1 .708 0l3.292 3.292a.5.5 0 0 0 .708 0l4.292-4.292a.5.5 0 0 1 .854.353V16a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1z"/></svg>}>
-    Real-time monitoring of all fund metrics including value, risk, and yield performance.
+  <Card title="Total Deposits" icon="wallet">
+    Cumulative deposits across all your strategies.
   </Card>
-  
-  <Card title="Data Visualization" icon={<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-chart-line-icon lucide-file-chart-line"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="m16 13-3.5 3.5-2-2L8 17"/></svg>}>
-    Interactive charts showing performance trends over customizable time periods.
+  <Card title="Total Strategies" icon="layer-group">
+    Number of active strategies in your organization.
   </Card>
-  
-  <Card title="Risk Analysis" icon={<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-alert-icon lucide-shield-alert"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>}>
-    Detailed risk metrics, allocation breakdowns, and exposure monitoring tools.
+  <Card title="Total Users" icon="users">
+    Unique users depositing into your strategies.
   </Card>
-  
-  <Card title="Comparative Analytics" icon={<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-git-compare-icon lucide-git-compare"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7"/><path d="M11 18H8a2 2 0 0 1-2-2V9"/></svg>}>
-    Side-by-side fund comparisons and benchmarking capabilities for optimization.
+  <Card title="User Earnings" icon="dollar-sign">
+    Total yield earned by your users.
   </Card>
-  
-  <Card title="Export & Reporting" icon="download">
-    Generate detailed reports for compliance, analysis, and stakeholder reporting.
+  <Card title="Fees Earned" icon="coins">
+    Total fees you've earned from user yields.
   </Card>
-  
-  <Card title="Real-time Updates" icon={<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rss-icon lucide-rss"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>}>
-    Live data feeds ensuring you always have the most current platform metrics.
+  <Card title="Current APY" icon="percent">
+    Weighted average APY across all strategies.
   </Card>
 </CardGroup>
 
-## Control your fees
+### Performance Charts
 
-<div className="flex justify-center">
-  <img src="/customer-portal/images/fee-config.png" alt="Member Management Interface" className="w-100 h-auto rounded-lg" />
-</div>
-<div className="flex justify-center">
-  <img src="/customer-portal/images/fee-distribution.png" alt="Member Management Interface" className="w-100 h-auto rounded-lg" />
-</div>
+<img src="/customer-portal/new-images/overview-down.png" alt="Performance Charts" />
 
-## User & Member Management
+The dashboard includes interactive charts for **TVL**, **Fees Earned**, **APY** (with time range selector), and **Asset Allocation** across supported tokens.
 
-<div className="flex justify-center">
-  <img src="/customer-portal/images/users.png" alt="Member Management Interface" className="w-100 h-auto rounded-lg" />
-</div>
+---
 
-<Warning>
-Powerful user customeristration tools with role-based access controls and comprehensive user lifecycle management.
-</Warning>
+## Strategies
 
-<CardGroup cols={2}>
-  <Card title="User Directory" icon="users">
-    Complete listing of all platform users with advanced search and filtering capabilities.
+The Strategies section allows you to manage and monitor all your yield optimization strategies.
+
+<img src="/customer-portal/new-images/strategies.png" alt="Strategies List" />
+
+The strategies table displays: Strategy Name, Status, Assets, APY, Total Users, Fee Rate, Created date, and Actions.
+
+<Tip>
+Click on any strategy row to view detailed metrics and configuration options.
+</Tip>
+
+### Strategy Details - Overview Tab
+
+<img src="/customer-portal/new-images/strategy-up.png" alt="Strategy Overview" />
+
+Each strategy has its own detailed view with three tabs: **Overview**, **Allocations**, and **Fee Info**.
+
+The Overview tab shows key metrics: **TVL**, **Fees Earned**, **Current APY**, and **Total Users**, along with charts for **Asset Breakdown** and **Strategy APY** over time.
+
+<img src="/customer-portal/new-images/strategies-down.png" alt="Strategy Charts" />
+
+### Strategy Details - Allocations Tab
+
+<img src="/customer-portal/new-images/strategy-allocations-up.png" alt="Strategy Allocations" />
+
+The Allocations tab provides transparency into how funds are deployed:
+
+<CardGroup cols={3}>
+  <Card title="Allocated Amount" icon="check">
+    Amount currently deployed to yield-generating protocols.
   </Card>
-  
-  <Card title="Account Management" icon={<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-cog-icon lucide-user-cog"><path d="M10 15H6a4 4 0 0 0-4 4v2"/><path d="m14.305 16.53.923-.382"/><path d="m15.228 13.852-.923-.383"/><path d="m16.852 12.228-.383-.923"/><path d="m16.852 17.772-.383.924"/><path d="m19.148 12.228.383-.923"/><path d="m19.53 18.696-.382-.924"/><path d="m20.772 13.852.924-.383"/><path d="m20.772 16.148.924.383"/><circle cx="18" cy="15" r="3"/><circle cx="9" cy="7" r="4"/></svg>}>
-    Create, modify, and deactivate user accounts with granular role-based permissions.
+  <Card title="Unallocated Amount" icon="clock">
+    Amount waiting to be allocated to yield sources.
   </Card>
-  
-  <Card title="API Key customeristration" icon="key">
-    Generate, rotate, and manage API keys for users and customeristrators with security controls.
-  </Card>
-  
-  <Card title="Credit Management" icon="credit-card">
-    Monitor and adjust API usage limits and credit allocations for optimal resource distribution.
-  </Card>
-  
-  <Card title="Activity Monitoring" icon="eye">
-    Track user activities, transactions, and API usage patterns for security and compliance.
-  </Card>
-  
-  <Card title="Bulk Operations" icon={<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layers-icon lucide-layers"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"/><path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12"/><path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17"/></svg>}>
-    Efficiently manage multiple users with batch processing capabilities and automation tools.
+  <Card title="Allocation Ratio" icon="chart-pie">
+    Percentage of funds actively earning yield.
   </Card>
 </CardGroup>
 
-## API Usage Analytics
+**Protocol Allocation** shows fund distribution across DeFi protocols: Drift, Kamino, Marginfi, and JupLend.
 
-<div className="flex justify-center">
-  <img src="/customer-portal/images/api-keys.png" alt="API Usage Analytics Dashboard" className="w-100 h-auto rounded-lg" />
-</div>
+<img src="/customer-portal/new-images/strategy-allocations-down.png" alt="Active Yield Allocations" />
+
+**Active Yield Allocations** breaks down positions by asset with expandable details showing protocol, value, APY, and allocation percentage.
+
+### Strategy Details - Fee Info Tab
+
+<img src="/customer-portal/new-images/strategy-fee.png" alt="Fee Info" />
+
+The Fee Info tab displays your **Performance Fee** percentage, **Fee Recipient** wallet address, and **Distribution Frequency**.
 
 <Note>
-Advanced API monitoring and analytics to optimize performance, track usage, and ensure reliable service delivery.
+Remember: Fees are only taken from the yield your users earn, never from their deposits.
 </Note>
 
-<CardGroup cols={2}>
-  <Card title="Usage Metrics" icon={<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-activity-icon lucide-activity"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/></svg>}>
-    Real-time tracking of API calls, response times, error rates, and system performance indicators.
-  </Card>
-  
-  <Card title="Endpoint Analytics" icon={<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap-icon lucide-zap"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>}>
-    Detailed breakdown of usage by specific API endpoints and methods with performance insights.
-  </Card>
-  
-  <Card title="User Consumption" icon="user-check">
-    Monitor individual user API usage against their allocated credits and usage patterns.
-  </Card>
-  
-  <Card title="Performance Monitoring" icon="gauge">
-    Identify bottlenecks, optimize performance, and ensure system reliability with automated alerts.
-  </Card>
-  
-  <Card title="Usage Forecasting" icon={<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-up-icon lucide-trending-up"><path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/></svg>}>
-    Predictive analytics to help plan capacity and credit allocations for future growth.
-  </Card>
-  
-  <Card title="Alert Management" icon="bell">
-    Automated notifications for usage thresholds, anomalies, and system performance issues.
-  </Card>
-</CardGroup>
+---
+
+## API Keys
+
+The API Keys section lets you manage authentication credentials for integrating with the Breeze API.
+
+<img src="/customer-portal/new-images/api-keys-screen.png" alt="API Keys" />
+
+Create, search, and manage your API keys with quick links to **API Docs** and **Authentication Guide**. The table shows key name, status, masked key (with copy), creation/expiration dates, last used, and actions (view, edit, delete).
+
+<Warning>
+Keep your API keys secure. Never expose them in client-side code or public repositories.
+</Warning>
+
+---
+
+## Organization Settings
+
+The Organization section allows you to manage your organization's settings and team members.
+
+<img src="/customer-portal/new-images/organization-members.png" alt="Organization Settings" />
+
+### Organization Settings
+
+Configure your **Fee Distribution Wallet** where earned fees are sent.
+
+### Organization Members
+
+Add and manage team members with **Admin** or **Member** roles. The table shows user info, access level, and timestamps for easy team management.
+
 ---
 
 ## Key Benefits
 
-<Tip>
-The customer Portal transforms complex customeristrative tasks into simple, visual workflows that scale with your business.
-</Tip>
-
-<CardGroup cols={3}>
-  <Card title="Streamlined Operations" icon={<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-workflow-icon lucide-workflow"><rect width="8" height="8" x="3" y="3" rx="2"/><path d="M7 11v4a2 2 0 0 0 2 2h4"/><rect width="8" height="8" x="13" y="13" rx="2"/></svg>}>
-    Intuitive interface reduces customeristrative overhead and simplifies complex platform management tasks.
-  </Card>
-  
+<CardGroup cols={2}>
   <Card title="Real-time Visibility" icon="eye">
-    Live dashboards provide immediate insights into platform performance with instant updates.
+    Live dashboards provide immediate insights into deposits, yields, and user activity.
   </Card>
-  
-  <Card title="Enhanced Security" icon="shield">
-    Centralized user management with robust access controls, audit trails, and security monitoring.
+  <Card title="Protocol Transparency" icon="magnifying-glass">
+    See exactly where funds are allocated across DeFi protocols like Drift, Kamino, Marginfi, and JupLend.
   </Card>
-  
-  <Card title="Data-Driven Decisions" icon="brain">
-    Comprehensive analytics enable informed strategic planning with actionable insights.
+  <Card title="Fee Management" icon="sliders">
+    Configure and track your performance fees with detailed earnings breakdowns.
   </Card>
-  
-  <Card title="Scalable Management" icon="expand">
-    Tools designed to efficiently handle growing user bases and increasing transaction volumes.
-  </Card>
-  
-  <Card title="Compliance Ready" icon={<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bc07c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big-icon lucide-circle-check-big"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m9 11 3 3L22 4"/></svg>}>
-    Built-in reporting and audit capabilities support regulatory requirements and governance.
+  <Card title="Team Collaboration" icon="user-group">
+    Add team members with role-based access to manage your integration together.
   </Card>
 </CardGroup>

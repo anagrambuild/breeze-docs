@@ -1,0 +1,82 @@
+---
+title: 'Create a Strategy'
+description: 'Learn how to create and configure a yield strategy in the Breeze Customer Portal.'
+---
+
+A strategy defines which assets your users can deposit and the fee structure for your application. Follow this guide to create your first strategy.
+
+## Getting to the Strategy Creation
+
+There are two ways to start creating a strategy:
+
+## Creating Your Strategy
+
+<Steps>
+<Step title="Find the Strategies Tab">
+    From your main dashboard, navigate to the **Strategies** tab in the sidebar.
+
+    <img src="/customer-portal/images/new-organisation-overview.jpeg" alt="Organization Overview" />
+
+    <img src="/customer-portal/images/sidebar.jpeg" alt="Sidebar Navigation" style={{ width: '250px', height: 'auto' }} />
+  </Step>
+  <Step title="Start the Strategy Creation">
+    If you don't have any strategies yet, you'll see an empty strategies page. Click the button to start creating your first strategy.
+
+    <img src="/customer-portal/images/strategies-tab-without-strategy.jpeg" alt="Strategies Tab" />
+
+    <img src="/customer-portal/images/start-onboarding.jpeg" alt="Start Onboarding" />
+  </Step>
+
+  <Step title="Configure Strategy Name and Assets">
+    Enter a name for your strategy and select the assets you want to support.
+
+    <img src="/customer-portal/images/select-assets-without-templ.jpeg" alt="Configure Assets" />
+
+    <Note>
+      **What do these assets mean?**
+
+      The assets you select here determine which tokens your users will be able to deposit into your strategy to earn yield. For example, if you select USDC and SOL, your users can deposit either of these tokens and earn yield on their deposits.
+    </Note>
+
+    <Info>
+      Can't find the asset you need? [Contact us](/contact-us/contact-us)
+    </Info>
+  </Step>
+
+  <Step title="Set Up Fee Distribution">
+    Configure the fee percentage for your strategy.
+
+    <img src="/customer-portal/images/set-up-fee-distribution.png" alt="Set Up Fee Distribution" />
+
+    <Warning>
+      **How fees work:**
+
+      The fee you set is taken **only from the yield earned by your users**, not from their deposits.
+
+      For example, if you set a 10% fee and your user earns 100 USD in yield, you will receive 10 USD as your fee. The user keeps 90 USD of their earned yield, and their original deposit remains untouched.
+    </Warning>
+  </Step>
+
+  <Step title="Review and Create">
+    Review all your strategy settings to make sure everything is configured correctly, then click the **Create** button.
+
+    <img src="/customer-portal/images/review-your-strategy-1.png" alt="Review Strategy" />
+
+    <Tip>
+      Strategy creation may take a some time as it requires creating various on-chain accounts. Please be patient while the strategy creation is being executed.
+    </Tip>
+  </Step>
+</Steps>
+
+## What's Next?
+
+Once your strategy is created, you can:
+
+<CardGroup cols={2}>
+  <Card title="Get Your API Key" icon="key" href="/get-your-api-key/instruction">
+    Generate an API key to start integrating Breeze into your application.
+  </Card>
+  <Card title="Integration Guide" icon="book" href="/Integration-Guide/Integration-Guide">
+    Follow our integration guide to connect your strategy to your app.
+  </Card>
+</CardGroup>

@@ -5,7 +5,7 @@
     "description": "A comprehensive API for managing yield farming operations, funds, and user authentication",
     "contact": {
       "name": "Breeze Team",
-      "email": "support@breeze.com"
+      "email": "support@breeze.baby"
     },
     "license": {
       "name": ""
@@ -41,7 +41,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Partner"
+                  "$ref": "#/components/schemas/ApiAssignFundOperationResult"
                 }
               }
             }
@@ -75,54 +75,16 @@
       }
     },
     "/admin/create-fund": {
-      "get": {
-        "tags": [
-          "Admin"
-        ],
-        "operationId": "process_create_fund",
-        "responses": {
-          "200": {
-            "description": "Fund created successfully"
-          },
-          "400": {
-            "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearer_auth": []
-          }
-        ]
-      }
-    },
-    "/admin/create-organization": {
       "post": {
         "tags": [
           "Admin"
         ],
-        "operationId": "create_organization",
+        "operationId": "process_create_fund",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/StructuredInputForCreatingParter"
+                "$ref": "#/components/schemas/ApiCreateFundRequest"
               }
             }
           },
@@ -130,11 +92,11 @@
         },
         "responses": {
           "200": {
-            "description": "Partner created successfully",
+            "description": "Fund created successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Partner"
+                  "$ref": "#/components/schemas/CreateFundApiResult"
                 }
               }
             }
@@ -167,12 +129,224 @@
         ]
       }
     },
-    "/admin/update-fund-constraints": {
+    "/admin/delete-strategy-template": {
       "post": {
         "tags": [
           "Admin"
         ],
-        "operationId": "update_fund_constraints",
+        "operationId": "delete_strategy_template",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiInputForDeletingStrategy"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Strategy deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiDeleteStrategyOperationResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
+    "/admin/get-job-status": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "get_job_status",
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "query",
+            "description": "Task ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fund job status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiJobStatus"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
+    "/admin/org-fund-access": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "get_org_fund_access",
+        "responses": {
+          "200": {
+            "description": "Organization fund access records retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {}
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
+    "/admin/unassign-fund-to-organization": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "unassign_fund_to_organization",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiUnAssignFundFromOrganization"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Fund assigned to partner successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiAssignFundOperationResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
+    "/admin/update-fund": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "update_fund",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiFundUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "Fund constraints updated successfully"
@@ -211,6 +385,16 @@
           "Admin"
         ],
         "operationId": "update_fund_fees",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiFundFees"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "Fund fees updated successfully"
@@ -249,6 +433,16 @@
           "Admin"
         ],
         "operationId": "update_fund_rebalance_settings",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiFundRebalanceSettings"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "Fund rebalance settings updated successfully"
@@ -281,17 +475,17 @@
         ]
       }
     },
-    "/admin/update-partner": {
+    "/admin/update-org-tags": {
       "post": {
         "tags": [
           "Admin"
         ],
-        "operationId": "update_organization",
+        "operationId": "update_organization_tags",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/StructuredInputForUpdatingPartnerDetails"
+                "$ref": "#/components/schemas/ApiUpdateOrganizationTagsInputs"
               }
             }
           },
@@ -299,14 +493,7 @@
         },
         "responses": {
           "200": {
-            "description": "Partner updated successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Partner"
-                }
-              }
-            }
+            "description": "Organization tags updated successfully"
           },
           "400": {
             "description": "Bad request",
@@ -342,6 +529,8 @@
           "Deposits"
         ],
         "operationId": "process_for_deposit_with_instruction",
+        "summary": "Generate deposit instructions",
+        "description": "Generates raw Solana instructions for depositing funds into a strategy. Use this endpoint for advanced use cases where you need more control over transaction construction.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -354,943 +543,11 @@
         },
         "responses": {
           "200": {
-            "description": "Deposit instruction response",
+            "description": "Deposit instruction prepared successfully",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DepositInstructionResponse"
-                },
-                "examples": {
-                  "example": {
-                    "value": {
-                      "lookup_table": "7Xpgp15kooeJmJoy6NP8YXJuXFEqs6aZiy6bwt4KdaxX",
-                      "deposit_instructions": [
-                        {
-                          "program_id": [
-                            8,
-                            238,
-                            71,
-                            110,
-                            229,
-                            69,
-                            154,
-                            37,
-                            85,
-                            165,
-                            43,
-                            241,
-                            227,
-                            162,
-                            137,
-                            161,
-                            28,
-                            193,
-                            158,
-                            234,
-                            60,
-                            194,
-                            104,
-                            226,
-                            162,
-                            223,
-                            66,
-                            172,
-                            55,
-                            253,
-                            80,
-                            154
-                          ],
-                          "accounts": [
-                            {
-                              "pubkey": [
-                                252,
-                                50,
-                                162,
-                                95,
-                                111,
-                                13,
-                                145,
-                                158,
-                                206,
-                                169,
-                                151,
-                                208,
-                                197,
-                                82,
-                                186,
-                                204,
-                                66,
-                                26,
-                                103,
-                                81,
-                                233,
-                                91,
-                                38,
-                                12,
-                                162,
-                                209,
-                                104,
-                                67,
-                                25,
-                                132,
-                                175,
-                                184
-                              ],
-                              "is_signer": false,
-                              "is_writable": false
-                            },
-                            {
-                              "pubkey": [
-                                116,
-                                55,
-                                183,
-                                180,
-                                0,
-                                210,
-                                115,
-                                191,
-                                160,
-                                17,
-                                70,
-                                177,
-                                67,
-                                0,
-                                70,
-                                38,
-                                28,
-                                42,
-                                250,
-                                18,
-                                199,
-                                61,
-                                172,
-                                99,
-                                179,
-                                58,
-                                250,
-                                153,
-                                23,
-                                189,
-                                107,
-                                158
-                              ],
-                              "is_signer": false,
-                              "is_writable": true
-                            },
-                            {
-                              "pubkey": [
-                                254,
-                                251,
-                                175,
-                                205,
-                                5,
-                                227,
-                                11,
-                                206,
-                                223,
-                                83,
-                                18,
-                                0,
-                                23,
-                                239,
-                                78,
-                                179,
-                                174,
-                                164,
-                                4,
-                                205,
-                                21,
-                                148,
-                                106,
-                                28,
-                                44,
-                                193,
-                                11,
-                                20,
-                                123,
-                                251,
-                                160,
-                                25
-                              ],
-                              "is_signer": false,
-                              "is_writable": true
-                            },
-                            {
-                              "pubkey": [
-                                74,
-                                86,
-                                50,
-                                101,
-                                61,
-                                12,
-                                138,
-                                184,
-                                170,
-                                98,
-                                22,
-                                240,
-                                175,
-                                91,
-                                9,
-                                124,
-                                16,
-                                141,
-                                61,
-                                235,
-                                141,
-                                213,
-                                79,
-                                231,
-                                95,
-                                152,
-                                138,
-                                137,
-                                118,
-                                191,
-                                123,
-                                65
-                              ],
-                              "is_signer": false,
-                              "is_writable": true
-                            },
-                            {
-                              "pubkey": [
-                                251,
-                                50,
-                                17,
-                                95,
-                                90,
-                                142,
-                                190,
-                                207,
-                                51,
-                                44,
-                                248,
-                                163,
-                                252,
-                                215,
-                                147,
-                                124,
-                                150,
-                                20,
-                                148,
-                                168,
-                                114,
-                                16,
-                                167,
-                                104,
-                                136,
-                                166,
-                                246,
-                                45,
-                                14,
-                                174,
-                                213,
-                                155
-                              ],
-                              "is_signer": true,
-                              "is_writable": true
-                            },
-                            {
-                              "pubkey": [
-                                230,
-                                106,
-                                163,
-                                90,
-                                155,
-                                108,
-                                232,
-                                121,
-                                36,
-                                133,
-                                22,
-                                158,
-                                71,
-                                65,
-                                39,
-                                36,
-                                120,
-                                86,
-                                76,
-                                221,
-                                151,
-                                241,
-                                25,
-                                232,
-                                214,
-                                77,
-                                244,
-                                172,
-                                230,
-                                176,
-                                81,
-                                148
-                              ],
-                              "is_signer": false,
-                              "is_writable": true
-                            },
-                            {
-                              "pubkey": [
-                                6,
-                                221,
-                                246,
-                                225,
-                                215,
-                                101,
-                                161,
-                                147,
-                                217,
-                                203,
-                                225,
-                                70,
-                                206,
-                                235,
-                                121,
-                                172,
-                                28,
-                                180,
-                                133,
-                                237,
-                                95,
-                                91,
-                                55,
-                                145,
-                                58,
-                                140,
-                                245,
-                                133,
-                                126,
-                                255,
-                                0,
-                                169
-                              ],
-                              "is_signer": false,
-                              "is_writable": false
-                            },
-                            {
-                              "pubkey": [
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0
-                              ],
-                              "is_signer": false,
-                              "is_writable": false
-                            },
-                            {
-                              "pubkey": [
-                                27,
-                                173,
-                                29,
-                                250,
-                                60,
-                                178,
-                                248,
-                                93,
-                                215,
-                                246,
-                                166,
-                                103,
-                                169,
-                                72,
-                                78,
-                                104,
-                                22,
-                                199,
-                                199,
-                                119,
-                                233,
-                                52,
-                                157,
-                                83,
-                                60,
-                                115,
-                                73,
-                                220,
-                                223,
-                                111,
-                                223,
-                                138
-                              ],
-                              "is_signer": false,
-                              "is_writable": true
-                            },
-                            {
-                              "pubkey": [
-                                29,
-                                24,
-                                115,
-                                123,
-                                175,
-                                128,
-                                85,
-                                6,
-                                134,
-                                40,
-                                172,
-                                174,
-                                147,
-                                112,
-                                100,
-                                176,
-                                90,
-                                254,
-                                132,
-                                135,
-                                205,
-                                171,
-                                128,
-                                76,
-                                114,
-                                221,
-                                23,
-                                206,
-                                121,
-                                73,
-                                153,
-                                48
-                              ],
-                              "is_signer": false,
-                              "is_writable": false
-                            },
-                            {
-                              "pubkey": [
-                                57,
-                                20,
-                                47,
-                                104,
-                                47,
-                                216,
-                                56,
-                                132,
-                                150,
-                                236,
-                                189,
-                                81,
-                                6,
-                                241,
-                                92,
-                                121,
-                                76,
-                                36,
-                                119,
-                                67,
-                                56,
-                                40,
-                                250,
-                                102,
-                                66,
-                                219,
-                                235,
-                                247,
-                                32,
-                                3,
-                                74,
-                                97
-                              ],
-                              "is_signer": false,
-                              "is_writable": false
-                            },
-                            {
-                              "pubkey": [
-                                92,
-                                162,
-                                189,
-                                250,
-                                16,
-                                101,
-                                68,
-                                230,
-                                212,
-                                254,
-                                164,
-                                242,
-                                51,
-                                226,
-                                155,
-                                51,
-                                9,
-                                156,
-                                252,
-                                244,
-                                251,
-                                119,
-                                35,
-                                113,
-                                200,
-                                227,
-                                171,
-                                168,
-                                19,
-                                137,
-                                107,
-                                169
-                              ],
-                              "is_signer": false,
-                              "is_writable": false
-                            },
-                            {
-                              "pubkey": [
-                                84,
-                                95,
-                                163,
-                                14,
-                                163,
-                                188,
-                                63,
-                                60,
-                                41,
-                                102,
-                                218,
-                                139,
-                                108,
-                                61,
-                                254,
-                                248,
-                                211,
-                                171,
-                                125,
-                                165,
-                                124,
-                                160,
-                                35,
-                                42,
-                                84,
-                                228,
-                                160,
-                                38,
-                                79,
-                                255,
-                                195,
-                                194
-                              ],
-                              "is_signer": false,
-                              "is_writable": true
-                            },
-                            {
-                              "pubkey": [
-                                74,
-                                62,
-                                239,
-                                75,
-                                3,
-                                200,
-                                42,
-                                113,
-                                89,
-                                158,
-                                160,
-                                122,
-                                22,
-                                238,
-                                75,
-                                207,
-                                109,
-                                206,
-                                49,
-                                53,
-                                125,
-                                132,
-                                96,
-                                178,
-                                172,
-                                27,
-                                212,
-                                195,
-                                169,
-                                134,
-                                12,
-                                157
-                              ],
-                              "is_signer": false,
-                              "is_writable": false
-                            },
-                            {
-                              "pubkey": [
-                                126,
-                                23,
-                                2,
-                                201,
-                                3,
-                                123,
-                                162,
-                                167,
-                                56,
-                                29,
-                                159,
-                                185,
-                                206,
-                                109,
-                                241,
-                                93,
-                                15,
-                                197,
-                                77,
-                                116,
-                                187,
-                                115,
-                                17,
-                                159,
-                                138,
-                                241,
-                                47,
-                                25,
-                                12,
-                                14,
-                                21,
-                                190
-                              ],
-                              "is_signer": false,
-                              "is_writable": false
-                            },
-                            {
-                              "pubkey": [
-                                230,
-                                176,
-                                118,
-                                69,
-                                128,
-                                81,
-                                64,
-                                35,
-                                143,
-                                110,
-                                17,
-                                194,
-                                223,
-                                123,
-                                38,
-                                9,
-                                170,
-                                165,
-                                234,
-                                36,
-                                191,
-                                190,
-                                250,
-                                15,
-                                112,
-                                248,
-                                142,
-                                50,
-                                43,
-                                103,
-                                31,
-                                15
-                              ],
-                              "is_signer": false,
-                              "is_writable": false
-                            },
-                            {
-                              "pubkey": [
-                                5,
-                                48,
-                                122,
-                                214,
-                                69,
-                                75,
-                                188,
-                                94,
-                                30,
-                                78,
-                                146,
-                                5,
-                                146,
-                                83,
-                                161,
-                                139,
-                                184,
-                                200,
-                                134,
-                                140,
-                                88,
-                                166,
-                                49,
-                                46,
-                                200,
-                                106,
-                                57,
-                                230,
-                                34,
-                                78,
-                                55,
-                                59
-                              ],
-                              "is_signer": false,
-                              "is_writable": false
-                            },
-                            {
-                              "pubkey": [
-                                9,
-                                84,
-                                219,
-                                190,
-                                158,
-                                201,
-                                96,
-                                201,
-                                138,
-                                122,
-                                41,
-                                63,
-                                226,
-                                19,
-                                54,
-                                150,
-                                111,
-                                225,
-                                128,
-                                209,
-                                81,
-                                174,
-                                75,
-                                129,
-                                121,
-                                86,
-                                31,
-                                137,
-                                133,
-                                74,
-                                83,
-                                246
-                              ],
-                              "is_signer": false,
-                              "is_writable": false
-                            },
-                            {
-                              "pubkey": [
-                                4,
-                                178,
-                                172,
-                                177,
-                                18,
-                                88,
-                                204,
-                                227,
-                                104,
-                                44,
-                                65,
-                                139,
-                                168,
-                                114,
-                                255,
-                                61,
-                                249,
-                                17,
-                                2,
-                                113,
-                                47,
-                                21,
-                                175,
-                                18,
-                                182,
-                                190,
-                                105,
-                                179,
-                                67,
-                                91,
-                                0,
-                                8
-                              ],
-                              "is_signer": false,
-                              "is_writable": false
-                            },
-                            {
-                              "pubkey": [
-                                231,
-                                87,
-                                212,
-                                60,
-                                1,
-                                138,
-                                81,
-                                205,
-                                34,
-                                113,
-                                131,
-                                137,
-                                252,
-                                83,
-                                115,
-                                39,
-                                203,
-                                161,
-                                99,
-                                225,
-                                67,
-                                121,
-                                124,
-                                78,
-                                247,
-                                31,
-                                202,
-                                74,
-                                122,
-                                117,
-                                4,
-                                227
-                              ],
-                              "is_signer": false,
-                              "is_writable": true
-                            },
-                            {
-                              "pubkey": [
-                                192,
-                                133,
-                                208,
-                                91,
-                                55,
-                                2,
-                                93,
-                                49,
-                                36,
-                                187,
-                                83,
-                                121,
-                                21,
-                                167,
-                                90,
-                                58,
-                                171,
-                                25,
-                                46,
-                                94,
-                                220,
-                                91,
-                                251,
-                                219,
-                                69,
-                                202,
-                                164,
-                                105,
-                                119,
-                                228,
-                                194,
-                                13
-                              ],
-                              "is_signer": false,
-                              "is_writable": false
-                            },
-                            {
-                              "pubkey": [
-                                35,
-                                44,
-                                105,
-                                3,
-                                224,
-                                169,
-                                4,
-                                227,
-                                130,
-                                108,
-                                129,
-                                243,
-                                126,
-                                0,
-                                161,
-                                193,
-                                162,
-                                104,
-                                40,
-                                35,
-                                132,
-                                92,
-                                36,
-                                99,
-                                231,
-                                158,
-                                59,
-                                118,
-                                147,
-                                136,
-                                95,
-                                21
-                              ],
-                              "is_signer": false,
-                              "is_writable": true
-                            },
-                            {
-                              "pubkey": [
-                                239,
-                                214,
-                                25,
-                                100,
-                                35,
-                                5,
-                                252,
-                                34,
-                                90,
-                                248,
-                                117,
-                                120,
-                                138,
-                                251,
-                                6,
-                                55,
-                                216,
-                                25,
-                                89,
-                                115,
-                                218,
-                                161,
-                                69,
-                                120,
-                                238,
-                                189,
-                                198,
-                                71,
-                                46,
-                                80,
-                                219,
-                                93
-                              ],
-                              "is_signer": false,
-                              "is_writable": true
-                            }
-                          ],
-                          "data": [
-                            7,
-                            64,
-                            66,
-                            15,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0
-                          ]
-                        }
-                      ]
-                    }
-                  }
                 }
               }
             }
@@ -1329,6 +586,8 @@
           "Deposits"
         ],
         "operationId": "process_for_deposit_with_transaction",
+        "summary": "Generate deposit transaction",
+        "description": "Generates a complete, versioned, serialized unsigned Solana transaction for depositing funds into a strategy. The returned base64-encoded transaction can be deserialized, signed by the user's wallet, and submitted to the Solana network.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1345,7 +604,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SerializedTx"
+                  "$ref": "#/components/schemas/TransactionResponse"
                 }
               }
             }
@@ -1546,6 +805,98 @@
         ]
       }
     },
+    "/fund/{fund_id}/metrics": {
+      "get": {
+        "tags": [
+          "Funds"
+        ],
+        "operationId": "get_fund_metrics",
+        "parameters": [
+          {
+            "name": "start_timestamp",
+            "in": "query",
+            "description": "Start timestamp for metrics range (ISO 8601 format)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "end_timestamp",
+            "in": "query",
+            "description": "End timestamp for metrics range (ISO 8601 format)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "aggregation_window",
+            "in": "query",
+            "description": "Optional aggregation window (e.g., '1h', '1d', '5m') - if not provided, database will choose optimal window",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fund_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fund metrics retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiFundMetrics"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid time range",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Fund not found or no data available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
     "/fund/{fund_id}/rebalance-history": {
       "get": {
         "tags": [
@@ -1553,15 +904,6 @@
         ],
         "operationId": "get_fund_rebalance_history",
         "parameters": [
-          {
-            "name": "fund_id",
-            "in": "path",
-            "description": "Fund identifier",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
           {
             "name": "per_page",
             "in": "query",
@@ -1582,6 +924,23 @@
               "type": "integer",
               "format": "int64",
               "minimum": 0
+            }
+          },
+          {
+            "name": "include_failed",
+            "in": "query",
+            "description": "Include failed rebalance history",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "fund_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -1643,6 +1002,98 @@
           },
           "403": {
             "description": "Organization access denied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
+    "/global-config": {
+      "get": {
+        "tags": [
+          "Global Config"
+        ],
+        "summary": "Get the global configuration",
+        "operationId": "get_global_config",
+        "responses": {
+          "200": {
+            "description": "Global configuration retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GlobalConfigResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Global configuration not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
+    "/global-config/supported-assets": {
+      "get": {
+        "tags": [
+          "Global Config"
+        ],
+        "summary": "Get only the supported base assets from global configuration",
+        "operationId": "get_supported_assets",
+        "responses": {
+          "200": {
+            "description": "Supported assets retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupportedAssetsResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Global configuration not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -1890,6 +1341,119 @@
         ]
       }
     },
+    "/organization/create-strategy-template": {
+      "post": {
+        "tags": [
+          "Strategies"
+        ],
+        "operationId": "create_new_strategy_template",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiInputForCreatingStrategy"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Strategy created successfully"
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiCreateStrategyTemplateResult"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
+    "/organization/create-strategy/{organization_id}": {
+      "post": {
+        "tags": [
+          "Strategies"
+        ],
+        "operationId": "create_new_strategy",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiInputForInitializingStrategy"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Fund created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateStrategyApiResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
     "/organization/fund-requests": {
       "get": {
         "tags": [
@@ -1903,6 +1467,106 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiFundRequestListResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
+    "/organization/fund-resolver": {
+      "post": {
+        "tags": [
+          "Funds"
+        ],
+        "operationId": "fund_resolver",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiInputForFundResolver"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Fund requested successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiFundResolverResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
+    "/organization/get-strategy": {
+      "post": {
+        "tags": [
+          "Strategy"
+        ],
+        "operationId": "get_strategy_template_by_tags",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiInputForGetStrategyByTags"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Strategy template requests retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Vec"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -1970,6 +1634,124 @@
         ]
       }
     },
+    "/organization/settings": {
+      "put": {
+        "tags": [
+          "Organization Settings"
+        ],
+        "operationId": "update_organization_settings",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiUpdateOrganizationSettingsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Organization settings updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiOrganizationSettingsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Organization access denied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Organization Settings"
+        ],
+        "operationId": "get_organization_settings",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiGetRequestBasedOrgTagsInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Organization settings retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiOrganizationSettingsResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Organization not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
     "/organization/stats": {
       "get": {
         "tags": [
@@ -1990,12 +1772,137 @@
         }
       }
     },
+    "/organization/{organization_id}/strategies": {
+      "get": {
+        "tags": [
+          "Strategies"
+        ],
+        "operationId": "get_strategies",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Strategy metrics retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Vec"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid time range",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Fund not found or no data available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
+    "/strategy-info/{strategy_id}": {
+      "get": {
+        "tags": [
+          "Strategies"
+        ],
+        "operationId": "get_strategy_info",
+        "summary": "Get strategy information",
+        "description": "Retrieves detailed information about a strategy, including the strategy name, list of supported assets, overall APY, and per-asset APY breakdown.",
+        "parameters": [
+          {
+            "name": "strategy_id",
+            "in": "path",
+            "description": "Strategy identifier",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Strategy information retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StrategyInfo"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Strategy not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
     "/user-balances/{user_id}": {
       "get": {
         "tags": [
           "User Data"
         ],
         "operationId": "get_user_balances",
+        "summary": "Get user balances",
+        "description": "Retrieves balance information for a user with optional filtering by asset. Returns position values and deposit amounts with pagination support.",
         "parameters": [
           {
             "name": "user_id",
@@ -2062,7 +1969,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserBalancesResponse"
+                  "$ref": "#/components/schemas/PaginatedResponseUserBalance"
                 }
               }
             }
@@ -2095,12 +2002,249 @@
         ]
       }
     },
+    "/breeze-balances/{user_id}": {
+      "get": {
+        "tags": [
+          "User Data"
+        ],
+        "operationId": "get_breeze_balances",
+        "summary": "Get user balances with strategy information",
+        "description": "Retrieves detailed balance information for a user, including strategy details, token information, position values, deposited amounts, yield earned, APY, and last update timestamp.",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "Fund user identifier (wallet address)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "strategy_id",
+            "in": "query",
+            "description": "Filter by specific strategy ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "asset",
+            "in": "query",
+            "description": "Filter by specific asset (token symbol or mint address)",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort_by",
+            "in": "query",
+            "description": "Sort by balance, default 'balance'",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort_order",
+            "in": "query",
+            "description": "Sort order: 'asc' or 'desc', default 'desc'",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number for pagination, default 1",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 0
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "description": "Items per page, default 1000",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Breeze balances retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "fund_id",
+                          "token_address",
+                          "token_symbol",
+                          "token_name",
+                          "decimals",
+                          "total_position_value",
+                          "total_deposited_value",
+                          "yield_earned",
+                          "apy",
+                          "last_updated"
+                        ],
+                        "properties": {
+                          "strategy_name": {
+                            "type": "string",
+                            "description": "Name of the strategy"
+                          },
+                          "strategy_id": {
+                            "type": "string",
+                            "description": "Unique identifier for the strategy"
+                          },
+                          "fund_id": {
+                            "type": "string",
+                            "description": "Unique identifier for the fund"
+                          },
+                          "token_address": {
+                            "type": "string",
+                            "description": "Token mint address"
+                          },
+                          "token_symbol": {
+                            "type": "string",
+                            "description": "Token symbol (e.g., USDC)"
+                          },
+                          "token_name": {
+                            "type": "string",
+                            "description": "Full token name"
+                          },
+                          "decimals": {
+                            "type": "integer",
+                            "description": "Token decimals"
+                          },
+                          "total_position_value": {
+                            "type": "integer",
+                            "description": "Total current position value in token's smallest unit"
+                          },
+                          "total_deposited_value": {
+                            "type": "integer",
+                            "description": "Total deposited value in token's smallest unit"
+                          },
+                          "yield_earned": {
+                            "type": "integer",
+                            "description": "Yield earned in token's smallest unit"
+                          },
+                          "apy": {
+                            "type": "number",
+                            "format": "float",
+                            "description": "Annual percentage yield"
+                          },
+                          "last_updated": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "Timestamp of last update"
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "description": "Pagination metadata",
+                      "required": [
+                        "page",
+                        "per_page",
+                        "total",
+                        "total_pages",
+                        "has_more"
+                      ],
+                      "properties": {
+                        "page": {
+                          "type": "integer",
+                          "description": "Current page number"
+                        },
+                        "per_page": {
+                          "type": "integer",
+                          "description": "Items per page"
+                        },
+                        "total": {
+                          "type": "integer",
+                          "description": "Total number of items"
+                        },
+                        "total_pages": {
+                          "type": "integer",
+                          "description": "Total number of pages"
+                        },
+                        "has_more": {
+                          "type": "boolean",
+                          "description": "Whether there are more pages"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
     "/user-yield/{user_id}": {
       "get": {
         "tags": [
           "User Data"
         ],
         "operationId": "get_user_yield",
+        "summary": "Get user yield",
+        "description": "Retrieves the total yield earned by a user across all their positions. Supports optional currency conversion and filtering by balance or base asset.",
         "parameters": [
           {
             "name": "user_id",
@@ -2149,7 +2293,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserYieldResponse"
+                  "$ref": "#/components/schemas/PaginatedResponseUserYield"
                 }
               }
             }
@@ -2188,6 +2332,8 @@
           "Withdrawals"
         ],
         "operationId": "process_for_withdraw_with_instruction",
+        "summary": "Generate withdraw instructions",
+        "description": "Generates raw Solana instructions for withdrawing funds from a strategy. Use this endpoint for advanced use cases where you need more control over transaction construction.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -2200,1552 +2346,11 @@
         },
         "responses": {
           "200": {
-            "description": "Withdraw instruction response",
+            "description": "Withdraw instruction prepared successfully",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/WithdrawInstructionResponse"
-                },
-                "examples": {
-                  "example": {
-                    "value": {
-                      "lookup_table": "7Xpgp15kooeJmJoy6NP8YXJuXFEqs6aZiy6bwt4KdaxX",
-                      "withdraw_instructions": [
-                        {
-                        "program_id": [
-                          8,
-                          238,
-                          71,
-                          110,
-                          229,
-                          69,
-                          154,
-                          37,
-                          85,
-                          165,
-                          43,
-                          241,
-                          227,
-                          162,
-                          137,
-                          161,
-                          28,
-                          193,
-                          158,
-                          234,
-                          60,
-                          194,
-                          104,
-                          226,
-                          162,
-                          223,
-                          66,
-                          172,
-                          55,
-                          253,
-                          80,
-                          154
-                        ],
-                        "accounts": [
-                          {
-                            "pubkey": [
-                              252,
-                              50,
-                              162,
-                              95,
-                              111,
-                              13,
-                              145,
-                              158,
-                              206,
-                              169,
-                              151,
-                              208,
-                              197,
-                              82,
-                              186,
-                              204,
-                              66,
-                              26,
-                              103,
-                              81,
-                              233,
-                              91,
-                              38,
-                              12,
-                              162,
-                              209,
-                              104,
-                              67,
-                              25,
-                              132,
-                              175,
-                              184
-                            ],
-                            "is_signer": false,
-                            "is_writable": true
-                          },
-                          {
-                            "pubkey": [
-                              116,
-                              55,
-                              183,
-                              180,
-                              0,
-                              210,
-                              115,
-                              191,
-                              160,
-                              17,
-                              70,
-                              177,
-                              67,
-                              0,
-                              70,
-                              38,
-                              28,
-                              42,
-                              250,
-                              18,
-                              199,
-                              61,
-                              172,
-                              99,
-                              179,
-                              58,
-                              250,
-                              153,
-                              23,
-                              189,
-                              107,
-                              158
-                            ],
-                            "is_signer": false,
-                            "is_writable": true
-                          },
-                          {
-                            "pubkey": [
-                              124,
-                              82,
-                              183,
-                              148,
-                              223,
-                              202,
-                              208,
-                              201,
-                              18,
-                              23,
-                              30,
-                              162,
-                              1,
-                              67,
-                              221,
-                              227,
-                              208,
-                              169,
-                              185,
-                              5,
-                              78,
-                              131,
-                              100,
-                              19,
-                              47,
-                              96,
-                              243,
-                              216,
-                              51,
-                              42,
-                              239,
-                              253
-                            ],
-                            "is_signer": false,
-                            "is_writable": true
-                          },
-                          {
-                            "pubkey": [
-                              74,
-                              86,
-                              50,
-                              101,
-                              61,
-                              12,
-                              138,
-                              184,
-                              170,
-                              98,
-                              22,
-                              240,
-                              175,
-                              91,
-                              9,
-                              124,
-                              16,
-                              141,
-                              61,
-                              235,
-                              141,
-                              213,
-                              79,
-                              231,
-                              95,
-                              152,
-                              138,
-                              137,
-                              118,
-                              191,
-                              123,
-                              65
-                            ],
-                            "is_signer": false,
-                            "is_writable": true
-                          },
-                          {
-                            "pubkey": [
-                              251,
-                              50,
-                              17,
-                              95,
-                              90,
-                              142,
-                              190,
-                              207,
-                              51,
-                              44,
-                              248,
-                              163,
-                              252,
-                              215,
-                              147,
-                              124,
-                              150,
-                              20,
-                              148,
-                              168,
-                              114,
-                              16,
-                              167,
-                              104,
-                              136,
-                              166,
-                              246,
-                              45,
-                              14,
-                              174,
-                              213,
-                              155
-                            ],
-                            "is_signer": true,
-                            "is_writable": true
-                          },
-                          {
-                            "pubkey": [
-                              254,
-                              251,
-                              175,
-                              205,
-                              5,
-                              227,
-                              11,
-                              206,
-                              223,
-                              83,
-                              18,
-                              0,
-                              23,
-                              239,
-                              78,
-                              179,
-                              174,
-                              164,
-                              4,
-                              205,
-                              21,
-                              148,
-                              106,
-                              28,
-                              44,
-                              193,
-                              11,
-                              20,
-                              123,
-                              251,
-                              160,
-                              25
-                            ],
-                            "is_signer": false,
-                            "is_writable": true
-                          },
-                          {
-                            "pubkey": [
-                              198,
-                              250,
-                              122,
-                              243,
-                              190,
-                              219,
-                              173,
-                              58,
-                              61,
-                              101,
-                              243,
-                              106,
-                              171,
-                              201,
-                              116,
-                              49,
-                              177,
-                              187,
-                              228,
-                              194,
-                              210,
-                              246,
-                              224,
-                              228,
-                              124,
-                              166,
-                              2,
-                              3,
-                              69,
-                              47,
-                              93,
-                              97
-                            ],
-                            "is_signer": false,
-                            "is_writable": true
-                          },
-                          {
-                            "pubkey": [
-                              230,
-                              106,
-                              163,
-                              90,
-                              155,
-                              108,
-                              232,
-                              121,
-                              36,
-                              133,
-                              22,
-                              158,
-                              71,
-                              65,
-                              39,
-                              36,
-                              120,
-                              86,
-                              76,
-                              221,
-                              151,
-                              241,
-                              25,
-                              232,
-                              214,
-                              77,
-                              244,
-                              172,
-                              230,
-                              176,
-                              81,
-                              148
-                            ],
-                            "is_signer": false,
-                            "is_writable": true
-                          },
-                          {
-                            "pubkey": [
-                              27,
-                              173,
-                              29,
-                              250,
-                              60,
-                              178,
-                              248,
-                              93,
-                              215,
-                              246,
-                              166,
-                              103,
-                              169,
-                              72,
-                              78,
-                              104,
-                              22,
-                              199,
-                              199,
-                              119,
-                              233,
-                              52,
-                              157,
-                              83,
-                              60,
-                              115,
-                              73,
-                              220,
-                              223,
-                              111,
-                              223,
-                              138
-                            ],
-                            "is_signer": false,
-                            "is_writable": true
-                          },
-                          {
-                            "pubkey": [
-                              29,
-                              24,
-                              115,
-                              123,
-                              175,
-                              128,
-                              85,
-                              6,
-                              134,
-                              40,
-                              172,
-                              174,
-                              147,
-                              112,
-                              100,
-                              176,
-                              90,
-                              254,
-                              132,
-                              135,
-                              205,
-                              171,
-                              128,
-                              76,
-                              114,
-                              221,
-                              23,
-                              206,
-                              121,
-                              73,
-                              153,
-                              48
-                            ],
-                            "is_signer": false,
-                            "is_writable": true
-                          },
-                          {
-                            "pubkey": [
-                              57,
-                              20,
-                              47,
-                              104,
-                              47,
-                              216,
-                              56,
-                              132,
-                              150,
-                              236,
-                              189,
-                              81,
-                              6,
-                              241,
-                              92,
-                              121,
-                              76,
-                              36,
-                              119,
-                              67,
-                              56,
-                              40,
-                              250,
-                              102,
-                              66,
-                              219,
-                              235,
-                              247,
-                              32,
-                              3,
-                              74,
-                              97
-                            ],
-                            "is_signer": false,
-                            "is_writable": false
-                          },
-                          {
-                            "pubkey": [
-                              100,
-                              14,
-                              163,
-                              145,
-                              214,
-                              3,
-                              63,
-                              89,
-                              181,
-                              142,
-                              65,
-                              172,
-                              175,
-                              203,
-                              59,
-                              31,
-                              218,
-                              175,
-                              109,
-                              3,
-                              141,
-                              226,
-                              23,
-                              227,
-                              231,
-                              2,
-                              10,
-                              186,
-                              157,
-                              224,
-                              4,
-                              149
-                            ],
-                            "is_signer": false,
-                            "is_writable": true
-                          },
-                          {
-                            "pubkey": [
-                              190,
-                              147,
-                              154,
-                              131,
-                              9,
-                              245,
-                              100,
-                              7,
-                              24,
-                              127,
-                              255,
-                              48,
-                              172,
-                              84,
-                              177,
-                              105,
-                              73,
-                              139,
-                              233,
-                              159,
-                              109,
-                              142,
-                              27,
-                              253,
-                              66,
-                              68,
-                              104,
-                              12,
-                              212,
-                              247,
-                              209,
-                              226
-                            ],
-                            "is_signer": false,
-                            "is_writable": false
-                          },
-                          {
-                            "pubkey": [
-                              43,
-                              72,
-                              47,
-                              205,
-                              63,
-                              92,
-                              107,
-                              135,
-                              22,
-                              155,
-                              87,
-                              182,
-                              2,
-                              27,
-                              74,
-                              177,
-                              216,
-                              196,
-                              30,
-                              149,
-                              100,
-                              39,
-                              237,
-                              245,
-                              55,
-                              167,
-                              240,
-                              25,
-                              37,
-                              38,
-                              122,
-                              93
-                            ],
-                            "is_signer": false,
-                            "is_writable": true
-                          },
-                          {
-                            "pubkey": [
-                              92,
-                              162,
-                              189,
-                              250,
-                              16,
-                              101,
-                              68,
-                              230,
-                              212,
-                              254,
-                              164,
-                              242,
-                              51,
-                              226,
-                              155,
-                              51,
-                              9,
-                              156,
-                              252,
-                              244,
-                              251,
-                              119,
-                              35,
-                              113,
-                              200,
-                              227,
-                              171,
-                              168,
-                              19,
-                              137,
-                              107,
-                              169
-                            ],
-                            "is_signer": false,
-                            "is_writable": true
-                          },
-                          {
-                            "pubkey": [
-                              84,
-                              95,
-                              163,
-                              14,
-                              163,
-                              188,
-                              63,
-                              60,
-                              41,
-                              102,
-                              218,
-                              139,
-                              108,
-                              61,
-                              254,
-                              248,
-                              211,
-                              171,
-                              125,
-                              165,
-                              124,
-                              160,
-                              35,
-                              42,
-                              84,
-                              228,
-                              160,
-                              38,
-                              79,
-                              255,
-                              195,
-                              194
-                            ],
-                            "is_signer": false,
-                            "is_writable": true
-                          },
-                          {
-                            "pubkey": [
-                              74,
-                              62,
-                              239,
-                              75,
-                              3,
-                              200,
-                              42,
-                              113,
-                              89,
-                              158,
-                              160,
-                              122,
-                              22,
-                              238,
-                              75,
-                              207,
-                              109,
-                              206,
-                              49,
-                              53,
-                              125,
-                              132,
-                              96,
-                              178,
-                              172,
-                              27,
-                              212,
-                              195,
-                              169,
-                              134,
-                              12,
-                              157
-                            ],
-                            "is_signer": false,
-                            "is_writable": true
-                          },
-                          {
-                            "pubkey": [
-                              126,
-                              23,
-                              2,
-                              201,
-                              3,
-                              123,
-                              162,
-                              167,
-                              56,
-                              29,
-                              159,
-                              185,
-                              206,
-                              109,
-                              241,
-                              93,
-                              15,
-                              197,
-                              77,
-                              116,
-                              187,
-                              115,
-                              17,
-                              159,
-                              138,
-                              241,
-                              47,
-                              25,
-                              12,
-                              14,
-                              21,
-                              190
-                            ],
-                            "is_signer": false,
-                            "is_writable": false
-                          },
-                          {
-                            "pubkey": [
-                              230,
-                              176,
-                              118,
-                              69,
-                              128,
-                              81,
-                              64,
-                              35,
-                              143,
-                              110,
-                              17,
-                              194,
-                              223,
-                              123,
-                              38,
-                              9,
-                              170,
-                              165,
-                              234,
-                              36,
-                              191,
-                              190,
-                              250,
-                              15,
-                              112,
-                              248,
-                              142,
-                              50,
-                              43,
-                              103,
-                              31,
-                              15
-                            ],
-                            "is_signer": false,
-                            "is_writable": true
-                          },
-                          {
-                            "pubkey": [
-                              131,
-                              248,
-                              241,
-                              242,
-                              111,
-                              54,
-                              220,
-                              129,
-                              56,
-                              165,
-                              21,
-                              111,
-                              96,
-                              241,
-                              43,
-                              47,
-                              60,
-                              252,
-                              234,
-                              185,
-                              39,
-                              113,
-                              225,
-                              173,
-                              132,
-                              106,
-                              91,
-                              14,
-                              244,
-                              6,
-                              166,
-                              40
-                            ],
-                            "is_signer": false,
-                            "is_writable": true
-                          },
-                          {
-                            "pubkey": [
-                              4,
-                              103,
-                              185,
-                              134,
-                              5,
-                              206,
-                              217,
-                              201,
-                              48,
-                              45,
-                              252,
-                              230,
-                              181,
-                              55,
-                              78,
-                              207,
-                              45,
-                              210,
-                              53,
-                              116,
-                              48,
-                              216,
-                              158,
-                              3,
-                              224,
-                              55,
-                              27,
-                              10,
-                              109,
-                              172,
-                              218,
-                              48
-                            ],
-                            "is_signer": false,
-                            "is_writable": false
-                          },
-                          {
-                            "pubkey": [
-                              231,
-                              87,
-                              212,
-                              60,
-                              1,
-                              138,
-                              81,
-                              205,
-                              34,
-                              113,
-                              131,
-                              137,
-                              252,
-                              83,
-                              115,
-                              39,
-                              203,
-                              161,
-                              99,
-                              225,
-                              67,
-                              121,
-                              124,
-                              78,
-                              247,
-                              31,
-                              202,
-                              74,
-                              122,
-                              117,
-                              4,
-                              227
-                            ],
-                            "is_signer": false,
-                            "is_writable": true
-                          },
-                          {
-                            "pubkey": [
-                              192,
-                              133,
-                              208,
-                              91,
-                              55,
-                              2,
-                              93,
-                              49,
-                              36,
-                              187,
-                              83,
-                              121,
-                              21,
-                              167,
-                              90,
-                              58,
-                              171,
-                              25,
-                              46,
-                              94,
-                              220,
-                              91,
-                              251,
-                              219,
-                              69,
-                              202,
-                              164,
-                              105,
-                              119,
-                              228,
-                              194,
-                              13
-                            ],
-                            "is_signer": false,
-                            "is_writable": false
-                          },
-                          {
-                            "pubkey": [
-                              239,
-                              214,
-                              25,
-                              100,
-                              35,
-                              5,
-                              252,
-                              34,
-                              90,
-                              248,
-                              117,
-                              120,
-                              138,
-                              251,
-                              6,
-                              55,
-                              216,
-                              25,
-                              89,
-                              115,
-                              218,
-                              161,
-                              69,
-                              120,
-                              238,
-                              189,
-                              198,
-                              71,
-                              46,
-                              80,
-                              219,
-                              93
-                            ],
-                            "is_signer": false,
-                            "is_writable": true
-                          },
-                          {
-                            "pubkey": [
-                              35,
-                              44,
-                              105,
-                              3,
-                              224,
-                              169,
-                              4,
-                              227,
-                              130,
-                              108,
-                              129,
-                              243,
-                              126,
-                              0,
-                              161,
-                              193,
-                              162,
-                              104,
-                              40,
-                              35,
-                              132,
-                              92,
-                              36,
-                              99,
-                              231,
-                              158,
-                              59,
-                              118,
-                              147,
-                              136,
-                              95,
-                              21
-                            ],
-                            "is_signer": false,
-                            "is_writable": true
-                          },
-                          {
-                            "pubkey": [
-                              150,
-                              218,
-                              251,
-                              248,
-                              254,
-                              175,
-                              194,
-                              199,
-                              144,
-                              204,
-                              11,
-                              252,
-                              81,
-                              30,
-                              86,
-                              201,
-                              204,
-                              244,
-                              23,
-                              253,
-                              15,
-                              2,
-                              243,
-                              200,
-                              179,
-                              79,
-                              107,
-                              6,
-                              252,
-                              202,
-                              11,
-                              122
-                            ],
-                            "is_signer": false,
-                            "is_writable": false
-                          },
-                          {
-                            "pubkey": [
-                              226,
-                              76,
-                              86,
-                              224,
-                              191,
-                              125,
-                              10,
-                              151,
-                              220,
-                              10,
-                              138,
-                              20,
-                              206,
-                              213,
-                              102,
-                              87,
-                              63,
-                              2,
-                              40,
-                              113,
-                              74,
-                              164,
-                              201,
-                              236,
-                              246,
-                              61,
-                              98,
-                              129,
-                              216,
-                              211,
-                              81,
-                              139
-                            ],
-                            "is_signer": false,
-                            "is_writable": true
-                          },
-                          {
-                            "pubkey": [
-                              30,
-                              27,
-                              67,
-                              103,
-                              85,
-                              118,
-                              16,
-                              113,
-                              126,
-                              5,
-                              159,
-                              52,
-                              6,
-                              144,
-                              129,
-                              16,
-                              61,
-                              237,
-                              243,
-                              48,
-                              215,
-                              55,
-                              10,
-                              255,
-                              27,
-                              218,
-                              115,
-                              32,
-                              157,
-                              70,
-                              228,
-                              61
-                            ],
-                            "is_signer": false,
-                            "is_writable": true
-                          },
-                          {
-                            "pubkey": [
-                              81,
-                              236,
-                              68,
-                              53,
-                              217,
-                              182,
-                              124,
-                              58,
-                              33,
-                              25,
-                              249,
-                              167,
-                              128,
-                              95,
-                              153,
-                              98,
-                              136,
-                              73,
-                              21,
-                              30,
-                              41,
-                              196,
-                              126,
-                              92,
-                              247,
-                              125,
-                              42,
-                              192,
-                              231,
-                              166,
-                              16,
-                              66
-                            ],
-                            "is_signer": false,
-                            "is_writable": true
-                          },
-                          {
-                            "pubkey": [
-                              139,
-                              38,
-                              250,
-                              141,
-                              236,
-                              206,
-                              236,
-                              11,
-                              214,
-                              67,
-                              55,
-                              228,
-                              29,
-                              92,
-                              169,
-                              146,
-                              6,
-                              5,
-                              167,
-                              194,
-                              96,
-                              177,
-                              252,
-                              90,
-                              87,
-                              106,
-                              140,
-                              91,
-                              44,
-                              202,
-                              253,
-                              21
-                            ],
-                            "is_signer": false,
-                            "is_writable": true
-                          },
-                          {
-                            "pubkey": [
-                              197,
-                              14,
-                              2,
-                              23,
-                              141,
-                              43,
-                              33,
-                              173,
-                              31,
-                              12,
-                              70,
-                              217,
-                              40,
-                              197,
-                              132,
-                              100,
-                              66,
-                              223,
-                              208,
-                              65,
-                              200,
-                              150,
-                              188,
-                              173,
-                              9,
-                              232,
-                              204,
-                              46,
-                              135,
-                              218,
-                              229,
-                              101
-                            ],
-                            "is_signer": false,
-                            "is_writable": true
-                          },
-                          {
-                            "pubkey": [
-                              216,
-                              176,
-                              16,
-                              23,
-                              99,
-                              211,
-                              229,
-                              31,
-                              18,
-                              110,
-                              97,
-                              86,
-                              222,
-                              133,
-                              222,
-                              140,
-                              97,
-                              48,
-                              89,
-                              184,
-                              68,
-                              104,
-                              208,
-                              218,
-                              63,
-                              232,
-                              162,
-                              162,
-                              37,
-                              28,
-                              199,
-                              1
-                            ],
-                            "is_signer": false,
-                            "is_writable": false
-                          },
-                          {
-                            "pubkey": [
-                              6,
-                              167,
-                              213,
-                              23,
-                              24,
-                              123,
-                              209,
-                              102,
-                              53,
-                              218,
-                              212,
-                              4,
-                              85,
-                              253,
-                              194,
-                              192,
-                              193,
-                              36,
-                              198,
-                              143,
-                              33,
-                              86,
-                              117,
-                              165,
-                              219,
-                              186,
-                              203,
-                              95,
-                              8,
-                              0,
-                              0,
-                              0
-                            ],
-                            "is_signer": false,
-                            "is_writable": false
-                          },
-                          {
-                            "pubkey": [
-                              6,
-                              221,
-                              246,
-                              225,
-                              215,
-                              101,
-                              161,
-                              147,
-                              217,
-                              203,
-                              225,
-                              70,
-                              206,
-                              235,
-                              121,
-                              172,
-                              28,
-                              180,
-                              133,
-                              237,
-                              95,
-                              91,
-                              55,
-                              145,
-                              58,
-                              140,
-                              245,
-                              133,
-                              126,
-                              255,
-                              0,
-                              169
-                            ],
-                            "is_signer": false,
-                            "is_writable": false
-                          },
-                          {
-                            "pubkey": [
-                              0,
-                              0,
-                              0,
-                              0,
-                              0,
-                              0,
-                              0,
-                              0,
-                              0,
-                              0,
-                              0,
-                              0,
-                              0,
-                              0,
-                              0,
-                              0,
-                              0,
-                              0,
-                              0,
-                              0,
-                              0,
-                              0,
-                              0,
-                              0,
-                              0,
-                              0,
-                              0,
-                              0,
-                              0,
-                              0,
-                              0,
-                              0
-                            ],
-                            "is_signer": false,
-                            "is_writable": false
-                          },
-                          {
-                            "pubkey": [
-                              5,
-                              48,
-                              122,
-                              214,
-                              69,
-                              75,
-                              188,
-                              94,
-                              30,
-                              78,
-                              146,
-                              5,
-                              146,
-                              83,
-                              161,
-                              139,
-                              184,
-                              200,
-                              134,
-                              140,
-                              88,
-                              166,
-                              49,
-                              46,
-                              200,
-                              106,
-                              57,
-                              230,
-                              34,
-                              78,
-                              55,
-                              59
-                            ],
-                            "is_signer": false,
-                            "is_writable": false
-                          },
-                          {
-                            "pubkey": [
-                              9,
-                              84,
-                              219,
-                              190,
-                              158,
-                              201,
-                              96,
-                              201,
-                              138,
-                              122,
-                              41,
-                              63,
-                              226,
-                              19,
-                              54,
-                              150,
-                              111,
-                              225,
-                              128,
-                              209,
-                              81,
-                              174,
-                              75,
-                              129,
-                              121,
-                              86,
-                              31,
-                              137,
-                              133,
-                              74,
-                              83,
-                              246
-                            ],
-                            "is_signer": false,
-                            "is_writable": false
-                          },
-                          {
-                            "pubkey": [
-                              4,
-                              178,
-                              172,
-                              177,
-                              18,
-                              88,
-                              204,
-                              227,
-                              104,
-                              44,
-                              65,
-                              139,
-                              168,
-                              114,
-                              255,
-                              61,
-                              249,
-                              17,
-                              2,
-                              113,
-                              47,
-                              21,
-                              175,
-                              18,
-                              182,
-                              190,
-                              105,
-                              179,
-                              67,
-                              91,
-                              0,
-                              8
-                            ],
-                            "is_signer": false,
-                            "is_writable": false
-                          },
-                          {
-                            "pubkey": [
-                              216,
-                              249,
-                              222,
-                              186,
-                              51,
-                              135,
-                              215,
-                              148,
-                              172,
-                              242,
-                              48,
-                              215,
-                              14,
-                              3,
-                              214,
-                              215,
-                              172,
-                              214,
-                              249,
-                              173,
-                              95,
-                              46,
-                              170,
-                              152,
-                              21,
-                              245,
-                              84,
-                              18,
-                              225,
-                              144,
-                              83,
-                              47
-                            ],
-                            "is_signer": false,
-                            "is_writable": true
-                          }
-                        ],
-                        "data": [
-                          8,
-                          1,
-                          19,
-                          56,
-                          15,
-                          0,
-                          0,
-                          0,
-                          0,
-                          0,
-                          0
-                        ]
-                      }]
-                    }
-                  }
                 }
               }
             }
@@ -3784,6 +2389,8 @@
           "Withdrawals"
         ],
         "operationId": "process_for_withdraw_with_transaction",
+        "summary": "Generate withdraw transaction",
+        "description": "Generates a complete, versioned, serialized unsigned Solana transaction for withdrawing funds from a strategy. The returned base64-encoded transaction can be deserialized, signed by the user's wallet, and submitted to the Solana network.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -3800,7 +2407,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SerializedTx"
+                  "$ref": "#/components/schemas/TransactionResponse"
                 }
               }
             }
@@ -3889,10 +2496,108 @@
           }
         ]
       }
+    },
+    "/yield-sources": {
+      "get": {
+        "tags": [
+          "Yield Sources"
+        ],
+        "summary": "Get yield sources with optional base asset filter and pagination",
+        "operationId": "get_yield_sources",
+        "parameters": [
+          {
+            "name": "base_asset",
+            "in": "query",
+            "description": "Base asset identifier to filter by (e.g., USDC, SOL, ETH)",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number for pagination (default: 1)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 0
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "description": "Items per page (default: 20, max: 100)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Yield sources retrieved successfully grouped by protocol",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
     }
   },
   "components": {
     "schemas": {
+      "ApiAssignFundOperationResult": {
+        "type": "object",
+        "required": [
+          "message",
+          "fund_id",
+          "organization_id"
+        ],
+        "properties": {
+          "fund_id": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "organization_id": {
+            "type": "string"
+          }
+        }
+      },
       "ApiAssignFundToOrganization": {
         "type": "object",
         "required": [
@@ -3904,6 +2609,157 @@
             "type": "string"
           },
           "organization_id": {
+            "type": "string"
+          }
+        }
+      },
+      "ApiConstraintType": {
+        "type": "string",
+        "enum": [
+          "MaxPercentage",
+          "MaxBaseAssetAmount"
+        ]
+      },
+      "ApiCreateFundRebalanceSettings": {
+        "type": "object",
+        "properties": {
+          "min_position_settle_time": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64",
+            "description": "Minimum position settle time in seconds",
+            "minimum": 0
+          },
+          "min_rebalance_value": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64",
+            "description": "Minimum rebalance value in lamports",
+            "minimum": 0
+          },
+          "rebalance_period": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64",
+            "description": "Rebalance period in seconds",
+            "minimum": 0
+          },
+          "unallocated_threshold": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64",
+            "description": "Unallocated threshold in lamports",
+            "minimum": 0
+          }
+        }
+      },
+      "ApiCreateFundRequest": {
+        "type": "object",
+        "required": [
+          "base_asset_mint",
+          "yield_source_ids",
+          "risk_aversion_bps",
+          "risk_max"
+        ],
+        "properties": {
+          "base_asset_mint": {
+            "type": "string",
+            "description": "Base asset mint address (e.g., USDC mint)"
+          },
+          "constraints": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/ApiFundConstraint"
+            },
+            "description": "Optional constraints for yield strategies"
+          },
+          "fees": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/ApiFundFee"
+            },
+            "description": "Optional fees configuration"
+          },
+          "organization_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Optional organization ID to associate with the fund"
+          },
+          "rebalance_settings": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ApiCreateFundRebalanceSettings",
+                "description": "Optional rebalance settings"
+              }
+            ]
+          },
+          "risk_aversion_bps": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Risk aversion in basis points (0-10000)",
+            "minimum": 0
+          },
+          "risk_max": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Maximum risk level (0-100)",
+            "minimum": 0
+          },
+          "yield_source_ids": {
+            "$ref": "#/components/schemas/ApiYieldSourceIds",
+            "description": "Yield source IDs - one per protocol, must match base asset mint"
+          }
+        }
+      },
+      "ApiCreateStrategyTemplateResult": {
+        "type": "object",
+        "required": [
+          "message",
+          "strategy_name",
+          "template_id"
+        ],
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "strategy_name": {
+            "type": "string"
+          },
+          "template_id": {
+            "type": "string"
+          }
+        }
+      },
+      "ApiDeleteStrategyOperationResult": {
+        "type": "object",
+        "required": [
+          "message",
+          "strategy_id"
+        ],
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "strategy_id": {
             "type": "string"
           }
         }
@@ -4062,7 +2918,7 @@
         ],
         "properties": {
           "constraint_type": {
-            "type": "string"
+            "$ref": "#/components/schemas/ApiConstraintType"
           },
           "value": {
             "type": "integer",
@@ -4092,6 +2948,200 @@
           },
           "recipient": {
             "type": "string"
+          }
+        }
+      },
+      "ApiFundFees": {
+        "type": "object",
+        "required": [
+          "fund_id",
+          "fees"
+        ],
+        "properties": {
+          "fees": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApiFundFee"
+            }
+          },
+          "fund_id": {
+            "type": "string"
+          }
+        }
+      },
+      "ApiFundMetricDataPoint": {
+        "type": "object",
+        "required": [
+          "time",
+          "allocated_to_yield",
+          "current_value",
+          "current_value_usd",
+          "unallocated_amount",
+          "unallocated_amount_usd",
+          "allocation_count",
+          "user_count",
+          "total_deposits",
+          "current_apy",
+          "risk_level",
+          "share_price",
+          "base_asset_price_usd"
+        ],
+        "properties": {
+          "allocated_to_yield": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "allocation_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "base_asset_price_usd": {
+            "type": "number",
+            "format": "double"
+          },
+          "current_apy": {
+            "type": "number",
+            "format": "double"
+          },
+          "current_value": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "current_value_usd": {
+            "type": "number",
+            "format": "double"
+          },
+          "risk_level": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "share_price": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "time": {
+            "type": "string"
+          },
+          "total_deposits": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "unallocated_amount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "unallocated_amount_usd": {
+            "type": "number",
+            "format": "double"
+          },
+          "user_count": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          }
+        }
+      },
+      "ApiFundMetrics": {
+        "type": "object",
+        "required": [
+          "start",
+          "end",
+          "aggregation_window",
+          "fund_id",
+          "data"
+        ],
+        "properties": {
+          "aggregation_window": {
+            "type": "string",
+            "description": "Aggregation window (e.g., \"1h\", \"1d\", \"5m\") representing time between data points"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApiFundMetricDataPoint"
+            },
+            "description": "Array of aggregated metric data points"
+          },
+          "end": {
+            "type": "string",
+            "description": "End timestamp of the data range"
+          },
+          "fund_id": {
+            "type": "string",
+            "description": "Fund ID for the metrics"
+          },
+          "start": {
+            "type": "string",
+            "description": "Start timestamp of the data range"
+          }
+        }
+      },
+      "ApiFundMetricsRequest": {
+        "type": "object",
+        "required": [
+          "start_timestamp",
+          "end_timestamp"
+        ],
+        "properties": {
+          "aggregation_window": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Optional aggregation window (e.g., \"1h\", \"1d\", \"5m\") - if not provided, database will choose optimal window"
+          },
+          "end_timestamp": {
+            "type": "string",
+            "description": "End timestamp for metrics range (Unix timestamp)"
+          },
+          "start_timestamp": {
+            "type": "string",
+            "description": "Start timestamp for metrics range (Unix timestamp)"
+          }
+        }
+      },
+      "ApiFundRebalanceSettings": {
+        "type": "object",
+        "required": [
+          "fund_id"
+        ],
+        "properties": {
+          "fund_id": {
+            "type": "string"
+          },
+          "min_position_settle_time": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64",
+            "minimum": 0
+          },
+          "min_rebalance_value": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64",
+            "minimum": 0
+          },
+          "rebalance_period": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64",
+            "minimum": 0
+          },
+          "unallocated_threshold": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64",
+            "minimum": 0
           }
         }
       },
@@ -4148,6 +3198,17 @@
           }
         }
       },
+      "ApiFundResolverResponse": {
+        "type": "object",
+        "required": [
+          "fund_id"
+        ],
+        "properties": {
+          "fund_id": {
+            "type": "string"
+          }
+        }
+      },
       "ApiFundType": {
         "type": "string",
         "enum": [
@@ -4156,6 +3217,238 @@
           "Staking",
           "Mixed"
         ]
+      },
+      "ApiFundUpdateRequest": {
+        "type": "object",
+        "required": [
+          "fund_id",
+          "constraints"
+        ],
+        "properties": {
+          "constraints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApiFundConstraint"
+            }
+          },
+          "fund_id": {
+            "type": "string"
+          },
+          "risk_aversion_bps": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64",
+            "minimum": 0
+          },
+          "risk_max": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64",
+            "minimum": 0
+          }
+        }
+      },
+      "ApiFundWithBaseAssetMapper": {
+        "type": "object",
+        "required": [
+          "fund_id",
+          "base_asset"
+        ],
+        "properties": {
+          "base_asset": {
+            "type": "string"
+          },
+          "fund_id": {
+            "type": "string"
+          }
+        }
+      },
+      "ApiGetRequestBasedOrgTagsInput": {
+        "type": "object",
+        "properties": {
+          "organization_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "ApiGlobalConfig": {
+        "type": "object",
+        "required": [
+          "program_admin",
+          "initialized",
+          "paused",
+          "bump",
+          "fund_counter",
+          "supported_base_assets",
+          "updated_at_timestamp",
+          "updated_at_slot"
+        ],
+        "properties": {
+          "bump": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Program derived address bump",
+            "minimum": 0
+          },
+          "fund_counter": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Counter for funds created",
+            "minimum": 0
+          },
+          "initialized": {
+            "type": "boolean",
+            "description": "Whether the program is initialized"
+          },
+          "paused": {
+            "type": "boolean",
+            "description": "Whether the program is paused"
+          },
+          "program_admin": {
+            "type": "string",
+            "description": "Program admin pubkey"
+          },
+          "supported_base_assets": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of supported base asset mint addresses"
+          },
+          "updated_at_slot": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Slot when the config was last updated",
+            "minimum": 0
+          },
+          "updated_at_timestamp": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Timestamp when the config was last updated",
+            "minimum": 0
+          }
+        }
+      },
+      "ApiInputForCreatingStrategy": {
+        "type": "object",
+        "required": [
+          "name",
+          "visibility_tags",
+          "assets",
+          "fees"
+        ],
+        "properties": {
+          "assets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApiTemplateAsset"
+            }
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "fees": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApiTemplateFee"
+            }
+          },
+          "name": {
+            "type": "string"
+          },
+          "visibility_tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ApiInputForDeletingStrategy": {
+        "type": "object",
+        "required": [
+          "strategy_id"
+        ],
+        "properties": {
+          "strategy_id": {
+            "type": "string"
+          }
+        }
+      },
+      "ApiInputForFundResolver": {
+        "type": "object",
+        "required": [
+          "strategy_id",
+          "base_asset"
+        ],
+        "properties": {
+          "base_asset": {
+            "type": "string"
+          },
+          "strategy_id": {
+            "type": "string"
+          }
+        }
+      },
+      "ApiInputForGetStrategyByTags": {
+        "type": "object",
+        "required": [
+          "tags"
+        ],
+        "properties": {
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ApiInputForInitializingStrategy": {
+        "type": "object",
+        "required": [
+          "name",
+          "template_id",
+          "fee_recipient",
+          "fee_percentage",
+          "frequency_seconds"
+        ],
+        "properties": {
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "fee_percentage": {
+            "type": "number",
+            "format": "double"
+          },
+          "fee_recipient": {
+            "type": "string"
+          },
+          "frequency_seconds": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "name": {
+            "type": "string"
+          },
+          "template_id": {
+            "type": "string"
+          }
+        }
       },
       "ApiInputsForRequestingFund": {
         "type": "object",
@@ -4181,6 +3474,56 @@
           "yield_target": {
             "type": "number",
             "format": "double"
+          }
+        }
+      },
+      "ApiJobStatus": {
+        "type": "object",
+        "required": [
+          "job_id",
+          "job_type",
+          "payload",
+          "state",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "additional_fund_metadata": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/ApiFundWithBaseAssetMapper"
+            }
+          },
+          "created_at": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "error": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "job_id": {
+            "type": "string"
+          },
+          "job_type": {
+            "type": "string"
+          },
+          "payload": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
           }
         }
       },
@@ -4320,6 +3663,43 @@
             "items": {
               "$ref": "#/components/schemas/ApiTokenPair"
             }
+          }
+        }
+      },
+      "ApiOrganizationSettings": {
+        "type": "object",
+        "required": [
+          "organization_id",
+          "fee_distribution_key",
+          "tags"
+        ],
+        "properties": {
+          "fee_distribution_key": {
+            "type": "string",
+            "description": "Fee distribution key for the organization"
+          },
+          "organization_id": {
+            "type": "string",
+            "description": "Organization ID"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Tags for the organization"
+          }
+        }
+      },
+      "ApiOrganizationSettingsResponse": {
+        "type": "object",
+        "required": [
+          "settings"
+        ],
+        "properties": {
+          "settings": {
+            "$ref": "#/components/schemas/ApiOrganizationSettings",
+            "description": "Organization settings"
           }
         }
       },
@@ -4501,6 +3881,60 @@
           "HIGH"
         ]
       },
+      "ApiStrategyTemplate": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "visibility_tags",
+          "assets",
+          "fees",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "assets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApiTemplateAsset"
+            }
+          },
+          "created_at": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "fees": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApiTemplateFee"
+            }
+          },
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "visibility_tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
       "ApiTargetAllocation": {
         "type": "object",
         "required": [
@@ -4531,6 +3965,60 @@
           }
         }
       },
+      "ApiTemplateAsset": {
+        "type": "object",
+        "required": [
+          "symbol",
+          "yield_sources"
+        ],
+        "properties": {
+          "symbol": {
+            "type": "string"
+          },
+          "yield_sources": {
+            "$ref": "#/components/schemas/ApiTemplateYieldSource"
+          }
+        }
+      },
+      "ApiTemplateFee": {
+        "type": "object",
+        "required": [
+          "fee_type",
+          "percentage",
+          "recipient"
+        ],
+        "properties": {
+          "fee_type": {
+            "type": "string"
+          },
+          "percentage": {
+            "type": "number",
+            "format": "double"
+          },
+          "recipient": {
+            "type": "string"
+          }
+        }
+      },
+      "ApiTemplateYieldSource": {
+        "type": "object",
+        "required": [
+          "kamino",
+          "marginfiv2",
+          "drift_lending"
+        ],
+        "properties": {
+          "drift_lending": {
+            "type": "string"
+          },
+          "kamino": {
+            "type": "string"
+          },
+          "marginfiv2": {
+            "type": "string"
+          }
+        }
+      },
       "ApiTokenPair": {
         "type": "object",
         "required": [
@@ -4543,6 +4031,68 @@
             "minimum": 0
           },
           "token_mint": {
+            "type": "string"
+          }
+        }
+      },
+      "ApiUnAssignFundFromOrganization": {
+        "type": "object",
+        "required": [
+          "organization_fund_id"
+        ],
+        "properties": {
+          "organization_fund_id": {
+            "type": "string"
+          }
+        }
+      },
+      "ApiUpdateOrganizationSettingsRequest": {
+        "type": "object",
+        "properties": {
+          "fee_distribution_key": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Fee distribution key for the organization"
+          },
+          "tags": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "description": "Tags for the organization"
+          }
+        }
+      },
+      "ApiUpdateOrganizationTagsInputs": {
+        "type": "object",
+        "required": [
+          "organization_id",
+          "tags"
+        ],
+        "properties": {
+          "organization_id": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ApiUpdateOrganizationTagsResult": {
+        "type": "object",
+        "required": [
+          "message"
+        ],
+        "properties": {
+          "message": {
             "type": "string"
           }
         }
@@ -4686,6 +4236,28 @@
           }
         }
       },
+      "ApiYieldSourceIds": {
+        "type": "object",
+        "required": [
+          "drift",
+          "kamino",
+          "marginfi"
+        ],
+        "properties": {
+          "drift": {
+            "type": "string",
+            "description": "Drift protocol yield source ID"
+          },
+          "kamino": {
+            "type": "string",
+            "description": "Kamino protocol yield source ID"
+          },
+          "marginfi": {
+            "type": "string",
+            "description": "MarginFi protocol yield source ID"
+          }
+        }
+      },
       "ApiYieldSourceTarget": {
         "type": "object",
         "required": [
@@ -4731,62 +4303,44 @@
           }
         }
       },
-      "CodexTokenBalance": {
-        "type": "object",
-        "required": [
-          "token",
-          "balance"
-        ],
-        "properties": {
-          "balance": {
-            "type": "string"
-          },
-          "token": {
-            "$ref": "#/components/schemas/CodexToken"
-          },
-          "value_usd": {
-            "type": [
-              "string",
-              "null"
-            ]
-          }
-        }
-      },
-      "CodexWalletData": {
-        "type": "object",
-        "required": [
-          "address",
-          "balances"
-        ],
-        "properties": {
-          "address": {
-            "type": "string"
-          },
-          "balances": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CodexTokenBalance"
-            }
-          },
-          "total_value_usd": {
-            "type": [
-              "string",
-              "null"
-            ]
-          }
-        }
-      },
       "CreateFundApiResult": {
         "type": "object",
         "required": [
-          "fund_key",
-          "signature"
+          "status",
+          "task_id",
+          "message"
         ],
         "properties": {
-          "fund_key": {
+          "message": {
             "type": "string"
           },
-          "signature": {
+          "status": {
+            "type": "string"
+          },
+          "task_id": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateStrategyApiResult": {
+        "type": "object",
+        "required": [
+          "task_id_for_creating_all_funds",
+          "task_id_for_creating_strategy",
+          "status",
+          "message"
+        ],
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "task_id_for_creating_all_funds": {
+            "type": "string"
+          },
+          "task_id_for_creating_strategy": {
             "type": "string"
           }
         }
@@ -4802,6 +4356,26 @@
           }
         }
       },
+      "DepositInstructionResponse": {
+        "type": "object",
+        "required": [
+          "deposit_instructions",
+          "lookup_table"
+        ],
+        "properties": {
+          "deposit_instructions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SolanaInstruction"
+            },
+            "description": "Array of Solana instructions for the deposit operation"
+          },
+          "lookup_table": {
+            "type": "string",
+            "description": "Address of the lookup table for the transaction"
+          }
+        }
+      },
       "ErrorResponse": {
         "type": "object",
         "required": [
@@ -4814,11 +4388,62 @@
           }
         }
       },
-      "SerializedTx": {
-        "type": "string",
-        "examples": [
-          "AQAAAAAAAAAAAAAAAAAA...JAwAGDQoBEBETBBIUFgwPCwcVAggJB0BCDwAAAAAAAA=="
-        ]
+      "FeeInfo": {
+        "type": "object",
+        "required": [
+          "fee_bps",
+          "fee_recipient",
+          "frequency_seconds"
+        ],
+        "properties": {
+          "fee_bps": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "fee_recipient": {
+            "type": "string"
+          },
+          "frequency_seconds": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          }
+        }
+      },
+      "FundRef": {
+        "type": "object",
+        "required": [
+          "symbol",
+          "fund_id"
+        ],
+        "properties": {
+          "allocation_percent": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "format": "double"
+          },
+          "fund_id": {
+            "type": "string"
+          },
+          "symbol": {
+            "type": "string"
+          }
+        }
+      },
+      "GlobalConfigResponse": {
+        "type": "object",
+        "required": [
+          "global_config"
+        ],
+        "properties": {
+          "global_config": {
+            "$ref": "#/components/schemas/ApiGlobalConfig",
+            "description": "Global configuration information"
+          }
+        }
       },
       "InputForCreatingUserFund": {
         "type": "object",
@@ -4854,6 +4479,12 @@
             "format": "int64",
             "minimum": 0
           },
+          "base_asset": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
           "fund_id": {
             "type": [
               "string",
@@ -4861,6 +4492,12 @@
             ]
           },
           "payer_key": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "strategy_id": {
             "type": [
               "string",
               "null"
@@ -4877,21 +4514,6 @@
               "string",
               "null"
             ]
-          }
-        }
-      },
-      "InputForUpdatingPartnerDetails": {
-        "type": "object",
-        "required": [
-          "organization_id",
-          "organization_fund_id"
-        ],
-        "properties": {
-          "organization_fund_id": {
-            "type": "string"
-          },
-          "organization_id": {
-            "type": "string"
           }
         }
       },
@@ -4912,6 +4534,12 @@
             "format": "int64",
             "minimum": 0
           },
+          "base_asset": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
           "fund_id": {
             "type": [
               "string",
@@ -4919,6 +4547,12 @@
             ]
           },
           "payer_key": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "strategy_id": {
             "type": [
               "string",
               "null"
@@ -4947,9 +4581,7 @@
             "type": "object",
             "required": [
               "fund_id",
-              "fees",
-              "updated_at_timestamp",
-              "updated_at_slot"
+              "fees"
             ],
             "properties": {
               "fees": {
@@ -4960,16 +4592,6 @@
               },
               "fund_id": {
                 "type": "string"
-              },
-              "updated_at_slot": {
-                "type": "integer",
-                "format": "int64",
-                "minimum": 0
-              },
-              "updated_at_timestamp": {
-                "type": "integer",
-                "format": "int64",
-                "minimum": 0
               }
             }
           }
@@ -5005,7 +4627,47 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ApiRebalanceHistory"
+              "$ref": "#/components/schemas/ProtocolYieldSources"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMeta",
+            "description": "Pagination metadata"
+          }
+        }
+      },
+      "PaginatedResponseUserBalance": {
+        "type": "object",
+        "description": "Paginated response wrapper",
+        "required": [
+          "data",
+          "meta"
+        ],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserBalance"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMeta",
+            "description": "Pagination metadata"
+          }
+        }
+      },
+      "PaginatedResponseUserYield": {
+        "type": "object",
+        "description": "Paginated response wrapper",
+        "required": [
+          "data",
+          "meta"
+        ],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserYield"
             }
           },
           "meta": {
@@ -5086,36 +4748,6 @@
           }
         }
       },
-      "Partner": {
-        "type": "object",
-        "required": [
-          "organization",
-          "organization_id",
-          "organization_fund_id",
-          "organization_slug",
-          "organization_image_url"
-        ],
-        "properties": {
-          "organization": {
-            "type": "string"
-          },
-          "organization_fund_id": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "organization_id": {
-            "type": "string"
-          },
-          "organization_image_url": {
-            "type": "string"
-          },
-          "organization_slug": {
-            "type": "string"
-          }
-        }
-      },
       "PortalCreateApiKeyRequest": {
         "type": "object",
         "properties": {
@@ -5175,17 +4807,198 @@
           }
         }
       },
+      "ProtocolYieldSources": {
+        "type": "object",
+        "required": [
+          "protocol",
+          "yield_sources",
+          "count"
+        ],
+        "properties": {
+          "count": {
+            "type": "integer",
+            "description": "Number of yield sources in this protocol",
+            "minimum": 0
+          },
+          "protocol": {
+            "type": "string",
+            "description": "Protocol/source name (e.g., \"kamino\", \"marginfi\", \"drift\")"
+          },
+          "yield_sources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApiYieldSource"
+            },
+            "description": "List of yield sources for this protocol"
+          }
+        }
+      },
+      "StrategyInstance": {
+        "type": "object",
+        "required": [
+          "id",
+          "org_id",
+          "name",
+          "template_id",
+          "funds",
+          "fee_info",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "created_at": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "fee_info": {
+            "$ref": "#/components/schemas/FeeInfo"
+          },
+          "funds": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FundRef"
+            }
+          },
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "org_id": {
+            "type": "string"
+          },
+          "template_id": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          }
+        }
+      },
+      "SolanaAccountMeta": {
+        "type": "object",
+        "required": [
+          "pubkey",
+          "is_signer",
+          "is_writable"
+        ],
+        "properties": {
+          "pubkey": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "uint8",
+              "minimum": 0,
+              "maximum": 255
+            },
+            "minItems": 32,
+            "maxItems": 32,
+            "description": "32-byte public key as an array of integers"
+          },
+          "is_signer": {
+            "type": "boolean",
+            "description": "Whether the account is a signer"
+          },
+          "is_writable": {
+            "type": "boolean",
+            "description": "Whether the account is writable"
+          }
+        }
+      },
+      "SolanaInstruction": {
+        "type": "object",
+        "required": [
+          "program_id",
+          "accounts",
+          "data"
+        ],
+        "properties": {
+          "program_id": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "uint8",
+              "minimum": 0,
+              "maximum": 255
+            },
+            "minItems": 32,
+            "maxItems": 32,
+            "description": "32-byte program ID as an array of integers"
+          },
+          "accounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SolanaAccountMeta"
+            },
+            "description": "Array of account metadata for the instruction"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "uint8",
+              "minimum": 0,
+              "maximum": 255
+            },
+            "description": "Instruction data as an array of bytes"
+          }
+        }
+      },
       "String": {
         "type": "string"
       },
-      "StructuredInputForCreatingParter": {
+      "StrategyInfo": {
         "type": "object",
         "required": [
-          "params"
+          "strategy_id",
+          "strategy_name",
+          "assets",
+          "apy",
+          "apy_per_asset"
         ],
         "properties": {
-          "params": {
-            "$ref": "#/components/schemas/Partner"
+          "strategy_id": {
+            "type": "string",
+            "description": "Unique identifier for the strategy"
+          },
+          "strategy_name": {
+            "type": "string",
+            "description": "Name of the strategy"
+          },
+          "assets": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of asset addresses included in the strategy"
+          },
+          "apy": {
+            "type": "number",
+            "format": "double",
+            "description": "Overall annual percentage yield for the strategy"
+          },
+          "apy_per_asset": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number",
+              "format": "double"
+            },
+            "description": "APY breakdown per asset address",
+            "example": {
+              "27G8MtK7VtTcCHkpASjSDdkWWYfoqT6ggEuKidVJidD4": 0.046395890734657115,
+              "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn": 0.05022988427340677,
+              "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": 5.660193556175348
+            }
           }
         }
       },
@@ -5211,17 +5024,6 @@
           }
         }
       },
-      "StructuredInputForUpdatingPartnerDetails": {
-        "type": "object",
-        "required": [
-          "params"
-        ],
-        "properties": {
-          "params": {
-            "$ref": "#/components/schemas/InputForUpdatingPartnerDetails"
-          }
-        }
-      },
       "StructuredInputForWithdraw": {
         "type": "object",
         "required": [
@@ -5230,6 +5032,33 @@
         "properties": {
           "params": {
             "$ref": "#/components/schemas/InputForWithdraw"
+          }
+        }
+      },
+      "TransactionResponse": {
+        "type": "object",
+        "required": [
+          "encoded_transaction"
+        ],
+        "properties": {
+          "encoded_transaction": {
+            "type": "string",
+            "description": "Base64 encoded Solana transaction"
+          }
+        }
+      },
+      "SupportedAssetsResponse": {
+        "type": "object",
+        "required": [
+          "supported_base_assets"
+        ],
+        "properties": {
+          "supported_base_assets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CodexToken"
+            },
+            "description": "List of supported base assets with metadata"
           }
         }
       },
@@ -5263,45 +5092,13 @@
           "yield_balance": {
             "oneOf": [
               {
-                "type": "null"
+                "$ref": "#/components/schemas/YieldBalance"
               },
               {
-                "$ref": "#/components/schemas/YieldBalance"
+                "type": "null"
               }
+              
             ]
-          }
-        }
-      },
-      "UserFundStatsMeta": {
-        "type": "object",
-        "required": [
-          "base_asset",
-          "fund_id",
-          "start",
-          "end",
-          "granularity"
-        ],
-        "properties": {
-          "base_asset": {
-            "type": "string"
-          },
-          "end": {
-            "type": "string"
-          },
-          "fiat_currency": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "fund_id": {
-            "type": "string"
-          },
-          "granularity": {
-            "type": "string"
-          },
-          "start": {
-            "type": "string"
           }
         }
       },
@@ -5352,44 +5149,52 @@
         "items": {
           "type": "object",
           "required": [
-            "time_stamps",
-            "base_asset_value",
-            "yeild_percentage",
-            "meta"
+            "id",
+            "org_id",
+            "name",
+            "template_id",
+            "funds",
+            "fee_info",
+            "created_at",
+            "updated_at"
           ],
           "properties": {
-            "base_asset_value": {
-              "type": "array",
-              "items": {
-                "type": "number",
-                "format": "double"
-              }
+            "created_at": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0
             },
-            "fiat_value": {
+            "description": {
               "type": [
-                "array",
+                "string",
                 "null"
-              ],
-              "items": {
-                "type": "number",
-                "format": "double"
-              }
+              ]
             },
-            "meta": {
-              "$ref": "#/components/schemas/UserFundStatsMeta"
+            "fee_info": {
+              "$ref": "#/components/schemas/FeeInfo"
             },
-            "time_stamps": {
+            "funds": {
               "type": "array",
               "items": {
-                "type": "string"
+                "$ref": "#/components/schemas/FundRef"
               }
             },
-            "yeild_percentage": {
-              "type": "array",
-              "items": {
-                "type": "number",
-                "format": "double"
-              }
+            "id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "org_id": {
+              "type": "string"
+            },
+            "template_id": {
+              "type": "string"
+            },
+            "updated_at": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0
             }
           }
         }
@@ -5418,6 +5223,26 @@
           }
         }
       },
+      "WithdrawInstructionResponse": {
+        "type": "object",
+        "required": [
+          "withdraw_instructions",
+          "lookup_table"
+        ],
+        "properties": {
+          "withdraw_instructions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SolanaInstruction"
+            },
+            "description": "Array of Solana instructions for the withdraw operation"
+          },
+          "lookup_table": {
+            "type": "string",
+            "description": "Address of the lookup table for the transaction"
+          }
+        }
+      },
       "YieldSourceResponse": {
         "type": "object",
         "required": [
@@ -5430,334 +5255,39 @@
           }
         }
       },
+      "YieldSourcesQuery": {
+        "type": "object",
+        "properties": {
+          "base_asset": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Base asset to filter by (e.g., \"USDC\", \"SOL\", \"ETH\")"
+          },
+          "page": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int32",
+            "description": "Page number for pagination (default: 1)",
+            "minimum": 0
+          },
+          "per_page": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int32",
+            "description": "Items per page (default: 20, max: 100)",
+            "minimum": 0
+          }
+        }
+      },
       "f64": {
         "type": "number",
         "format": "double"
-      },
-      "U8Array32": {
-        "type": "array",
-        "items": {
-          "type": "integer",
-          "format": "uint8",
-          "minimum": 0,
-          "maximum": 255
-        },
-        "minItems": 32,
-        "maxItems": 32,
-        "description": "32-byte array represented as 8-bit unsigned integers."
-      },
-      "U8Array": {
-        "type": "array",
-        "items": {
-          "type": "integer",
-          "format": "uint8",
-          "minimum": 0,
-          "maximum": 255
-        },
-        "description": "Variable-length byte array represented as 8-bit unsigned integers."
-      },
-      "AccountMeta": {
-        "type": "object",
-        "properties": {
-          "pubkey": {
-            "$ref": "#/components/schemas/U8Array32",
-            "description": "32-byte public key"
-          },
-          "is_signer": {
-            "type": "boolean",
-            "description": "Whether the account must sign the transaction"
-          },
-          "is_writable": {
-            "type": "boolean",
-            "description": "Whether the account is writable"
-          }
-        },
-        "required": [
-          "pubkey",
-          "is_signer",
-          "is_writable"
-        ]
-      },
-      "CompiledInstruction": {
-        "type": "object",
-        "properties": {
-          "program_id": {
-            "$ref": "#/components/schemas/U8Array32",
-            "description": "32-byte program id"
-          },
-          "accounts": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AccountMeta"
-            }
-          },
-          "data": {
-            "$ref": "#/components/schemas/U8Array",
-            "description": "Opaque instruction data bytes"
-          }
-        },
-        "required": [
-          "program_id",
-          "accounts",
-          "data"
-        ]
-      },
-      "DepositInstructionResponse": {
-        "type": "object",
-        "properties": {
-          "lookup_table": {
-            "type": "string",
-            "description": "Address of address lookup table (if applicable)",
-            "example": "7Xpgp15kooeJmJoy6NP8YXJuXFEqs6aZiy6bwt4KdaxX"
-          },
-          "deposit_instructions": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CompiledInstruction"
-            }
-          }
-        },
-        "required": [
-          "deposit_instructions"
-        ]
-      },
-      "WithdrawInstructionResponse": {
-        "type": "object",
-        "properties": {
-          "lookup_table": {
-            "type": "string",
-            "description": "Address of address lookup table (if applicable)",
-            "example": "7Xpgp15kooeJmJoy6NP8YXJuXFEqs6aZiy6bwt4KdaxX"
-          },
-          "withdraw_instructions": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CompiledInstruction"
-            }
-          }
-        },
-        "required": [
-          "withdraw_instructions"
-        ]
-      },
-      "UserBalancesResponse": {
-        "type": "object",
-        "description": "Aggregated wallet and Breeze fund balances for a user.",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/UserBalanceItem"
-            },
-            "description": "Per-asset balances and optional yield position."
-          },
-          "meta": {
-            "$ref": "#/components/schemas/PaginationMeta"
-          }
-        },
-        "required": [
-          "data",
-          "meta"
-        ],
-        "example": {
-          "data": [
-            {
-              "token_address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
-              "token_symbol": "USDC",
-              "token_name": "USD Coin",
-              "decimals": 6,
-              "total_balance": 13465672,
-              "yield_balance": {
-                "fund_id": "8pfa41TvGWyttSViHRaNwFwbjhDEgmf3tHj81XR3CwWV",
-                "funds": "8000002",
-                "amount_of_yield": "811",
-                "fund_apy": 4.993670216216565
-              }
-            },
-            {
-              "token_address": "11111111111111111111111111111112",
-              "token_symbol": "SOL",
-              "token_name": "Solana",
-              "decimals": 9,
-              "total_balance": 17974104,
-              "yield_balance": null
-            }
-          ],
-          "meta": {
-            "page": 1,
-            "per_page": 10,
-            "total": 2,
-            "total_pages": 1,
-            "has_more": false
-          }
-        }
-      },
-      "UserBalanceItem": {
-        "type": "object",
-        "properties": {
-          "token_address": {
-            "type": "string",
-            "description": "Mint address (SPL) or special address (e.g., 111...12 for SOL)."
-          },
-          "token_symbol": {
-            "type": "string",
-            "description": "Ticker symbol (e.g., USDC, SOL)."
-          },
-          "token_name": {
-            "type": "string",
-            "description": "Human-readable name."
-          },
-          "decimals": {
-            "type": "integer",
-            "format": "int32",
-            "description": "Token decimals."
-          },
-          "total_balance": {
-            "type": "integer",
-            "format": "int64",
-            "description": "Total wallet balance in raw token units."
-          },
-          "yield_balance": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/UserYieldResponse"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Active yield position details or null."
-          }
-        },
-        "required": [
-          "token_address",
-          "token_symbol",
-          "token_name",
-          "decimals",
-          "total_balance",
-          "yield_balance"
-        ]
-      },
-      "UserYieldBalance": {
-        "type": "object",
-        "properties": {
-          "fund_id": {
-            "type": "string",
-            "description": "Breeze fund ID."
-          },
-          "funds": {
-            "type": "string",
-            "description": "Position size in raw token units (string)."
-          },
-          "amount_of_yield": {
-            "type": "string",
-            "description": "Yield earned in raw token units (string)."
-          },
-          "fund_apy": {
-            "type": "number",
-            "format": "double",
-            "description": "Current APY for the fund."
-          }
-        },
-        "required": [
-          "fund_id",
-          "funds",
-          "amount_of_yield",
-          "fund_apy"
-        ]
-      },
-      "UserYieldResponse": {
-        "type": "object",
-        "description": "Per-fund yield and position entries for a user.",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/UserYieldItem"
-            },
-            "description": "Yield entries per fund."
-          },
-          "meta": {
-            "$ref": "#/components/schemas/PaginationMeta"
-          }
-        },
-        "required": [
-          "data",
-          "meta"
-        ],
-        "example": {
-          "data": [
-            {
-              "fund_id": "8pfa41TvGWyttSViHRaNwFwbjhDEgmf3tHj81XR3CwWV",
-              "fund_name": "Fund 8pfa41TvGWyttSViHRaNwFwbjhDEgmf3tHj81XR3CwWV",
-              "base_asset": "USDC",
-              "position_value": 7000019,
-              "yield_earned": 17,
-              "apy": 4.790763840530781,
-              "entry_date": "2025-07-30T21:24:30+00:00",
-              "last_updated": "2025-07-30T21:24:30+00:00"
-            }
-          ],
-          "meta": {
-            "page": 1,
-            "per_page": 10,
-            "total": 1,
-            "total_pages": 1,
-            "has_more": false
-          }
-        }
-      },
-      "UserYieldItem": {
-        "type": "object",
-        "properties": {
-          "fund_id": {
-            "type": "string",
-            "description": "Breeze fund ID."
-          },
-          "fund_name": {
-            "type": "string",
-            "description": "Fund display name."
-          },
-          "base_asset": {
-            "type": "string",
-            "description": "Base token symbol (e.g., USDC)."
-          },
-          "position_value": {
-            "type": "integer",
-            "format": "int64",
-            "description": "Position value in raw token units."
-          },
-          "yield_earned": {
-            "type": "integer",
-            "format": "int64",
-            "description": "Yield earned in raw token units."
-          },
-          "apy": {
-            "type": "number",
-            "format": "double",
-            "description": "APY for this position."
-          },
-          "entry_date": {
-            "type": "string",
-            "format": "date-time",
-            "description": "ISO 8601 date-time."
-          },
-          "last_updated": {
-            "type": "string",
-            "format": "date-time",
-            "description": "ISO 8601 date-time."
-          }
-        },
-        "required": [
-          "fund_id",
-          "fund_name",
-          "base_asset",
-          "position_value",
-          "yield_earned",
-          "apy",
-          "entry_date",
-          "last_updated"
-        ]
       }
     },
     "securitySchemes": {
@@ -5799,8 +5329,16 @@
       "description": "Organization API key management"
     },
     {
+      "name": "Organization Management",
+      "description": "Organization configuration and settings"
+    },
+    {
       "name": "Partner Stats",
       "description": "Partner statistics and analytics"
+    },
+    {
+      "name": "Global Config",
+      "description": "Global configuration and supported assets"
     },
     {
       "name": "Yield Sources",

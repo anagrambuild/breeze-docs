@@ -1,0 +1,826 @@
+---
+title: 'Integration of Breeze UI Components'
+description: 'Explore how is it possible to integrate Breeze by using Breeze UI Components'
+---
+
+# Integrating Breeze into Your UI
+
+This guide walks you through integrating Breeze yield-earning functionality into your Next.js application. You'll learn how to set up the API routes, create React hooks for managing state, and use pre-built UI components from the [Breeze UI Playground](https://ui.breeze.baby).
+
+## Overview
+
+Breeze allows users to earn yield on their Solana assets (USDC, USDT, SOL, and more) with simple deposit and withdraw operations. This integration consists of:
+
+1. **Server-side API routes** - Proxy requests to the Breeze API while keeping your API key secure
+2. **React hooks** - Manage wallet connection, balances, and transactions
+3. **UI components** - Pre-styled, customizable components for deposit/withdraw flows
+
+## Prerequisites
+
+- Node.js 18+
+- A Breeze API key (contact the Breeze team)
+- A Breeze Strategy ID
+- A Solana RPC endpoint (recommended: use a paid RPC provider for production)
+
+<Card title="Example Code Repository" icon="github" href="https://github.com/anagrambuild/breeze-integration-examples/tree/master/breeze-powered-website">
+  View the complete example code for this integration on GitHub.
+</Card>
+
+## Project Setup
+
+### 1. Create a Next.js Project
+
+```bash
+npx create-next-app@latest my-breeze-app --typescript --tailwind --app
+cd my-breeze-app
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install @solana/wallet-adapter-react @solana/wallet-adapter-react-ui @solana/wallet-adapter-wallets @solana/wallet-adapter-base @solana/web3.js @solana/spl-token sonner lucide-react clsx tailwind-merge
+```
+
+### 3. Environment Variables
+
+Create a `.env.local` file in your project root:
+
+```env
+# Breeze API Configuration (keep secret - server-side only)
+BREEZE_API_KEY=your_api_key_here
+BREEZE_API_BASE_URL=https://api.breeze.baby
+
+# Strategy ID (can be public - used client-side)
+NEXT_PUBLIC_BREEZE_STRATEGY_ID=your_strategy_id_here
+
+# Solana RPC URL (recommended: use a paid RPC for production)
+NEXT_PUBLIC_RPC_URL=https://api.mainnet-beta.solana.com
+```
+
+> **Security Note**: Never expose `BREEZE_API_KEY` to the client. Only `NEXT_PUBLIC_*` variables are sent to the browser.
+
+---
+
+## Step 1: Token Configuration
+
+Create a configuration file for supported tokens:
+
+```typescript
+// app/config/tokens.ts
+
+export interface AssetConfig {
+  symbol: string;
+  mint: string;
+  decimals: number;
+}
+
+// Fetch available assets from /strategy-info/{strategy_id} endpoint
+// and hardcode them here for your strategy
+export const AVAILABLE_ASSETS: AssetConfig[] = [
+  {
+    symbol: "USDC",
+    mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    decimals: 6,
+  },
+  {
+    symbol: "USDT",
+    mint: "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+    decimals: 6,
+  },
+  {
+    symbol: "SOL",
+    mint: "So11111111111111111111111111111111111111112",
+    decimals: 9,
+  },
+  // Add more tokens as supported by your strategy
+];
+
+// For lookups by symbol
+export const SUPPORTED_TOKENS: Record<string, AssetConfig> =
+  Object.fromEntries(AVAILABLE_ASSETS.map((asset) => [asset.symbol, asset]));
+
+export type TokenSymbol = "USDC" | "USDT" | "SOL";
+```
+
+---
+
+## Step 2: Utility Functions
+
+Create helpers for decimal conversion:
+
+```typescript
+// app/utils/decimals.ts
+
+// Convert user-facing amount to API amount (multiply by 10^decimals)
+export const toApiAmount = (userAmount: number, decimals: number = 6): number => {
+  return Math.floor(userAmount * Math.pow(10, decimals));
+};
+
+// Convert API amount to user-facing amount (divide by 10^decimals)
+export const fromApiAmount = (apiAmount: number, decimals: number = 6): number => {
+  return apiAmount / Math.pow(10, decimals);
+};
+```
+
+---
+
+## Step 3: API Routes
+
+Create server-side API routes that proxy requests to the Breeze API. This keeps your API key secure.
+
+### Balance Route
+
+```typescript
+// app/api/balance/route.ts
+
+import { NextRequest } from "next/server";
+import { fromApiAmount } from "../../utils/decimals";
+
+export const dynamic = 'force-dynamic';
+
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
+  const user_pubkey = searchParams.get("user_pubkey");
+
+  if (!user_pubkey) {
+    return new Response("user_pubkey is required", { status: 400 });
+  }
+
+  const apiKey = process.env.BREEZE_API_KEY;
+  const baseUrl = process.env.BREEZE_API_BASE_URL;
+  const strategyId = process.env.NEXT_PUBLIC_BREEZE_STRATEGY_ID;
+
+  if (!apiKey || !baseUrl || !strategyId) {
+    return new Response("Server configuration error", { status: 500 });
+  }
+
+  try {
+    const url = new URL(`${baseUrl}/breeze-balances/${user_pubkey}`);
+    url.searchParams.append("strategy_id", strategyId);
+
+    const response = await fetch(url.toString(), {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+      },
+      cache: 'no-store',
+    });
+
+    if (!response.ok) {
+      return new Response(`Failed to fetch balance: ${response.status}`, {
+        status: response.status,
+      });
+    }
+
+    const data = await response.json();
+
+    // Convert API amounts to user-facing amounts
+    if (data.data && Array.isArray(data.data)) {
+      const convertedData = {
+        ...data,
+        data: data.data.map((item: any) => {
+          const decimals = item.decimals || 6;
+          return {
+            ...item,
+            total_position_value: fromApiAmount(item.total_position_value, decimals),
+            total_deposited_value: fromApiAmount(item.total_deposited_value, decimals),
+            yield_earned: fromApiAmount(item.yield_earned, decimals),
+          };
+        }),
+      };
+      return Response.json(convertedData);
+    }
+
+    return Response.json(data);
+  } catch (error) {
+    return new Response("Internal server error", { status: 500 });
+  }
+}
+```
+
+### Deposit Transaction Route
+
+```typescript
+// app/api/deposittx/route.ts
+
+import { NextRequest } from "next/server";
+import { toApiAmount } from "../../utils/decimals";
+import { AVAILABLE_ASSETS } from "../../config/tokens";
+
+export async function POST(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
+  const amount = searchParams.get("amount");
+  const user_pubkey = searchParams.get("user_pubkey");
+  const base_asset = searchParams.get("base_asset");
+  const all = searchParams.get("all") === "true";
+
+  if (!user_pubkey || !base_asset) {
+    return new Response("Missing required parameters", { status: 400 });
+  }
+
+  const tokenConfig = AVAILABLE_ASSETS.find((asset) => asset.mint === base_asset);
+  const decimals = tokenConfig?.decimals || 6;
+  const apiAmount = toApiAmount(Number(amount || 0), decimals);
+
+  const apiKey = process.env.BREEZE_API_KEY;
+  const strategyId = searchParams.get("strategy_id") || process.env.NEXT_PUBLIC_BREEZE_STRATEGY_ID;
+  const baseUrl = process.env.BREEZE_API_BASE_URL;
+
+  if (!apiKey || !strategyId || !baseUrl) {
+    return new Response("Server configuration error", { status: 500 });
+  }
+
+  const requestBody = {
+    params: {
+      strategy_id: strategyId,
+      base_asset: base_asset,
+      amount: apiAmount,
+      all: all,
+      user_key: user_pubkey,
+      payer_key: user_pubkey,
+    },
+  };
+
+  const response = await fetch(`${baseUrl}/deposit/tx`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": apiKey,
+    },
+    body: JSON.stringify(requestBody),
+  });
+
+  const text = await response.text();
+
+  try {
+    const data = JSON.parse(text);
+    return Response.json({ data: data });
+  } catch {
+    return Response.json({ data: text });
+  }
+}
+```
+
+### Withdraw Transaction Route
+
+```typescript
+// app/api/withdrawtx/route.ts
+
+import { NextRequest } from "next/server";
+import { toApiAmount } from "../../utils/decimals";
+import { AVAILABLE_ASSETS } from "../../config/tokens";
+
+export async function POST(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
+  const amount = searchParams.get("amount");
+  const user_pubkey = searchParams.get("user_pubkey");
+  const base_asset = searchParams.get("base_asset");
+  const all = searchParams.get("all") === "true";
+
+  if (!user_pubkey || !base_asset) {
+    return new Response("Missing required parameters", { status: 400 });
+  }
+
+  const tokenConfig = AVAILABLE_ASSETS.find((asset) => asset.mint === base_asset);
+  const decimals = tokenConfig?.decimals || 6;
+  const apiAmount = toApiAmount(Number(amount || 0), decimals);
+
+  const apiKey = process.env.BREEZE_API_KEY;
+  const strategyId = searchParams.get("strategy_id") || process.env.NEXT_PUBLIC_BREEZE_STRATEGY_ID;
+  const baseUrl = process.env.BREEZE_API_BASE_URL;
+
+  if (!apiKey || !strategyId || !baseUrl) {
+    return new Response("Server configuration error", { status: 500 });
+  }
+
+  const requestBody = {
+    params: {
+      strategy_id: strategyId,
+      base_asset: base_asset,
+      amount: apiAmount,
+      all: all,
+      user_key: user_pubkey,
+      payer_key: user_pubkey,
+    },
+  };
+
+  const response = await fetch(`${baseUrl}/withdraw/tx`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": apiKey,
+    },
+    body: JSON.stringify(requestBody),
+  });
+
+  const text = await response.text();
+
+  try {
+    const data = JSON.parse(text);
+    return Response.json({ data: data });
+  } catch {
+    return Response.json({ data: text });
+  }
+}
+```
+
+### Strategy Info Route
+
+```typescript
+// app/api/strategy-info/route.ts
+
+export const dynamic = 'force-dynamic';
+
+export async function GET() {
+  const apiKey = process.env.BREEZE_API_KEY;
+  const baseUrl = process.env.BREEZE_API_BASE_URL;
+  const strategyId = process.env.NEXT_PUBLIC_BREEZE_STRATEGY_ID;
+
+  if (!apiKey || !baseUrl || !strategyId) {
+    return new Response("Server configuration error", { status: 500 });
+  }
+
+  try {
+    const response = await fetch(`${baseUrl}/strategy-info/${strategyId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+      },
+      cache: 'no-store',
+    });
+
+    if (!response.ok) {
+      return new Response(`Failed to fetch strategy info: ${response.status}`, {
+        status: response.status,
+      });
+    }
+
+    const data = await response.json();
+    return Response.json(data);
+  } catch (error) {
+    return new Response("Internal server error", { status: 500 });
+  }
+}
+```
+
+---
+
+## Step 4: Wallet Provider Setup
+
+Create a wallet provider component:
+
+```typescript
+// app/components/AppWalletProvider.tsx
+
+"use client";
+
+import React, { useMemo } from "react";
+import {
+  ConnectionProvider,
+  WalletProvider,
+} from "@solana/wallet-adapter-react";
+import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
+import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
+import {
+  PhantomWalletAdapter,
+  SolflareWalletAdapter,
+} from "@solana/wallet-adapter-wallets";
+
+// Import wallet adapter styles
+import "@solana/wallet-adapter-react-ui/styles.css";
+
+export default function AppWalletProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const network = WalletAdapterNetwork.Mainnet;
+
+  const endpoint = useMemo(() => {
+    return process.env.NEXT_PUBLIC_RPC_URL || "https://api.mainnet-beta.solana.com";
+  }, []);
+
+  const wallets = useMemo(
+    () => [
+      new PhantomWalletAdapter(),
+      new SolflareWalletAdapter(),
+    ],
+    []
+  );
+
+  return (
+    <ConnectionProvider endpoint={endpoint}>
+      <WalletProvider wallets={wallets} autoConnect>
+        <WalletModalProvider>{children}</WalletModalProvider>
+      </WalletProvider>
+    </ConnectionProvider>
+  );
+}
+```
+
+Wrap your app with the provider:
+
+```typescript
+// app/layout.tsx
+
+import AppWalletProvider from "./components/AppWalletProvider";
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body>
+        <AppWalletProvider>
+          {children}
+        </AppWalletProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+---
+
+## Step 5: React Hooks
+
+### Balance Hook
+
+```typescript
+// app/hooks/useBreezeBalances.ts
+
+"use client";
+
+import { useState, useCallback } from "react";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { Connection, PublicKey } from "@solana/web3.js";
+import { getAccount, getAssociatedTokenAddress, TokenAccountNotFoundError } from "@solana/spl-token";
+import { SUPPORTED_TOKENS, TokenSymbol } from "../config/tokens";
+
+const rpcUrl = process.env.NEXT_PUBLIC_RPC_URL || "https://api.mainnet-beta.solana.com";
+const connection = new Connection(rpcUrl, "confirmed");
+
+export function useBreezeBalances(selectedToken: TokenSymbol) {
+  const { publicKey, connected } = useWallet();
+
+  const [walletBalance, setWalletBalance] = useState(0);
+  const [breezeBalance, setBreezeBalance] = useState(0);
+  const [loading, setLoading] = useState(false);
+
+  const fetchWalletBalance = useCallback(async (): Promise<number> => {
+    if (!connected || !publicKey) return 0;
+
+    try {
+      const tokenConfig = SUPPORTED_TOKENS[selectedToken];
+
+      // Handle native SOL differently
+      if (selectedToken === "SOL") {
+        const lamports = await connection.getBalance(publicKey);
+        const balance = lamports / Math.pow(10, tokenConfig.decimals);
+        setWalletBalance(balance);
+        return balance;
+      }
+
+      // For SPL tokens
+      const tokenMint = new PublicKey(tokenConfig.mint);
+      const ata = await getAssociatedTokenAddress(tokenMint, publicKey);
+      const accountInfo = await getAccount(connection, ata);
+      const balance = Number(accountInfo.amount) / Math.pow(10, tokenConfig.decimals);
+
+      setWalletBalance(balance);
+      return balance;
+    } catch (error) {
+      if (!(error instanceof TokenAccountNotFoundError)) {
+        console.error("Error fetching wallet balance:", error);
+      }
+      setWalletBalance(0);
+      return 0;
+    }
+  }, [connected, publicKey, selectedToken]);
+
+  const fetchBreezeBalance = useCallback(async (): Promise<number> => {
+    if (!connected || !publicKey) return 0;
+
+    try {
+      const response = await fetch(`/api/balance?user_pubkey=${publicKey.toBase58()}`);
+      if (!response.ok) throw new Error("Failed to fetch balance");
+
+      const data = await response.json();
+
+      if (data.data?.length > 0) {
+        const tokenBalance = data.data.find(
+          (item: any) => item.token_symbol === selectedToken
+        );
+        const balance = tokenBalance?.total_position_value || 0;
+        setBreezeBalance(balance);
+        return balance;
+      }
+
+      setBreezeBalance(0);
+      return 0;
+    } catch (error) {
+      console.error("Error fetching Breeze balance:", error);
+      setBreezeBalance(0);
+      return 0;
+    }
+  }, [connected, publicKey, selectedToken]);
+
+  const fetchBalances = useCallback(async () => {
+    if (!connected || !publicKey) return;
+
+    setLoading(true);
+    try {
+      await Promise.all([fetchWalletBalance(), fetchBreezeBalance()]);
+    } finally {
+      setLoading(false);
+    }
+  }, [connected, publicKey, fetchWalletBalance, fetchBreezeBalance]);
+
+  return {
+    walletBalance,
+    breezeBalance,
+    loading,
+    fetchBalances,
+  };
+}
+```
+
+### Transaction Hook
+
+```typescript
+// app/hooks/useBreezeTransactions.tsx
+
+"use client";
+
+import { useState, useCallback } from "react";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { Connection, VersionedTransaction } from "@solana/web3.js";
+import { SUPPORTED_TOKENS, TokenSymbol } from "../config/tokens";
+import { toast } from "sonner";
+
+const rpcUrl = process.env.NEXT_PUBLIC_RPC_URL || "https://api.mainnet-beta.solana.com";
+const connection = new Connection(rpcUrl, "confirmed");
+
+interface TransactionOptions {
+  selectedToken: TokenSymbol;
+  amount: string;
+  walletBalance: number;
+  breezeBalance: number;
+  onSuccess: () => Promise<void>;
+  all?: boolean;
+}
+
+export function useBreezeTransactions() {
+  const { publicKey, signTransaction, connected } = useWallet();
+
+  const [loading, setLoading] = useState(false);
+  const [confirming, setConfirming] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const executeTransaction = useCallback(
+    async (endpoint: string, operationType: "deposit" | "withdraw", onSuccess: () => Promise<void>) => {
+      setLoading(true);
+      setError(null);
+
+      const toastId = toast.loading(`Processing ${operationType}...`);
+
+      try {
+        const response = await fetch(endpoint, { method: "POST" });
+        if (!response.ok) throw new Error(`Failed to fetch ${operationType} transaction`);
+
+        const data = await response.json();
+        const txString = typeof data.data === "string" ? data.data : data;
+
+        const txBytes = Buffer.from(txString, "base64");
+        const versionedTx = VersionedTransaction.deserialize(txBytes);
+
+        if (!signTransaction) throw new Error("Wallet does not support signing");
+
+        const signedTx = await signTransaction(versionedTx);
+        const txSignature = await connection.sendTransaction(signedTx, {
+          skipPreflight: true,
+          preflightCommitment: "confirmed",
+        });
+
+        setLoading(false);
+        setConfirming(true);
+        toast.loading("Confirming transaction...", { id: toastId });
+
+        const confirmation = await connection.confirmTransaction(txSignature, "confirmed");
+
+        if (confirmation.value.err) {
+          throw new Error("Transaction failed to confirm");
+        }
+
+        toast.success(`${operationType === "deposit" ? "Deposit" : "Withdrawal"} successful!`, { id: toastId });
+        await onSuccess();
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : `${operationType} failed`;
+        setError(errorMessage);
+        toast.error(errorMessage, { id: toastId });
+      } finally {
+        setLoading(false);
+        setConfirming(false);
+      }
+    },
+    [signTransaction]
+  );
+
+  const deposit = useCallback(
+    async (options: TransactionOptions) => {
+      const { selectedToken, amount, onSuccess, all = false } = options;
+      const mint = SUPPORTED_TOKENS[selectedToken].mint;
+      const endpoint = `/api/deposittx?user_pubkey=${publicKey!.toBase58()}&amount=${amount}&base_asset=${mint}&all=${all}`;
+      await executeTransaction(endpoint, "deposit", onSuccess);
+    },
+    [publicKey, executeTransaction]
+  );
+
+  const withdraw = useCallback(
+    async (options: TransactionOptions) => {
+      const { selectedToken, amount, onSuccess, all = false } = options;
+      const mint = SUPPORTED_TOKENS[selectedToken].mint;
+      const endpoint = `/api/withdrawtx?user_pubkey=${publicKey!.toBase58()}&amount=${amount}&base_asset=${mint}&all=${all}`;
+      await executeTransaction(endpoint, "withdraw", onSuccess);
+    },
+    [publicKey, executeTransaction]
+  );
+
+  return {
+    loading,
+    confirming,
+    error,
+    deposit,
+    withdraw,
+  };
+}
+```
+
+---
+
+## Step 6: UI Components
+
+Visit [ui.breeze.baby](https://ui.breeze.baby) to customize and generate pre-built deposit/withdraw components with your preferred styling. The playground lets you:
+
+- Customize colors, border radius, and typography
+- Preview components in real-time
+- Export ready-to-use React components
+
+### Example Deposit Component
+
+```typescript
+// app/components/Deposit.tsx
+
+"use client";
+
+import { useState, useEffect } from "react";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { AVAILABLE_ASSETS, SUPPORTED_TOKENS, TokenSymbol } from "../config/tokens";
+import { useBreezeBalances } from "../hooks/useBreezeBalances";
+import { useBreezeTransactions } from "../hooks/useBreezeTransactions";
+
+export default function DepositComponent() {
+  const { connected } = useWallet();
+  const [selectedToken, setSelectedToken] = useState<TokenSymbol>("USDC");
+  const [amount, setAmount] = useState("");
+
+  const { walletBalance, fetchBalances, loading: balanceLoading } = useBreezeBalances(selectedToken);
+  const { deposit, loading, confirming } = useBreezeTransactions();
+
+  useEffect(() => {
+    if (connected) fetchBalances();
+  }, [connected, selectedToken, fetchBalances]);
+
+  const handleDeposit = async () => {
+    await deposit({
+      selectedToken,
+      amount,
+      walletBalance,
+      breezeBalance: 0,
+      onSuccess: async () => {
+        setAmount("");
+        await fetchBalances();
+      },
+    });
+  };
+
+  const isProcessing = loading || confirming || balanceLoading;
+
+  return (
+    <div className="p-6 rounded-2xl bg-gray-900 border border-gray-800 max-w-md">
+      <h2 className="text-xl font-semibold mb-4">Deposit</h2>
+
+      {!connected ? (
+        <WalletMultiButton />
+      ) : (
+        <>
+          <div className="mb-4">
+            <label className="block text-sm text-gray-400 mb-2">Amount</label>
+            <input
+              type="number"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              placeholder="0.00"
+              className="w-full p-3 rounded-lg bg-gray-800 border border-gray-700"
+            />
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-sm text-gray-400 mb-2">Token</label>
+            <select
+              value={selectedToken}
+              onChange={(e) => setSelectedToken(e.target.value as TokenSymbol)}
+              className="w-full p-3 rounded-lg bg-gray-800 border border-gray-700"
+            >
+              {AVAILABLE_ASSETS.map((asset) => (
+                <option key={asset.mint} value={asset.symbol}>
+                  {asset.symbol}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <p className="text-sm text-gray-400 mb-4">
+            Available: {walletBalance.toFixed(4)} {selectedToken}
+          </p>
+
+          <button
+            onClick={handleDeposit}
+            disabled={isProcessing || !amount}
+            className="w-full p-3 rounded-lg bg-pink-500 hover:bg-pink-600 disabled:opacity-50 font-medium"
+          >
+            {isProcessing ? "Processing..." : "Deposit"}
+          </button>
+        </>
+      )}
+    </div>
+  );
+}
+```
+
+---
+
+## API Reference
+
+### Breeze API Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/breeze-balances/{user_pubkey}` | GET | Get user's Breeze balances |
+| `/deposit/tx` | POST | Generate deposit transaction |
+| `/withdraw/tx` | POST | Generate withdraw transaction |
+| `/strategy-info/{strategy_id}` | GET | Get strategy details and supported assets |
+
+### Request Headers
+
+All requests require:
+```
+Content-Type: application/json
+x-api-key: YOUR_API_KEY
+```
+
+### Deposit/Withdraw Request Body
+
+```json
+{
+  "params": {
+    "strategy_id": "uuid",
+    "base_asset": "token_mint_address",
+    "amount": 1000000,
+    "all": false,
+    "user_key": "user_wallet_pubkey",
+    "payer_key": "user_wallet_pubkey"
+  }
+}
+```
+
+> **Note**: `amount` is in raw token units (e.g., 1 USDC = 1,000,000 with 6 decimals)
+
+---
+
+## Best Practices
+
+1. **Keep API keys server-side** - Never expose `BREEZE_API_KEY` to the client
+2. **Use a reliable RPC** - Public RPCs have rate limits; use a paid provider for production
+3. **Handle decimals correctly** - Different tokens have different decimal places (USDC: 6, SOL: 9)
+4. **Show transaction status** - Use toast notifications to keep users informed
+5. **Implement error handling** - Gracefully handle wallet disconnects and failed transactions
+
+---
+
+## Resources
+
+- [Breeze UI Playground](https://ui.breeze.baby) - Customize and export UI components
+- [Solana Wallet Adapter](https://github.com/solana-labs/wallet-adapter) - Wallet integration docs
+- [Solana Web3.js](https://solana-labs.github.io/solana-web3.js/) - Solana JavaScript SDK
+
+---
+
+## Support
+
+For API access and support, contact the Breeze team or visit the documentation portal.
